@@ -62,16 +62,14 @@
       </select>
       </div>
 
-      
       <p>Collected by</p>
       <div class="sm-3">
-      <select class="selectpicker form-control" multiple data-live-search="true" data-style="" data-styleBase="form-control" aria-label="Collected by" name="Collected_by">
+      <select class="from-select" multiple aria-label="Collected by" name="Collected_by">
           {% for i in leg %}
           <option value="{{ i.recordedBy }}">{{ i.recordedBy }}</option>
           {% endfor %}
       </select>
       </div>
-      <br />
       
       <p>Remarks</p>
       <div class="row">

@@ -127,18 +127,19 @@ def labels():
             label_type = request.form.get("label_type")
             # Finn eventIDer og antall etiketter som skal printes av brukeren
             user = current_user
-            n =[]
+            e,n = [],[]
+            cnt = 0
             for event in user.print_events:
-                n.append(event.eventID)
-            eventids = ','.join(n)
-            n =[]
-            for event in user.print_events:
+                e.append(event.eventID)
                 n.append(str(event.print_n))
+                cnt += 1
+            eventids = ','.join(e)
             labeln = ','.join(n)
-            #print(eventids)
-            #print(labeln)
-            subprocess.Popen(["/var/www/llab/llab/R/labels_exe.R", eventids, labeln, label_type])
-            return redirect(url_for('cevents.label_output'))
+            if cnt == 0:
+                flash("At least one collecting event must be added", category="error")
+            else:
+                subprocess.Popen(["/var/www/llab/llab/R/labels_exe.R", eventids, labeln, label_type])
+            #return redirect(url_for('cevents.label_output'))
         
     # Søk etter event-IDer
     events = Collecting_events.query.all()

@@ -21,7 +21,7 @@ def login():
             if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)  # login user
-                return redirect(url_for('views.home')) # Return homepage
+                return redirect(url_for('entomologist.home')) # Return homepage
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -73,7 +73,6 @@ def sign_up():
             user = User.query.filter_by(email=email).first()
             #login_user(user, remember=True) # login user
             flash("Account created!", category="success")
-            return redirect(url_for('views.home')) # return to homepage
     return render_template("sign_up.html", user=current_user, title=title)
             
         

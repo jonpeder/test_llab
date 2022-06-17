@@ -27,6 +27,7 @@ LOC = ["", "", "", "", "", ""]
 LATLON = ["", "", ""]
 DATE = ["", ""]
 
+
 @cevents.route('/new_event', methods=["POST", "GET"])
 @login_required
 def new_event():
@@ -107,7 +108,6 @@ def new_event():
 @login_required
 def labels():
     title = "Print collecting event labels"
-    label_filename = f'{current_user.id}_labels.pdf'
     # Post
     if request.method == 'POST':
         # Button 1: Add eventID and number of labels to be printed
@@ -141,73 +141,18 @@ def labels():
             if cnt == 0:
                 flash("At least one collecting event must be added", category="error")
             else:
-                # Delete old label
-                if exists(f'/var/www/llab/llab/insect_labels/{label_filename}'):
-                    os.remove(f'/var/www/llab/llab/insect_labels/{label_filename}')
                 # Print labels
-                subprocess.Popen(["/var/www/llab/llab/R/labels_exe.R", eventids, labeln, label_type, label_filename])
+                process = subprocess.Popen(["/var/www/llab/llab/R/labels_exe.R", eventids, labeln, label_type, f'{current_user.id}_labels.pdf'])
+                process.wait()
                 return redirect(url_for('cevents.label_output'))
-        
+
     # Søk etter event-IDer
     events = Collecting_events.query.all()
     # Return
     return render_template("event_labels.html", title = title, events=events, user=current_user)
 
-@cevents.route('/add_entomologist', methods=["POST", "GET"])
-@login_required
-def add_entomologist():
-    title = "Add entomologist"
-    if request.method == 'POST':
-        # Get input from form
-        recordedBy = request.form.get("fullname")
-        recordedByID = request.form.get("researcherid")
-        # Query email in database
-        recordedBy_test = Collectors.query.filter_by(recordedBy=recordedBy).first()
-        recordedByID_test = Collectors.query.filter_by(recordedByID=recordedByID).first()
-        # Check input is correct. If success add entomologist to database. If error send error message
-        if recordedBy_test:
-            flash('Entomologists name aready exists', category='error')
-        elif len(recordedBy) < 6:
-            flash('Entomologist name is to short. Should include more than five characters.', category='error')
-        elif len(recordedByID) < 1:
-            # New Print_events object
-            new_collector = Collectors(recordedBy=recordedBy, recordedByID=recordedByID)
-            # Add new objects to database
-            db.session.add(new_collector)
-            # Commit
-            db.session.commit()
-            flash(f'{recordedBy} was added to the list of entomologists, but without a researcher ID', category='success')
-        elif len(recordedByID) < 6:
-            flash('Entomologist ID is to short. Should include more than five characters.', category='error')
-        elif recordedByID == 'https://orcid.org/0000-0000-0000-0000':
-            flash('The entomologist ID field has to be edited.', category='error')
-        elif recordedByID_test:
-            flash('Entomologists ID aready exists', category='error')
-        else:
-            # New Print_events object
-            new_collector = Collectors(recordedBy=recordedBy, recordedByID=recordedByID)
-            # Add new objects to database
-            db.session.add(new_collector)
-            # Commit
-            db.session.commit()
-            flash(f'{recordedBy} was added to the list of entomologists', category='success')
-    # Return HTML page
-    return render_template("add_entomologist.html", title=title, user = current_user)
-
 @cevents.route('/label_output')
 @login_required
 def label_output():
-    label_filename = f'{current_user.id}_labels.pdf'
-    cnt=0
-    while(True):
-        if exists(f'/var/www/llab/llab/insect_labels/{label_filename}'):
-            time.sleep(2)
-            return send_file(f'/var/www/llab/llab/insect_labels/{label_filename}')
-            break
-        elif cnt > 60:
-            break
-        else:
-            time.sleep(1)
-            cnt+=1
-            continue
-
+    time.sleep(1)
+    return send_file(f'/var/www/llab/llab/insect_labels/{current_user.id}_labels.pdf')

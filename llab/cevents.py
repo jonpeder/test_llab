@@ -138,8 +138,11 @@ def labels():
             if cnt == 0:
                 flash("At least one collecting event must be added", category="error")
             else:
+                # Delete old label
+                
+                # Print labels
                 subprocess.Popen(["/var/www/llab/llab/R/labels_exe.R", eventids, labeln, label_type])
-            #return redirect(url_for('cevents.label_output'))
+                return redirect(url_for('cevents.label_output'))
         
     # Søk etter event-IDer
     events = Collecting_events.query.all()

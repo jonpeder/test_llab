@@ -63,20 +63,18 @@
       </div>
 
       <p>Collected by</p>
-      <div class="sm-3">
-      <select class="from-select" multiple aria-label="Collected by" name="Collected_by">
+      <div class="mb-3">
+      <select class="form-select" multiple aria-label="Collected by" name="Collected_by">
           {% for i in leg %}
           <option value="{{ i.recordedBy }}">{{ i.recordedBy }}</option>
           {% endfor %}
       </select>
       </div>
+        
       
       <p>Remarks</p>
-      <div class="row">
-      <div class="col-mb-3">
-      <!--<div class="row-mb-3">-->
+      <div class="mb-3">
       <input type="text" class="form-control" id="Remarks" aria-describedby="Remarks" placeholder="Remarks" name="Remarks">
-      </div>
       </div>
       
       <p>Number of labels to print</p>

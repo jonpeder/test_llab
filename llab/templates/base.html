@@ -32,25 +32,25 @@
             <a class="nav-item nav-link" id="home" href="/">Home</a>
             <a class="nav-item nav-link" id="addentomologist" href="/add_entomologist">Add entomologist</a>
             <a class="nav-item nav-link" id="newevent" href="/new_event">New event</a>
-            <a class="nav-item nav-link" id="eventlabels" href="/event_labels">Event-labels</a>        
-            <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign up</a>
-            <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-            <!-- Dropdown select
+            <a class="nav-item nav-link" id="eventlabels" href="/event_labels">Event-labels</a>
+            <!-- 
+            <a class="nav-item nav-link" id="eventlabels" href="/event_labels">Event-photo</a>
+            <a class="nav-item nav-link" id="eventlabels" href="/event_labels">Det-labels</a>
+            <a class="nav-item nav-link" id="eventlabels" href="/event_labels">Determination</a>
+            -->
+            <!-- Dropdown select -->
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Select
+                    
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">New collector</a>
-                        <a class="dropdown-item" href="/new_event">New event</a>
-                        <a class="dropdown-item" href="/event_labels">Event-labels</a>
-                        <a class="dropdown-item" href="#">Det-labels</a>
-                        <a class="dropdown-item" href="#">Determination</a>
+                        <a class="dropdown-item" id="signUp" href="/sign-up">Add user</a>
+                        <a class="dropdown-item" id="logout" href="/logout">Logout</a>
                     </div>
                 </li>
             </ul>
-            -->
+
             {% else %}
             <a class="nav-item nav-link" id="login" href="/login">Login</a>
             {% endif %}

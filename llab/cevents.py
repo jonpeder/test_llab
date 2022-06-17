@@ -8,7 +8,9 @@ import subprocess
 import time
 import os
 from os import path
+from os.path import exists
 import json
+import sys
 
 
 # connect to __init__ file
@@ -105,6 +107,7 @@ def new_event():
 @login_required
 def labels():
     title = "Print collecting event labels"
+    label_filename = f'{current_user.id}_labels.pdf'
     # Post
     if request.method == 'POST':
         # Button 1: Add eventID and number of labels to be printed
@@ -139,9 +142,10 @@ def labels():
                 flash("At least one collecting event must be added", category="error")
             else:
                 # Delete old label
-                
+                if exists(f'/var/www/llab/llab/insect_labels/{label_filename}'):
+                    os.remove(f'/var/www/llab/llab/insect_labels/{label_filename}')
                 # Print labels
-                subprocess.Popen(["/var/www/llab/llab/R/labels_exe.R", eventids, labeln, label_type])
+                subprocess.Popen(["/var/www/llab/llab/R/labels_exe.R", eventids, labeln, label_type, label_filename])
                 return redirect(url_for('cevents.label_output'))
         
     # Søk etter event-IDer
@@ -193,6 +197,17 @@ def add_entomologist():
 @cevents.route('/label_output')
 @login_required
 def label_output():
-    time.sleep(10)
-    return send_file('insect_labels/labels.pdf')
-    
+    label_filename = f'{current_user.id}_labels.pdf'
+    cnt=0
+    while(True):
+        if exists(f'/var/www/llab/llab/insect_labels/{label_filename}'):
+            time.sleep(2)
+            return send_file(f'/var/www/llab/llab/insect_labels/{label_filename}')
+            break
+        elif cnt > 60:
+            break
+        else:
+            time.sleep(1)
+            cnt+=1
+            continue
+

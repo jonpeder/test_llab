@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="/add_entomologist" method="POST">
+    <div class="form-group">
+        <label for="name">Full name</label>
+        <input type="fullname" class="form-control" id="fullname" name="fullname" placeholder="Dust Dustesen"/>
+        <small id="fullnameHelp" class="form-text text-muted">Should include both first name and surname</small>
+    </div>
+    <br />
+        <div class="form-group">
+        <label for="researcherId">Researcher ID</label>
+        <input type="text" class="form-control" id="researcherid" name="researcherid" placeholder="https://orcid.org/0000-0000-0000-0000"/>
+        <small id="researcheridHelp" class="form-text text-muted">Preferably ORCID</small>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-secondary">Submit</button> 
+</form>
+
+{% endblock %}

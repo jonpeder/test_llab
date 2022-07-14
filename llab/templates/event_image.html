@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method=post enctype=multipart/form-data>
+    
+    <p>Add images</p>
+    <div class="mb-3">
+    <input type=file class="form-control" name=file>
+    </div>
+    
+    <!-- Button 1, 2 and 3 -->
+    <div class="d-inline mb-3">   
+        <!-- Button 1-->
+        <button type="submit" class="btn btn-secondary" name="action1" value="VALUE1">Add</button> 
+        <!-- Button 2-->
+        <button type="submit" class="btn btn-danger" name="action2" value="VALUE2">Clear</button>
+    </div>
+    <p></p>
+    
+    <!-- Show images -->
+    {% if files|length > 0 %}
+        {% for i in files %}
+        <br />
+            <strong>Image {{loop.index}}:</strong> {{i}}
+            <div>
+                <img src="static/uploads/{{i}}" height="200" >
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="row mb-3">
+    <div class="col">
+    <p>Select collecting event</p>
+    <select class="form-select" aria-label="eventID" name="eventID">
+        {% for i in events %}
+            <option value="{{ i.eventID }}">{{ i.eventID }} - {{ i.locality_1 }} - {{ i.locality_2 }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    <div class="col">
+    <p>Select category</p>
+    <select class="form-select" aria-label="imageCategory" name="imageCategory">
+        {% for i in imagecat %}
+            <option value="{{ i }}">{{ i }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    </div>
+    
+    <p>Comment</p>
+      <div class="mb-3">
+        <input type="text" class="form-control" aria-describedby="comment" placeholder="comment" name="comment" >
+      </div>
+
+    
+    <!-- Button 3-->
+    <div class="mb-3">
+        <a href="/label_output" target="_blank">
+            <button type="submit" class="btn btn-success btn-lg" name="action3" value="VALUE3">Upload</button>
+        </a>
+    </div>
+</form>
+<br />
+
+{% endblock %}

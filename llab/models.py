@@ -59,3 +59,13 @@ class Collecting_events(db.Model):
 class Collectors (db.Model):
     recordedBy = db.Column(db.String(100), primary_key=True)
     recordedByID = db.Column(db.String(100))
+
+class Event_images (db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(100))
+    imageCategory = db.Column(db.String(20))
+    comment = db.Column(db.String(500))  
+    eventID = db.Column(db.String(50))
+    databased = db.Column(db.DateTime(timezone=True), default=func.now())
+    createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
+    

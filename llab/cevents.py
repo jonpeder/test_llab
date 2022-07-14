@@ -147,7 +147,7 @@ def labels():
                 return redirect(url_for('cevents.label_output'))
 
     # Søk etter event-IDer
-    events = Collecting_events.query.all()
+    events = Collecting_events.query.filter_by(createdByUserID = current_user.id).order_by(Collecting_events.eventID.desc())
     # Return
     return render_template("event_labels.html", title = title, events=events, user=current_user)
 

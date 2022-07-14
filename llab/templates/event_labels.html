@@ -4,10 +4,10 @@
 <form action="/event_labels" method="POST">          
           <div class="row">
               <div class="col">
-                  <p>Add collecting event-ID</p>
+                  <p>Select collecting event</p>
                   <select class="form-select" aria-label="ID" name="ID">
                       {% for i in events %}
-                          <option value="{{ i.eventID }}">{{ i.eventID }}</option>
+                          <option value="{{ i.eventID }}">{{ i.eventID }} - {{ i.locality_1 }} - {{ i.locality_2 }}</option>
                       {% endfor %}
                   </select>
               </div>
@@ -38,7 +38,7 @@
               <a href="/label_output" target="_blank">
                   <button type="submit" class="btn btn-success btn-lg" name="action3" value="VALUE3">Print</button>
               </a>
-      </div>
+          </div>
       <br />        
 </form>      
 <!-- table-->

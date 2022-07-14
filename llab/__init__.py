@@ -7,24 +7,30 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 DB_NAME = "insects.db"
 
+# Upload folder path
+UPLOAD_FOLDER = "static/uploads/"
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'pteromalidsarebeautiful'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     db.init_app(app)
     
     from .auth import auth
     from .cevents import cevents
     from .entomologist import entomologist
+    from .images import images
+    from .queries import queries
     
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(cevents, url_prefix='/')
     app.register_blueprint(entomologist, url_prefix='/')
+    app.register_blueprint(images, url_prefix='/')
+    app.register_blueprint(queries, url_prefix='/')
     
-    
-    from .models import User, Note, Print_events
+    from .models import User, Note, Print_events, Event_images
     
     db.create_all(app=app)
     

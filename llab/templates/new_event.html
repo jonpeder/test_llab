@@ -2,99 +2,119 @@
 {% block content %}
 
 <form action="/new_event" method="POST">
-        
-      <p>Collecting event ID</p>
-      <div class="mb-3">
+      
+    <!-- Event ID -->
+    <div class="mb-3">
+        Collecting event ID
         <input type="text" class="form-control" id="ID" aria-describedby="Collecting event ID" placeholder="ID" name="ID" value={{ new_ID }} required >
-      </div>
-      <br>
-        
-      <p>Coordinates</p>      
-      <div class="row">
-          {% for i in range(latlon|length) %}
-          <div class="col mb-1">
-              <input type="text" class="form-control" id={{latlon[i]}} aria-describedby={{latlon[i]}} placeholder={{latlon[i]}} name={{latlon[i]}} value="{{LATLON[i]}}" required >
-          </div>
-          {% endfor %}
-      </div>            
-      <br>
-
-
-      <!-- Button: Get position -->
-      <div class="mb-3">
-          <input type="button" class="btn btn-secondary" value="Use position" onclick="getLocation()" />
-      </div>
-        
-
-      <!-- Locality -->
-      <p>Locality</p>
-          <div class="mb-1">
-              <input type="text" class="form-control" id="Country" aria-describedby="Country" placeholder="Country code" name="Country" value="no" required>
-          </div>
-          {% for i in range(loc|length) %}
-          <div class="mb-1">
-              <input type="text" class="form-control" id={{loc[i]}} aria-describedby={{loc[i]}} placeholder={{loc[i]}} name={{loc[i]}} value="{{LOC[i]}}" >
-          </div>
-          {% endfor %}
-      <br>
-        
-      <!-- Button 1-->
-      <div class="mb-3">
-          <button type="submit" class="btn btn-secondary" name="action1" value="VALUE1" >Get locality from position</button>
-      </div>
-      <p>{{ strand_id }}</p>
-           
-      <p>Date</p>
-      <div class="row">
-      {% for i in range(date|length) %}
-      <div class="col mb-3">
-        <input type="date" class="form-control" id={{date[i]}} aria-describedby={{date[i]}} placeholder={{date[i]}} name={{date[i]}} value={{DATE[i]}}>
-      </div>
-      {% endfor %}
-      </div>
-              
-      <p>Collecting method</p>
-      <div class="mb-3">
-      <select class="form-select" aria-label="Default select example" name="Collecting_method">
-          {% for i in met %}
-          <option value={{ i.ID }}>{{ i.samplingProtocol }}</option>
-          {% endfor %}
-      </select>
-      </div>
-
-      <p>Collected by</p>
-      <div class="mb-3">
-      <select class="form-select" multiple aria-label="Collected by" name="Collected_by">
-          {% for i in leg %}
-          <option value="{{ i.recordedBy }}">{{ i.recordedBy }}</option>
-          {% endfor %}
-      </select>
-      </div>
-        
+    </div>
+    <br>
       
-      <p>Remarks</p>
-      <div class="mb-3">
-      <input type="text" class="form-control" id="Remarks" aria-describedby="Remarks" placeholder="Remarks" name="Remarks">
-      </div>
-      
-      <p>Number of labels to print</p>
-      <div class="mb-3">
-      <input type="number" class="form-control" id="Label_number" aria-describedby="Label_number" placeholder="Label_number" name="Label_number" min="0" value="0" />
-      </div>
-        
-      <!-- Button 2-->
-      <div class="mb-3">
-      <button type="submit" class="btn btn-secondary" name="action2" onclick="submitForms()" value="VALUE2">Submit</button>
-      </div>
-      <p></p>
-    </form>
+    <!-- Coordinates -->
+    Coordinates
+    <div class="row">
+        {% for i in range(latlon|length) %}
+        <div class="col mb-1">
+            <input type="text" class="form-control" id={{latlon[i]}} aria-describedby={{latlon[i]}} placeholder={{latlon[i]}} name={{latlon[i]}} value="{{LATLON[i]}}" required >
+        </div>
+        {% endfor %}
+    </div>            
+    <br>
 
-<!-- Display added collecting events -->
-{% if user.print_events|length > 0 %}
-<strong>Collecting-events added:</strong>
-    {% for event in user.print_events %}
-        {{ event.eventID }}, 
+
+    <!-- Button: Get position -->
+    <div class="mb-3">
+        <input type="button" class="btn btn-secondary" value="Use position" onclick="getLocation()" />
+    </div>
+        
+
+    <!-- Locality -->
+    Locality
+    <div class="mb-1">
+        <input type="text" class="form-control" id="Country" aria-describedby="Country" placeholder="Country code" name="Country" value="no" required>
+    </div>
+    {% for i in range(loc|length) %}
+    <div class="mb-1">
+        <input type="text" class="form-control" id={{loc[i]}} aria-describedby={{loc[i]}} placeholder={{loc[i]}} name={{loc[i]}} value="{{LOC[i]}}" >
+    </div>
     {% endfor %}
-{% endif %}
+    <br>
+    
+    <!-- Button 1-->
+    <div class="mb-3">
+        <button type="submit" class="btn btn-secondary" name="action1" value="VALUE1" >Get locality from position</button>
+    </div>
+    <p>{{ strand_id }}</p>
+
+    <!-- Substrate -->
+    <a class="btn btn-success mb-3" data-toggle="collapse" href="#substrateCollapse" role="button" aria-expanded="false" aria-controls="substrateCollapse">Specify substrate</a>
+    <div class="collapse multi-collapse" id="substrateCollapse">
+        Substrate scientific name
+        <div class="mb-3">
+            <input type="text" class="form-control" id="Substrate" aria-describedby="Substrate" placeholder="Tussilago farfara" name="Substrate" >
+        </div>
+        Substrate type
+        <div class="mb-3">
+            <select class="form-select" id="Substrate_type" aria-label="Substrate type" name="Substrate_type" >
+                <option value=""></option>
+                {% for i in range(substrate_type|length) %}
+                <option value="{{ substrate_type[i] }}">{{ substrate_type[i] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        Specific substrate part
+        <div class="mb-3">
+            <select class="form-select" id="Substrate_plant_part" aria-label="Substrate type" name="Substrate_plant_part" >
+                <option value=""></option>
+                {% for i in range(substrate_part|length) %}
+                <option value="{{ substrate_part[i] }}">{{ substrate_part[i] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <br />    
+    
+    <!-- Date -->
+    Date
+    <div class="row">
+        {% for i in range(date|length) %}
+        <div class="col mb-3">
+            <input type="date" class="form-control" id={{date[i]}} aria-describedby={{date[i]}} placeholder={{date[i]}} name={{date[i]}} value={{DATE[i]}}>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Collecting method -->
+    Collecting method
+    <div class="mb-3">
+        <select class="form-select" aria-label="Default select example" name="Collecting_method">
+            {% for i in met %}
+            <option value={{ i.ID }}>{{ i.samplingProtocol }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <!-- Collected by -->
+    Collected by
+    <div class="mb-3">
+        <select class="form-select" multiple aria-label="Collected by" name="Collected_by">
+            {% for i in leg %}
+            <option value="{{ i.recordedBy }}">{{ i.recordedBy }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <!-- Remarks -->
+    Remarks
+    <div class="mb-3">
+        <input type="text" class="form-control" id="Remarks" aria-describedby="Remarks" placeholder="Remarks" name="Remarks">
+    </div>
+        
+    <!-- Button 2-->
+    <div class="mb-3">
+        <button type="submit" class="btn btn-secondary" name="action2" onclick="submitForms()" value="VALUE2">Submit</button>
+    </div>
+    <p></p>
+</form>
 
 {% endblock %}

@@ -55,6 +55,9 @@ class Collecting_events(db.Model):
     geodeticDatum = db.Column(db.String(5), default='WGS84')
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
     createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
+    substrateName=db.Column(db.String(50))
+    substrateType=db.Column(db.String(50))
+    substratePlantPart=db.Column(db.String(50))
 
 class Collectors (db.Model):
     recordedBy = db.Column(db.String(100), primary_key=True)

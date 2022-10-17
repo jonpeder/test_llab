@@ -26,12 +26,15 @@ date = ["Date_1", "Date_2"]
 LOC = ["", "", "", "", "", ""]
 LATLON = ["", "", ""]
 DATE = ["", ""]
-
+substrate_type = ["gall", "mine", "colony"]
+substrate_part = ["flower", "stem", "leaf", "shoot", "twig", "root", "fruit", "seed", "cone", "female_catkin", "male_catkin", "fruitbody"]
 
 @cevents.route('/new_event', methods=["POST", "GET"])
 @login_required
 def new_event():
     title = "New collecting event"
+    global substrate_type
+    global substrate_part
     ## Finn innsamlingsmetode og innsamlere
     leg = Collectors.query.all()
     met = Collecting_methods.query.all()
@@ -55,7 +58,9 @@ def new_event():
         eventDate_2 = request.form.get("Date_2")
         recordedBy = request.form.getlist("Collected_by")
         eventRemarks = request.form.get("Remarks")
-        label_number = request.form.get("Label_number")
+        substrate_name = request.form.get("Substrate_name")
+        substrate_type = request.form.get("Substrate_type")
+        substrate_plant_part = request.form.get("Substrate_plant_part")
 
         # Create global variables for remembering input from last post
         global LOC
@@ -67,7 +72,7 @@ def new_event():
 
         # Button 1: Get input coordinates from form and find locality data based on coordinates
         if request.form.get('action1') == 'VALUE1':
-            strand = readstrand(r_script_path='/var/www/llab/llab/R/strandr.R', lat=decimalLatitude, lon=decimalLongitude)
+            strand = readstrand(r_script_path='/home/jon/Dropbox/python/web_apps/llab/llab//R/strandr.R', lat=decimalLatitude, lon=decimalLongitude)
             strand_id = strand[0]
             municipality = strand[1]
             county = strand[2]
@@ -84,12 +89,9 @@ def new_event():
                 flash('event-ID aready exists', category='error')
             else:
                 # new Collecting_events object
-                new_event = Collecting_events(eventID=eventID, countryCode=countryCode, stateProvince=stateProvince, county=county, strand_id=strand_id, municipality=municipality, locality_1=locality_1, locality_2=locality_2, habitat=habitat, decimalLatitude=decimalLatitude, decimalLongitude=decimalLongitude, coordinateUncertaintyInMeters=coordinateUncertaintyInMeters,samplingProtocol=samplingProtocol, eventDate_1=eventDate_1, eventDate_2=eventDate_2, recordedBy=" | ".join(recordedBy), eventRemarks=eventRemarks, createdByUserID=current_user.id)
-                # New Print_events object
-                new_print_event = Print_events(eventID=eventID, print_n=label_number, createdByUserID=current_user.id)
+                new_event = Collecting_events(eventID=eventID, countryCode=countryCode, stateProvince=stateProvince, county=county, strand_id=strand_id, municipality=municipality, locality_1=locality_1, locality_2=locality_2, habitat=habitat, decimalLatitude=decimalLatitude, decimalLongitude=decimalLongitude, coordinateUncertaintyInMeters=coordinateUncertaintyInMeters,samplingProtocol=samplingProtocol, eventDate_1=eventDate_1, eventDate_2=eventDate_2, recordedBy=" | ".join(recordedBy), eventRemarks=eventRemarks, createdByUserID=current_user.id, substrateName=substrate_name, substrateType=substrate_type, substratePlantPart=substrate_plant_part)
                 # Add new objects to database
                 db.session.add(new_event)
-                db.session.add(new_print_event)
                 # Commit
                 db.session.commit()
                 flash(f'Collecting event with event-ID {eventID} created!', category="success")
@@ -102,12 +104,12 @@ def new_event():
     new_ID = newEventID(IDs, current_user.initials)
     
     # Return html-page
-    return render_template("new_event.html", title=title, loc=loc, latlon=latlon, date=date, new_ID=new_ID, met=met, leg=leg, LOC = LOC, LATLON = LATLON, DATE=DATE, user=current_user)
+    return render_template("new_event.html", title=title, loc=loc, latlon=latlon, substrate_type=substrate_type, substrate_part=substrate_part, date=date, new_ID=new_ID, met=met, leg=leg, LOC = LOC, LATLON = LATLON, DATE=DATE, user=current_user)
 
 @cevents.route('/event_labels', methods=["POST", "GET"])
 @login_required
 def labels():
-    title = "Print collecting event labels"
+    title = "Print specimen labels"
     # Post
     if request.method == 'POST':
         # Button 1: Add eventID and number of labels to be printed
@@ -142,7 +144,7 @@ def labels():
                 flash("At least one collecting event must be added", category="error")
             else:
                 # Print labels
-                process = subprocess.Popen(["/var/www/llab/llab/R/labels_exe.R", eventids, labeln, label_type, f'{current_user.id}_labels.pdf'])
+                process = subprocess.Popen(["/home/jon/Dropbox/python/web_apps/llab/llab/R/labels_exe.R", eventids, labeln, label_type, f'{current_user.id}_labels.pdf'])
                 process.wait()
                 return redirect(url_for('cevents.label_output'))
 

@@ -77,6 +77,13 @@ def new_event():
             municipality = strand[1]
             county = strand[2]
             locality_2 = strand[3]
+            # Fix problem with county 'Oslo og Akershus'
+            if county == 'Akershus og Oslo':
+                if municipality == 'Oslo':
+                    county = 'Oslo'
+                else:
+                    county = 'Akershus'
+            # Add to variables
             LOC = [county, strand_id, municipality, locality_1, locality_2, habitat]
             LATLON = [decimalLatitude, decimalLongitude, coordinateUncertaintyInMeters]
             DATE = [eventDate_1, eventDate_2]

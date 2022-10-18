@@ -74,5 +74,31 @@ def sign_up():
             #login_user(user, remember=True) # login user
             flash("Account created!", category="success")
     return render_template("sign_up.html", user=current_user, title=title)
-            
+
+
+@auth.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    title = 'Change Password'
+    if request.method == "POST":
+        new_password1 = request.form.get("new_password1")
+        new_password2 = request.form.get("new_password2")
+        # Check that password is not similar to previous password
+        if new_password1 != new_password2:
+            pass
+            flash("Passwords don\'t match.", category="error")
+        elif len(new_password1) < 6:
+            pass
+            flash("Password must be at least 6 characters.", category="error")
+        elif check_password_hash(current_user.password, new_password1):
+            pass
+            flash("This is the old password!", category="error")
+        else:
+            # Add new password to database
+            current_user.password = generate_password_hash(new_password1, method='sha256')
+            db.session.commit()
+            flash("Password changed!", category="success")
+            return redirect(url_for('entomologist.home')) # Return homepage
+    return render_template("change_password.html", user=current_user, title=title)
+    
         

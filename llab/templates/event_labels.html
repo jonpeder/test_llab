@@ -6,7 +6,7 @@
     <div class="mb-3">
         <select class="form-select" aria-label="ID" name="ID">
             {% for i in events %}
-                <option value="{{ i.eventID }}">{{ i.eventID }} - {{ i.locality_1 }} - {{ i.locality_2 }}</option>
+                <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if i.locality_2 %}- {{ i.locality_2 }}{% endif %}</option>
             {% endfor %}
         </select>
     </div>

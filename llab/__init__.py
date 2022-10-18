@@ -12,7 +12,7 @@ UPLOAD_FOLDER = "static/uploads/"
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'pteromalidsarebeautiful'
+    app.config['SECRET_KEY'] = 'secretkey'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER

@@ -19,5 +19,5 @@ def show_event():
             event = Collecting_events.query.filter_by(eventID = eventID)
             files = Event_images.query.filter_by(eventID=eventID)
             return render_template("show_event.html", title = title, user=current_user, files=files, events=events, event=event)
-    else:   
+    else:
         return render_template("show_event.html", title = title, user=current_user, events=events)

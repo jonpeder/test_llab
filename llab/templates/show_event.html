@@ -6,8 +6,9 @@
     <div class="mb-3">
     <p>Select collecting event-ID</p>
     <select class="form-select" aria-label="eventID" name="eventID">
+            <option value=""></option>
         {% for i in events %}
-            <option value="{{ i.eventID }}">{{ i.eventID }} - {{ i.locality_1 }} - {{ i.locality_2 }}</option>
+            <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if i.locality_2 %}- {{ i.locality_2 }}{% endif %}</option>
         {% endfor %}
     </select>
     </div>
@@ -21,45 +22,57 @@
 
 {% if event %}
     {% for i in event %}
-        <dl class="row">
-                <dt class="col-sm-3">Collecting-event:</dt>
+    <!-- Display event name -->
+    <h3> # {{ i.eventID }}{% if i.locality_1 %} - {{ i.locality_1 }}{% endif %}{% if i.locality_2 %} - {{ i.locality_2 }}{% endif %}</h3>
+        <br />
+        <!-- Display event data -->
+            <dl class="row">
+                <dt class="col-sm-3">Collecting-event</dt>
                 <dd class="col-sm-9">{{i.eventID}}</dd>
-                <dt class="col-sm-3">Country code:</dt>
+                <dt class="col-sm-3">Country code</dt>
                 <dd class="col-sm-9">{{i.countryCode}}</dd>
-                {% if i.strand_id %}
-                    <dt class="col-sm-3">County:</dt>
+                {% if i.county %}
+                    <dt class="col-sm-3">County</dt>
                     <dd class="col-sm-9">{{i.county}}</dd>
                 {% endif %}
-                {% if i.strand_id %}
-                    <dt class="col-sm-3">Strand:</dt>
-                    <dd class="col-sm-9">{{i.strand_id}}</dd>
-                {% endif %}
                 {% if i.municipality %}
-                    <dt class="col-sm-3">Municipality:</dt>
+                    <dt class="col-sm-3">Municipality</dt>
                     <dd class="col-sm-9">{{i.municipality}}</dd>
                 {% endif %}
                 {% if i.habitat %}
-                    <dt class="col-sm-3">Habitat:</dt>
+                    <dt class="col-sm-3">Habitat</dt>
                     <dd class="col-sm-9">{{i.habitat}}</dd>
                 {% endif %}
+                {% if i.substrateName %}
+                    <dt class="col-sm-3">Substrate name</dt>
+                    <dd class="col-sm-9">{{i.substrateName}}</dd>
+                {% endif %}
+                {% if i.substrateType %}
+                    <dt class="col-sm-3">Substrate type</dt>
+                    <dd class="col-sm-9">{{i.substrateType}}</dd>
+                {% endif %}
+                {% if i.substratePlantPart %}
+                    <dt class="col-sm-3">Substrate part</dt>
+                    <dd class="col-sm-9">{{i.substratePlantPart}}</dd>
+                {% endif %}            
                 {% if i.locality_1 %}
-                    <dt class="col-sm-3">Locality 1:</dt>
+                    <dt class="col-sm-3">Locality 1</dt>
                     <dd class="col-sm-9">{{i.locality_1}}</dd>
                 {% endif %}
                 {% if i.locality_2 %}
-                    <dt class="col-sm-3">Locality 2:</dt>
+                    <dt class="col-sm-3">Locality 2</dt>
                     <dd class="col-sm-9">{{i.locality_2}}</dd>
                 {% endif %}
                 {% if i.decimalLatitude %}
-                    <dt class="col-sm-3">Latitude:</dt>
+                    <dt class="col-sm-3">Latitude</dt>
                     <dd class="col-sm-9">{{i.decimalLatitude}}</dd>
                 {% endif %}
                 {% if i.decimalLongitude %}
-                    <dt class="col-sm-3">Longitude:</dt>
+                    <dt class="col-sm-3">Longitude</dt>
                     <dd class="col-sm-9">{{i.decimalLongitude}}</dd>
                 {% endif %}
                 {% if i.coordinateUncertaintyInMeters %}
-                    <dt class="col-sm-3">Radius:</dt>
+                    <dt class="col-sm-3">Radius</dt>
                     <dd class="col-sm-9">{{i.coordinateUncertaintyInMeters}}</dd>
                 {% endif %}
                 {% if i.coordinateUncertaintyInMeters %}
@@ -67,18 +80,37 @@
                     <dd class="col-sm-9">{{i.samplingProtocol}}</dd>
                 {% endif %}
                 {% if i.eventDate_1 %}
-                    <dt class="col-sm-3">Date 1:</dt>
+                    <dt class="col-sm-3">Date 1</dt>
                     <dd class="col-sm-9">{{i.eventDate_1}}</dd>
                 {% endif %}
                 {% if i.eventDate_2 %}
-                    <dt class="col-sm-3">Date 2:</dt>
+                    <dt class="col-sm-3">Date 2</dt>
                     <dd class="col-sm-9">{{i.eventDate_2}}</dd>
                 {% endif %}
                 {% if i.recordedBy %}
-                    <dt class="col-sm-3">Recorded by:</dt>
+                    <dt class="col-sm-3">Recorded by</dt>
                     <dd class="col-sm-9">{{i.recordedBy}}</dd>
                 {% endif %}
-        </dl>
+                {% if i.eventRemarks %}
+                    <dt class="col-sm-3">Remarks</dt>
+                    <dd class="col-sm-9">{{i.eventRemarks}}</dd>
+                {% endif %}
+            </dl>
+                {% if i.substrateName %}
+            <h5>Substrate</h5>
+            <dl class="row">
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">{{i.substrateName}}</dd>
+                    {% if i.substratePlantPart %}
+                        <dt class="col-sm-3">Part</dt>
+                        <dd class="col-sm-9">{{i.substratePlantPart}}</dd>
+                    {% endif %}
+                    {% if i.substrateType %}
+                        <dt class="col-sm-3">Type</dt>
+                        <dd class="col-sm-9">{{i.substrateType}}</dd>
+                    {% endif %}
+                {% endif %}
+            </dl>
     {% endfor %}
     <br />
     <!-- Show images -->

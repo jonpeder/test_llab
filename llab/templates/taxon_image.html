@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method=post>
+
+    <!--
+    <div class="mb-3">
+        <label for="exampleDataList" class="form-label">Select taxon name</label>
+        <input class="form-control" list="datalistOptions" id="taxon_name" name="taxon_name"
+            placeholder="Type to search...">
+        <datalist id="datalistOptions" name="taxon_name">
+            {% for i in dropdown_names %}
+            <option value="{{ i }};{{ dropdown_ranks[loop.index] }}">
+                {{ i }} ({{ dropdown_ranks[loop.index] }})
+            </option>
+            {% endfor %}
+        </datalist>
+    </div>
+-->
+
+    <!-- Select taxa -->
+    Select taxa
+    <div class="mb-3">
+        <select multiple id="taxon_name" name="taxon_name" placeholder="Click to select ..." multiselect-search="true"
+            multiselect-select-all="true" multiselect-max-items="10" multiselect-hide-x="false">
+            {% for i in dropdown_names %}
+            <option value="{{ i }};{{ dropdown_ranks[loop.index] }}">
+                {{ i }} ({{ dropdown_ranks[loop.index] }})
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Image categories -->
+    Image categories
+    <div class="mb-3">
+        <select class="form-select" multiple aria-label="image_categories" name="image_categories">
+            {% for i in imagecat %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Button 3-->
+    <div class="mb-3">
+        <button type="submit" class="btn btn-success btn-lg" name="action1" value="VALUE1">Show</button>
+    </div>
+
+    <!-- Show images -->
+    {% for taxa in imaged_taxa %}
+
+    <h5>
+        <strong>Taxon:</strong>
+        {% if taxa.taxonRank == "species" %}
+        <em>{{taxa.genus}} {{taxa.specificEpithet}}</em> {{taxa.scientificNameAuthorship}}
+        {% elif taxa.taxonRank == "genus" %}
+        <em>{{taxa.genus}}</em>
+        {% else %}
+        {{taxa.scientificName}}
+        {% endif %}
+    </h5>
+
+    {% for image in images %}
+    {% if image.scientificName == taxa.scientificName %}
+
+    <strong>{{ image.imageCategory[0]|upper}}{{image.imageCategory[1:] }}</strong>
+    <br />
+    {{image.comment}}
+    <div>
+        <img src="static/images/{{image.filename}}" onclick="window.open(this.src, '_blank');" height="200">
+    </div>
+    <br />
+
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
+
+
+    <script type="text/javascript" src="{{ url_for('static', filename='multiselect-dropdown.js')}}"></script>
+
+
+    {% endblock %}

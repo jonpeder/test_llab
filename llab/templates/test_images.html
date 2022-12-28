@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method=post enctype=multipart/form-data>
+
+    <div class="mb-3">
+        <label for="files">Select images</label>
+        <input type=file id="imgInp" multiple="multiple" accept="image/jpeg, image/png, image/jpg" class="form-control"
+            name=file onchange="loadFiles(event)">
+        <div class="img_container" id="result">
+        </div>
+    </div>
+</form>
+<br />
+
+
+<script>
+
+    // Find document variable
+    const output = document.querySelector("#result");
+
+    // Get input images and loop over each image
+    var loadFiles = function (event) {
+        //var index = 0
+        for (let i = 0; i < event.target.files.length; i++) {
+            //if (index == 0) {
+            //    var img_item = document.createElement("div"); // Create new div element
+            //    img_item.className = "img_item"
+            //}
+
+            var img_item = document.createElement("div"); // Create new div element
+            img_item.className = "img_item"
+            img_item.appendChild(imageAppend(event.target.files[i])); // Append element to img_item
+            output.appendChild(img_item)
+
+            // Every 4th iteration
+            //index++ // increse index by 1
+            //if (index == 1 || i == (event.target.files.length-1)) {
+            //    output.appendChild(img_item) // Append element to output
+            //    var index = 0 // Set index=0
+            //}
+        }
+    };
+
+    // Append image to output
+    var imageAppend = function (x) {
+        var image = document.createElement("img"); // Create new image element
+        image.src = URL.createObjectURL(x); // Add soure to image element
+        image.id = x.name; // Add name to image element
+        //image.className = "thumbnail"; // Add class to image element
+        //output.appendChild(image); // Append element to output
+        // free memory
+        image.onload = function () {
+            URL.revokeObjectURL(image.src); // free memory
+        };
+        // Return img element
+        return (image);
+    };
+
+</script>
+
+{% endblock %}

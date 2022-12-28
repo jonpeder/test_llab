@@ -1,0 +1,32 @@
+.img_container {
+   display: flex;
+   flex-wrap: wrap;
+   padding: 4px;
+}
+
+
+.img_item {
+   flex: 25%;
+   max-width: 50%;
+   margin: 2px;
+}
+
+.img_item img {
+   margin-top: 2px;
+   vertical-align: middle;
+   max-width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+   .img_item {
+      flex: 30%;
+      max-width: 100%;
+   }
+}
+
+@media screen and (max-width: 400px) {
+   .img_item {
+      flex: 100%;
+      max-width: 100%;
+   }
+}

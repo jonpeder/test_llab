@@ -1,129 +1,122 @@
 {% extends "base.html" %}
 {% block content %}
 
-<form method=post >
-    
+<form method=post>
+
     <div class="mb-3">
-    <p>Select collecting event-ID</p>
-    <select class="form-select" aria-label="eventID" name="eventID">
+        <p>Select collecting event-ID</p>
+        <select class="form-select" aria-label="eventID" name="eventID">
             <option value=""></option>
-        {% for i in events %}
-            <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if i.locality_2 %}- {{ i.locality_2 }}{% endif %}</option>
-        {% endfor %}
-    </select>
+            {% for i in events %}
+            <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if
+                i.locality_2 %}- {{ i.locality_2 }}{% endif %}</option>
+            {% endfor %}
+        </select>
     </div>
-    
-    <!-- Button 3-->
-    <div class="mb-3">
+
+    <!-- Button 1-->
+    <div class="d-inline mb-3">
         <button type="submit" class="btn btn-success btn-lg" name="action1" value="VALUE1">Show</button>
+        <!-- Button 2-->
+        <button type="submit" class="btn btn-secondary btn-lg" name="action2" value="VALUE2">Edit</button>
     </div>
 </form>
 <br />
 
 {% if event %}
-    {% for i in event %}
-    <!-- Display event name -->
-    <h3> # {{ i.eventID }}{% if i.locality_1 %} - {{ i.locality_1 }}{% endif %}{% if i.locality_2 %} - {{ i.locality_2 }}{% endif %}</h3>
-        <br />
-        <!-- Display event data -->
-            <dl class="row">
-                <dt class="col-sm-3">Collecting-event</dt>
-                <dd class="col-sm-9">{{i.eventID}}</dd>
-                <dt class="col-sm-3">Country code</dt>
-                <dd class="col-sm-9">{{i.countryCode}}</dd>
-                {% if i.county %}
-                    <dt class="col-sm-3">County</dt>
-                    <dd class="col-sm-9">{{i.county}}</dd>
-                {% endif %}
-                {% if i.municipality %}
-                    <dt class="col-sm-3">Municipality</dt>
-                    <dd class="col-sm-9">{{i.municipality}}</dd>
-                {% endif %}
-                {% if i.habitat %}
-                    <dt class="col-sm-3">Habitat</dt>
-                    <dd class="col-sm-9">{{i.habitat}}</dd>
-                {% endif %}
-                {% if i.substrateName %}
-                    <dt class="col-sm-3">Substrate name</dt>
-                    <dd class="col-sm-9">{{i.substrateName}}</dd>
-                {% endif %}
-                {% if i.substrateType %}
-                    <dt class="col-sm-3">Substrate type</dt>
-                    <dd class="col-sm-9">{{i.substrateType}}</dd>
-                {% endif %}
-                {% if i.substratePlantPart %}
-                    <dt class="col-sm-3">Substrate part</dt>
-                    <dd class="col-sm-9">{{i.substratePlantPart}}</dd>
-                {% endif %}            
-                {% if i.locality_1 %}
-                    <dt class="col-sm-3">Locality 1</dt>
-                    <dd class="col-sm-9">{{i.locality_1}}</dd>
-                {% endif %}
-                {% if i.locality_2 %}
-                    <dt class="col-sm-3">Locality 2</dt>
-                    <dd class="col-sm-9">{{i.locality_2}}</dd>
-                {% endif %}
-                {% if i.decimalLatitude %}
-                    <dt class="col-sm-3">Latitude</dt>
-                    <dd class="col-sm-9">{{i.decimalLatitude}}</dd>
-                {% endif %}
-                {% if i.decimalLongitude %}
-                    <dt class="col-sm-3">Longitude</dt>
-                    <dd class="col-sm-9">{{i.decimalLongitude}}</dd>
-                {% endif %}
-                {% if i.coordinateUncertaintyInMeters %}
-                    <dt class="col-sm-3">Radius</dt>
-                    <dd class="col-sm-9">{{i.coordinateUncertaintyInMeters}}</dd>
-                {% endif %}
-                {% if i.coordinateUncertaintyInMeters %}
-                    <dt class="col-sm-3">Collecting method:</dt>
-                    <dd class="col-sm-9">{{i.samplingProtocol}}</dd>
-                {% endif %}
-                {% if i.eventDate_1 %}
-                    <dt class="col-sm-3">Date 1</dt>
-                    <dd class="col-sm-9">{{i.eventDate_1}}</dd>
-                {% endif %}
-                {% if i.eventDate_2 %}
-                    <dt class="col-sm-3">Date 2</dt>
-                    <dd class="col-sm-9">{{i.eventDate_2}}</dd>
-                {% endif %}
-                {% if i.recordedBy %}
-                    <dt class="col-sm-3">Recorded by</dt>
-                    <dd class="col-sm-9">{{i.recordedBy}}</dd>
-                {% endif %}
-                {% if i.eventRemarks %}
-                    <dt class="col-sm-3">Remarks</dt>
-                    <dd class="col-sm-9">{{i.eventRemarks}}</dd>
-                {% endif %}
-            </dl>
-                {% if i.substrateName %}
-            <h5>Substrate</h5>
-            <dl class="row">
-                    <dt class="col-sm-3">Name</dt>
-                    <dd class="col-sm-9">{{i.substrateName}}</dd>
-                    {% if i.substratePlantPart %}
-                        <dt class="col-sm-3">Part</dt>
-                        <dd class="col-sm-9">{{i.substratePlantPart}}</dd>
-                    {% endif %}
-                    {% if i.substrateType %}
-                        <dt class="col-sm-3">Type</dt>
-                        <dd class="col-sm-9">{{i.substrateType}}</dd>
-                    {% endif %}
-                {% endif %}
-            </dl>
-    {% endfor %}
-    <br />
-    <!-- Show images -->
-    {% for i in files %}
-        <strong>Image {{loop.index}}:</strong> {{i.imageCategory}}
-        <br />
-        {{i.comment}}
-        <div>
-            <img src="static/images/{{i.filename}}" onclick="window.open(this.src, '_blank');" height="200" >
-        </div>
-        <br />
-    {% endfor %}
+{% for i in event %}
+<!-- Display event name -->
+<h3> # {{ i.eventID }}{% if i.locality_1 %} - {{ i.locality_1 }}{% endif %}{% if i.locality_2 %} - {{ i.locality_2 }}{%
+    endif %}</h3>
+<br />
+<!-- Display event data -->
+<dl class="row">
+    <dt class="col-sm-3">Country</dt>
+    <dd class="col-sm-9">{{i.countryCode}}</dd>
+    {% if i.county %}
+    <dt class="col-sm-3">County</dt>
+    <dd class="col-sm-9">{{i.county}}</dd>
+    {% endif %}
+    {% if i.municipality %}
+    <dt class="col-sm-3">Municipality</dt>
+    <dd class="col-sm-9">{{i.municipality}}</dd>
+    {% endif %}
+    {% if i.habitat %}
+    <dt class="col-sm-3">Habitat</dt>
+    <dd class="col-sm-9">{{i.habitat}}</dd>
+    {% endif %}
+    {% if i.locality_1 %}
+    <dt class="col-sm-3">Locality 1</dt>
+    <dd class="col-sm-9">{{i.locality_1}}</dd>
+    {% endif %}
+    {% if i.locality_2 %}
+    <dt class="col-sm-3">Locality 2</dt>
+    <dd class="col-sm-9">{{i.locality_2}}</dd>
+    {% endif %}
+    {% if i.samplingProtocol %}
+    <dt class="col-sm-3">Method</dt>
+    <dd class="col-sm-9">{{i.samplingProtocol}}</dd>
+    {% endif %}
+    {% if i.eventDate_1 %}
+    <dt class="col-sm-3">Date 1</dt>
+    <dd class="col-sm-9">{{i.eventDate_1}}</dd>
+    {% endif %}
+    {% if i.eventDate_2 %}
+    <dt class="col-sm-3">Date 2</dt>
+    <dd class="col-sm-9">{{i.eventDate_2}}</dd>
+    {% endif %}
+    {% if i.recordedBy %}
+    <dt class="col-sm-3">Recorded by</dt>
+    <dd class="col-sm-9">{{i.recordedBy}}</dd>
+    {% endif %}
+</dl>
+{% if i.decimalLatitude %}
+<h5>Coordinates</h5>
+<dl class="row">
+    <dt class="col-sm-3">Latitude</dt>
+    <dd class="col-sm-9">{{i.decimalLatitude}}</dd>
+    {% if i.decimalLongitude %}
+    <dt class="col-sm-3">Longitude</dt>
+    <dd class="col-sm-9">{{i.decimalLongitude}}</dd>
+    {% endif %}
+    {% if i.coordinateUncertaintyInMeters %}
+    <dt class="col-sm-3">Radius</dt>
+    <dd class="col-sm-9">{{i.coordinateUncertaintyInMeters}}</dd>
+    {% endif %}
+</dl>
 {% endif %}
-
+{% if i.substrateName %}
+<h5>Substrate</h5>
+<dl class="row">
+    <dt class="col-sm-3">Name</dt>
+    <dd class="col-sm-9">{{i.substrateName}}</dd>
+    {% if i.substratePlantPart %}
+    <dt class="col-sm-3">Part</dt>
+    <dd class="col-sm-9">{{i.substratePlantPart}}</dd>
+    {% endif %}
+    {% if i.substrateType %}
+    <dt class="col-sm-3">Type</dt>
+    <dd class="col-sm-9">{{i.substrateType}}</dd>
+    {% endif %}
+    {% endif %}
+</dl>
+{% if i.eventRemarks %}
+<h5>Remarks</h5>
+{{i.eventRemarks}}
+{% endif %}
+{% endfor %}
+<br />
+<p></p>
+<!-- Show images -->
+{% for i in files %}
+<strong>Image {{loop.index}}:</strong> {{i.imageCategory}}
+<br />
+{{i.comment}}
+<div>
+    <img src="static/images/{{i.filename}}" onclick="window.open(this.src, '_blank');" height="200">
+</div>
+<br />
+{% endfor %}
+{% endif %}
 
 {% endblock %}

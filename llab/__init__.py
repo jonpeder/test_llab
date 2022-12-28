@@ -17,31 +17,33 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     db.init_app(app)
-    
+
     from .auth import auth
     from .cevents import cevents
     from .entomologist import entomologist
     from .images import images
     from .queries import queries
-    
+
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(cevents, url_prefix='/')
     app.register_blueprint(entomologist, url_prefix='/')
     app.register_blueprint(images, url_prefix='/')
     app.register_blueprint(queries, url_prefix='/')
-    
-    from .models import User, Note, Print_events, Event_images
-    
+
+    from .models import User, Note, Print_events, Event_images, Occurrences, Taxa, Occurrence_images
+
     db.create_all(app=app)
-    
-    login_manager = LoginManager() 
-    login_manager.login_view = 'auth.login' # Redirect to login-page if not logged in 
-    login_manager.init_app(app) # Tell login manager which app we are using
-    
+
+    login_manager = LoginManager()
+    # Redirect to login-page if not logged in
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)  # Tell login manager which app we are using
+
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
-    
+
     return app
+
 
 app = create_app()

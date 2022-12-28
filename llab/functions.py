@@ -8,23 +8,27 @@ import time
 import unittest
 
 def readstrand(r_script_path, lat, lon):
-    p = subprocess.Popen([r_script_path, lat, lon], encoding="Latin-1", stderr=subprocess.DEVNULL, stdout=subprocess.PIPE, universal_newlines=True)
+    p = subprocess.Popen([r_script_path, lat, lon], encoding="Latin-1",
+                         stderr=subprocess.DEVNULL, stdout=subprocess.PIPE, universal_newlines=True)
     p.wait()
     output = [l.strip() for l in p.stdout]
-    output = str(output).replace("[", "").replace("]", "").replace("'", "").replace("<U+00E5>", "å").replace("<U+00C5>", "Å").replace("<U+00E6>", "æ").replace("<U+00C6>", "Æ").replace("<U+00D8>", "Ø").replace("<U+00F8>", "ø").replace("<U+0161>", "š").replace("<U+00E1>", "á").split(",")
-    return(output)
+    output = str(output).replace("[", "").replace("]", "").replace("'", "").replace("<U+00E5>", "å").replace("<U+00C5>", "Å").replace(
+        "<U+00E6>", "æ").replace("<U+00C6>", "Æ").replace("<U+00D8>", "Ø").replace("<U+00F8>", "ø").replace("<U+0161>", "š").replace("<U+00E1>", "á").split(",")
+    return (output)
+
 
 def readcsv(file):
-    reader = csv.DictReader(open(file, newline=''), delimiter=' ', quotechar='"')
+    reader = csv.DictReader(open(file, newline=''),
+                            delimiter=' ', quotechar='"')
     dictobj = next(reader)
-    return(dictobj)
+    return (dictobj)
 
 # Define query function
 def query(conn, sql):
     c = conn.cursor()
     c.execute(sql)
     return c.fetchall()
-    
+
 # Define query function
 def headers(conn, sql):
     # Create a cursor
@@ -48,5 +52,3 @@ def newEventID(eventID_list, prefix):
             break
         except:
             return f'{prefix}_A0001'
-
-

@@ -10,7 +10,7 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login', methods=["GET", "POST"])
 def login():
     title = "Login"
-    if request.method == "POST":    
+    if request.method == "POST":
         # Get input from form
         email = request.form.get("email")
         password = request.form.get("password")
@@ -21,7 +21,8 @@ def login():
             if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)  # login user
-                return redirect(url_for('entomologist.home')) # Return homepage
+                # Return homepage
+                return redirect(url_for('entomologist.home'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -36,6 +37,7 @@ def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
+
 @auth.route('/sign-up', methods=["GET", "POST"])
 @login_required
 def sign_up():
@@ -45,7 +47,7 @@ def sign_up():
         initials = request.form.get("initials")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
-         
+
         user = User.query.filter_by(email=email).first()
         initials_test = User.query.filter_by(initials=initials).first()
         if user:
@@ -67,11 +69,12 @@ def sign_up():
             flash("Password must be at least 6 characters.", category="error")
         else:
             # Add user to database
-            new_user = User(email=email, initials=initials, password=generate_password_hash(password1, method='sha256'))
+            new_user = User(email=email, initials=initials, password=generate_password_hash(
+                password1, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
             user = User.query.filter_by(email=email).first()
-            #login_user(user, remember=True) # login user
+            # login_user(user, remember=True) # login user
             flash("Account created!", category="success")
     return render_template("sign_up.html", user=current_user, title=title)
 
@@ -95,10 +98,9 @@ def change_password():
             flash("This is the old password!", category="error")
         else:
             # Add new password to database
-            current_user.password = generate_password_hash(new_password1, method='sha256')
+            current_user.password = generate_password_hash(
+                new_password1, method='sha256')
             db.session.commit()
             flash("Password changed!", category="success")
-            return redirect(url_for('entomologist.home')) # Return homepage
+            return redirect(url_for('entomologist.home'))  # Return homepage
     return render_template("change_password.html", user=current_user, title=title)
-    
-        

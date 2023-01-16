@@ -86,12 +86,18 @@ const output = document.querySelector("#result");
 
 // Get input images and loop over each image
 function loadFiles(event) {
+    output.innerHTML = ""
     for (let i = 0; i < event.target.files.length; i++) {
         var img_item = document.createElement("div"); // Create new div element
         img_item.className = "img_item";
         img_item.appendChild(imageAppend(event.target.files[i])); // Append element to img_item
         output.appendChild(img_item);
     }
+}
+
+function clearFiles() {
+    output.innerHTML = ""
+    document.getElementById("imgInp").value = ""
 }
 
 // Append image to output

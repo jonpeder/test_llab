@@ -34,61 +34,38 @@ def event_image():
     # Get image names starting with user initials
     files = [os.path.basename(x) for x in glob.glob(f"{dir_path}/{current_user.initials}*")]
     if request.method == 'POST':
-        # Request form input
-        eventID = request.form.get("eventID")
-        imageCategory = request.form.get("imageCategory")
-        comment = request.form.get("comment")
-
-        # Button 1: Add file to upload folder. Tempararily view the files before adding to database.
+        # Button 1: move images to image-folder and populate database
         if request.form.get('action1') == 'VALUE1':
-            # check if the post request has the file part
-            if 'file' not in request.files:
-                flash('No file part', category="error")
-                return redirect(request.url)
-            file = request.files['file']
-            # If the user does not select a file, the browser submits an empty file without a filename.
-            if file.filename == '':
-                flash('No selected file', category="error")
-                return redirect(request.url)
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'{eventID}_{filename}'))
-                return redirect(url_for("images.event_image"))
-
-        # Button 2: Delete files in upload folder
-        if request.form.get('action2') == 'VALUE2':
-            # Find and delete filenames starting with user initials
-            for i in files:
-                os.remove(f"{dir_path}/{i}")
-            return redirect(url_for("images.event_image"))
-
-        # Button 3: move images to image-folder and populate database
-        if request.form.get('action3') == 'VALUE3':
-            for i in files:
-                shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{i}", f"{dir_path}/{i}")
-                os.remove(f"{app.config['UPLOAD_FOLDER']}/{i}")
-                # New Print_events object
-                new_event_image = Event_images(
-                    filename=i, imageCategory=imageCategory, comment=comment, eventID=eventID, createdByUserID=current_user.id)
-                # Add new objects to database
-                db.session.add(new_event_image)
-                # Commit
-                db.session.commit()
+            # Request form input
+            eventID = request.form.get("eventID")
+            imageCategory = request.form.get("imageCategory")
+            comment = request.form.get("comment")
+            # For each file in post request
+            for file in request.files.getlist("files"):
+                # If the user does not select a file
+                if file.filename == '':
+                    flash('No selected file', category="error")
+                    return redirect(request.url)
+                # Secure the filenames and save 
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    filename2 = f'{eventID}_{filename}'
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2)) # Save file to upload folder
+                    shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/{filename2}") # Move file to image-folder
+                    os.remove(f"{app.config['UPLOAD_FOLDER']}/{filename2}") # Remove file from upload-folder
+                    # New Print_events object
+                    new_event_image = Event_images(
+                        filename=filename2, imageCategory=imageCategory, comment=comment, eventID=eventID, createdByUserID=current_user.id)
+                    # Add new objects to database
+                    db.session.add(new_event_image)
+                    # Commit
+                    db.session.commit()
             flash('Collecting-event images added', category="success")
             return redirect(url_for("images.event_image"))
-
     # Query collecting events
     events = Collecting_events.query.filter_by(
         createdByUserID=current_user.id).order_by(Collecting_events.eventID.desc())
     return render_template("event_image.html", title=title, user=current_user, files=files, events=events, imagecat=imagecat)
-
-
-@images.route('/test_images', methods=['GET', 'POST'])
-@login_required
-def test_images():
-    title="Test image"
-    return render_template("test_images.html", title=title, user=current_user)
-
 
 @images.route('/specimen_image', methods=['GET', 'POST'])
 @login_required
@@ -101,7 +78,6 @@ def specimen_image():
         occurrence = request.form.get("occurrenceID")
         imageCategory = request.form.get("imageCategory")
         comment = request.form.get("comment")
-        print("1")
         # Button 1:
         if request.form.get('action1') == 'VALUE1':
             # check if the occurrenceID exists
@@ -109,7 +85,7 @@ def specimen_image():
                 flash('occurrenceID does not exist in database', category="error")
                 return redirect(request.url)
             # For each file in post request
-            for file in request.files.getlist("file"):
+            for file in request.files.getlist("files"):
                 # If the user does not select a file
                 if file.filename == '':
                     flash('No selected file', category="error")

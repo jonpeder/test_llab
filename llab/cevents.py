@@ -121,6 +121,7 @@ def edit_event():
     if request.method == 'POST':
         if request.form.get('action1') == 'VALUE1':
             # Get input from form
+            # Collecting event
             eventID = request.form.get("eventID")
             countryCode = request.form.get("countryCode")
             stateProvince = request.form.get("stateProvince")
@@ -142,7 +143,23 @@ def edit_event():
             substrateName = request.form.get("substrateName")
             substratePlantPart = request.form.get("substratePlantPart")
             substrateType = request.form.get("substrateType")
-            # Update record
+            # Event images
+            images = Event_images.query.filter_by(eventID=eventID).all()
+            for image in images:
+                image_update = Event_images.query.filter_by(id=image.id).first()
+                if request.form.get(f'{image.id}_{image.filename}'):
+                    category=request.form.get(f'{image.id}_imageCategory')
+                    comment=request.form.get(f'{image.id}_comment')
+                    # Update image-record
+                    image_update.imageCategory = category
+                    image_update.comment = comment
+                    #flash(f'{image.filename} updated!', category="success")
+                else:
+                    # delete image-record
+                    db.session.delete(image_update)
+                    #flash(f'{image.filename} deleted!', category="error")
+                db.session.commit()
+            # Update event-record
             event = Collecting_events.query.filter_by(eventID=eventID).first()
             event.countryCode = countryCode
             event.stateProvince = stateProvince
@@ -163,7 +180,6 @@ def edit_event():
             event.substrateName = substrateName
             event.substratePlantPart = substratePlantPart
             event.substrateType = substrateType
-            # Update database
             db.session.commit()
             flash(
                 f'Collecting event with event-ID {eventID} updated!', category="success")

@@ -67,8 +67,10 @@
     <strong>{{ image.imageCategory[0]|upper}}{{image.imageCategory[1:] }}</strong>
     <br />
     {{image.comment}}
+    <br />
+    {{dir_path}}/{{image.filename}}
     <div>
-        <img src="static/images/{{image.filename}}" onclick="window.open(this.src, '_blank');" height="200">
+        <img src="{{dir_path}}/{{image.filename}}" onclick="window.open(this.src, '_blank');" height="200">
     </div>
     <br />
 

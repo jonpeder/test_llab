@@ -30,8 +30,7 @@ imagecat2 = ['habitus', 'in-situ', 'lateral', 'ventral', 'dorsal', 'face', 'fore
 @login_required
 def event_image():
     title = "Collecting event images"
-    dir_path = os.path.join(app.config['UPLOAD_FOLDER'], "event")
-    dir_path2 = "/var/www/llab/llab/static/images"
+    dir_path = "/var/www/llab/llab/static/images/events"
     # Get image names starting with user initials
     files = [os.path.basename(x) for x in glob.glob(f"{dir_path}/{current_user.initials}*")]
     if request.method == 'POST':
@@ -53,7 +52,7 @@ def event_image():
                 return redirect(request.url)
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(dir_path, f'{eventID}_{filename}'))
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'{eventID}_{filename}'))
                 return redirect(url_for("images.event_image"))
 
         # Button 2: Delete files in upload folder
@@ -66,8 +65,8 @@ def event_image():
         # Button 3: move images to image-folder and populate database
         if request.form.get('action3') == 'VALUE3':
             for i in files:
-                shutil.copyfile(f"{dir_path}/{i}", f"{dir_path2}/{i}")
-                os.remove(f"{dir_path}/{i}")
+                shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{i}", f"{dir_path}/{i}")
+                os.remove(f"{app.config['UPLOAD_FOLDER']}/{i}")
                 # New Print_events object
                 new_event_image = Event_images(
                     filename=i, imageCategory=imageCategory, comment=comment, eventID=eventID, createdByUserID=current_user.id)
@@ -95,7 +94,7 @@ def test_images():
 @login_required
 def specimen_image():
     title = "Specimen images"
-    dir_path = "/var/www/llab/llab/static/uploads/specimen"
+    dir_path = "/var/www/llab/llab/static/images/specimens"
     # Get image names starting with user initials
     if request.method == 'POST':
         # Request form input
@@ -119,7 +118,9 @@ def specimen_image():
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     filename2 = f'{occurrence}_{filename}'
-                    file.save(os.path.join(dir_path, filename2)) # Save file to upload folder
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2)) # Save file to upload folder
+                    shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/{filename2}") # Move file to image-folder
+                    os.remove(f"{app.config['UPLOAD_FOLDER']}/{filename2}") # Remove file from upload-folder
                     # New Print_events object
                     new_specimen_image = Occurrence_images(
                         filename=filename2, imageCategory=imageCategory, comment=comment, occurrenceID=occurrence, createdByUserID=current_user.id)

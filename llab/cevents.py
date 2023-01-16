@@ -1,20 +1,16 @@
 # load packages
-from .functions import newEventID, readstrand
-from flask import Blueprint, current_app, redirect, url_for, request, render_template, send_file, flash, make_response
+from .functions import newEventID
+from flask import Blueprint, current_app, redirect, url_for, request, render_template, flash
 from flask_login import login_required, current_user
-import sqlite3
 from .models import User, Collectors, Collecting_events, Country_codes, Collecting_methods, Print_events, Event_images
 from . import db
-import subprocess
-import time
 import os
 from os import path
 from os.path import exists
-import json
-import sys
 import qrcode
 import uuid
 #import pdfkit
+#import subprocess
 
 # connect to __init__ file
 cevents = Blueprint('cevents', __name__)
@@ -235,21 +231,8 @@ def labels():
                                 qr.make(fit = True)
                                 img = qr.make_image(fill_color = 'black', back_color = 'white')
                                 img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                # Print labels
-                print("TEST1")
-                res = render_template("label_output.html", title=title, events=events, user=current_user, event_data=event_data)
-                print("TEST2")
-                #responsestring = pdfkit.from_string(res, False)
-                print("TEST3")
-                #response = make_response(responsestring)
-                print("TEST4")
-                #response.headers['Content-Type'] = 'aplicateion/pdf'
-                #response.headers['Content-Disposition'] = 'inline;filename=event_labels.pdf'
-                # Save file
-                print("TEST5")
-                #return response
-                #return render_template("label_output.html", title=title, events=events, user=current_user, event_data=event_data)
-                return res
+                # Return labels
+                return render_template("label_output.html", title=title, events=events, user=current_user, event_data=event_data)
 
     # Søk etter event-IDer
     events = Collecting_events.query.filter_by(createdByUserID = current_user.id).order_by(Collecting_events.eventID.desc())

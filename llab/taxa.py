@@ -16,8 +16,6 @@ ranks = ['species', 'species-group', 'genus', 'tribe', 'subfamily',
          'family', 'superfamily', 'infraorder', 'order', 'class', 'spnov', 'other']
 
 # Function to add taxon
-
-
 @taxa.route('/add_taxon', methods=["POST", "GET"])
 @login_required
 def add_taxon():
@@ -196,6 +194,7 @@ def taxon_image():
     title = "Taxon images"
     imagecat = ['habitus', 'in-situ', 'lateral', 'ventral',
                 'dorsal', 'face', 'fore-wing', 'hind-wing']
+    dir_path = "static/images/specimens"
     # Prepare list of taxa for dropdown-select-search bar
     taxa = Taxa.query.all()  # Database query for taxa
     order = tuple(np.unique([i.order for i in taxa if i.order]))
@@ -254,6 +253,6 @@ def taxon_image():
             .filter(Occurrences.occurrenceID.in_(occurrenceIDs_imaged))\
             .all()
         # Render html
-        return render_template("taxon_image.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks, imagecat=imagecat, images=images, imaged_taxa=imaged_taxa)
+        return render_template("taxon_image.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks, imagecat=imagecat, images=images, imaged_taxa=imaged_taxa, dir_path=dir_path)
     else:
         return render_template("taxon_image.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks, imagecat=imagecat)

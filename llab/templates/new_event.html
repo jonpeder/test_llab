@@ -32,8 +32,15 @@
     <!-- Locality -->
     Locality
     <div class="mb-1">
-        <input type="text" class="form-control" id="Country" aria-describedby="Country" placeholder="Country code"
-            name="Country" value="no" required>
+        <select class="form-control selectpicker" id="Country" name="Country" data-live-search="true">
+            {% for country in ctries %}
+            {% if country.countryCode == "NO" %}
+            <option selected value="{{ country.countryCode }}">{{ country.country }}</option>
+            {% else %}
+            <option value="{{ country.countryCode }}">{{ country.country }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
     </div>
     {% for i in range(loc|length) %}
     <div class="mb-1">

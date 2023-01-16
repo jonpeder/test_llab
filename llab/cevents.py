@@ -34,9 +34,10 @@ def new_event():
     title = "New collecting event"
     global substrate_type
     global substrate_part
-    # Finn innsamlingsmetode og innsamlere
+    # Finn innsamlingsmetode, innsamlere og land
     leg = Collectors.query.all()
     met = Collecting_methods.query.all()
+    ctries = Country_codes.query.all()
     # If a for is posted, update database before generating the new page
     if request.method == 'POST':
         # Get input from form
@@ -84,7 +85,7 @@ def new_event():
         IDs.append(i.eventID)
     new_ID = newEventID(IDs, current_user.initials)
     # Return html-page
-    return render_template("new_event.html", title=title, loc=loc, latlon=latlon, substrate_types=substrate_types, substrate_parts=substrate_parts, date=date, new_ID=new_ID, met=met, leg=leg, user=current_user)
+    return render_template("new_event.html", title=title, loc=loc, latlon=latlon, substrate_types=substrate_types, substrate_parts=substrate_parts, date=date, new_ID=new_ID, met=met, leg=leg, ctries=ctries, user=current_user)
 
 
 @cevents.route('/show_event', methods=['GET', 'POST'])

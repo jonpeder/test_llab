@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="/add_taxon" method="POST">
+
+    <!-- Taxon ID -->
+    Taxon ID
+    <div class="mb-3">
+        <input type="text" class="form-control" id="taxonID" placeholder="https://www.gbif.org/species/1372014"
+                name="taxonID">
+    </div>
+
+    <!-- Button 1 -->
+    <div class="mb-3">
+        <input type="button" onclick="gbif_call()" value="Get data from GBIF" class="btn btn-secondary">
+    </div>
+
+    <p id="result"></p>
+
+     <!-- Taxon name -->
+    Taxon name
+    <div class="mb-3">
+        <input type="text" class="form-control" id="taxonName" placeholder="Pteromalus bedeguaris"
+                name="taxonName">
+    </div>
+
+    <!-- Authorship -->
+    Authorship
+    <div class="mb-3">
+        <input type="text" class="form-control" id="scientificNameAuthorship" placeholder="(Thomson, 1878)"
+                name="scientificNameAuthorship">
+    </div>
+
+    <!-- Rank -->
+    Rank
+    <div class="mb-3">
+        <select class="form-select" aria-label="rank" name="rank" id = "rank">
+            {% for i in ranks %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    Genus
+    <div class="mb-3">
+        <input type="text" class="form-control" id="genus" placeholder="Pteromalus" name="genus">
+    </div>
+
+    Family
+    <div class="mb-3">
+        <input type="text" class="form-control" id="family" placeholder="Pteromalidae" name="family">
+    </div>
+
+    Order
+    <div class="mb-3">
+        <input type="text" class="form-control" id="order" placeholder="Hymenoptera" name="order">
+    </div>
+
+    <!-- Button 2 -->
+    <div class="mb-3">
+        <button type="submit" class="btn btn-success btn-lg" name="action2" value="VALUE2">Add</button>
+    </div>
+</form>
+
+{% endblock %}

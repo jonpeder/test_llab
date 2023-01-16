@@ -1,5 +1,52 @@
 // JS
 
+// Function to make any api call
+async function api_call(gbif_url) {
+    const response = await fetch(gbif_url);
+    const myJson = await response.json(); //extract JSON from the http response
+    // do something with myJson
+    return myJson;
+}
+
+// Transform gbif-id to api-url, make api-call and return gbif-data
+async function gbif_call() {
+    // get taxon-id from input
+    let gbif_id = document.getElementById('taxonID').value;
+    // transform taxon-id into url for api call
+    const gbif_url = gbif_id.replace("https://www.gbif.org/", "https://api.gbif.org/v1/");
+    // Make api call
+    const gbif_out = await api_call(gbif_url);
+    // Add gbif-data to fields
+    if (typeof gbif_out.order !== 'undefined') {document.getElementById("order").value = gbif_out.order};
+    if (typeof gbif_out.family !== 'undefined') {document.getElementById("family").value = gbif_out.family};
+    if (typeof gbif_out.genus !== 'undefined') {document.getElementById("genus").value = gbif_out.genus};
+    if (typeof gbif_out.rank !== 'undefined') {document.getElementById("rank").value = gbif_out.rank.toLowerCase()};
+    if (typeof gbif_out.authorship !== 'undefined') {document.getElementById("scientificNameAuthorship").value = gbif_out.authorship};
+    if (typeof gbif_out.canonicalName !== 'undefined') {document.getElementById("taxonName").value = gbif_out.canonicalName};
+}
+
+//
+async function stedsnavn_call() {
+    // Get longitude and latitude from input form
+    let lat = document.getElementById('Latitude').value;
+    let lon = document.getElementById('Longitude').value;
+    // Prepare url for api call
+    const stedsnavn_url = 'https://ws.geonorge.no/stedsnavn/v1/punkt?nord='+lat+'&ost='+lon+'&koordsys=4326&radius=2000&utkoordsys=4326&treffPerSide=200&side=1';
+    const administReg_url = 'https://ws.geonorge.no/kommuneinfo/v1/punkt?koordsys=4326&ost='+lon+'&nord='+lat
+    // Make api calls
+    const stedsnavn_out = await api_call(stedsnavn_url);
+    const administReg_out = await api_call(administReg_url);
+    // Sort locality name by distance from point and pick the closest one
+    const stedsnavn_sorted = stedsnavn_out.navn;
+    stedsnavn_sorted.sort((a,b) => a.meterFraPunkt - b.meterFraPunkt);
+    // Add locality, county and municipality names to fields
+    if (typeof stedsnavn_sorted[0].stedsnavn[0].skrivemåte !== 'undefined') {document.getElementById("Locality_2").value = stedsnavn_sorted[0].stedsnavn[0].skrivemåte};
+    if (typeof administReg_out.fylkesnavn !== 'undefined') {document.getElementById("County").value = administReg_out.fylkesnavn};
+    if (typeof administReg_out.kommunenavn !== 'undefined') {document.getElementById("Municipality").value = administReg_out.kommunenavn};
+}
+// Selectpicker
+//$('#ScientificName').selectpicker();
+
 // Delete notes function
 function deleteNote(noteId) {
     fetch('/delete-note', {
@@ -7,16 +54,6 @@ function deleteNote(noteId) {
         body: JSON.stringify({ noteId: noteId }),
     }).then((_res) => {
         window.location.href = "/";
-    });
-}
-
-// Delete print_events function
-function deleteEvent(eventID) {
-    fetch('/delete-event', {
-        method: 'POST',
-        body: JSON.stringify({ eventID: eventID }),
-    }).then((_res) => {
-        window.location.href = "/event_labels";
     });
 }
 

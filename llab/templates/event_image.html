@@ -29,11 +29,14 @@
     {% endif %}
 
 
+    Collecting event
     <div class="mb-3">
-        Collecting event
-        <select class="form-select" aria-label="eventID" name="eventID">
+        <select class="form-control selectpicker" id="eventID" name="eventID" data-live-search="true">
             {% for i in events %}
-            <option value="{{ i.eventID }}">{{ i.eventID }} - {{ i.locality_1 }} - {{ i.locality_2 }}</option>
+            <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.municipality %}- {{ i.municipality }}{% endif %} {%
+                if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if
+                i.locality_2 %}- {{ i.locality_2 }}{% endif %}
+            </option>
             {% endfor %}
         </select>
     </div>

@@ -4,9 +4,9 @@
 <form action="/event_labels" method="POST">
     Select collecting event
     <div class="mb-3">
-        <select class="form-select" aria-label="ID" name="ID">
+        <select class="form-control selectpicker" id="ID" name="ID" data-live-search="true">
             {% for i in events %}
-            <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if
+            <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.municipality %}- {{ i.municipality }}{% endif %} {% if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if
                 i.locality_2 %}- {{ i.locality_2 }}{% endif %}</option>
             {% endfor %}
         </select>
@@ -14,7 +14,7 @@
     Number of labels
     <div class="mb-3">
         <input type="number" class="form-control" id="Label_number" aria-describedby="Label_number"
-            placeholder="Label_number" name="Label_number" min="0" value="0">
+            placeholder="Label_number" name="Label_number" min="1" value="1">
     </div>
     <div class="d-inline mb-3">
         <!-- Button 2-->
@@ -24,13 +24,37 @@
     </div>
     <p></p>
 
-    <!-- label type -->
+<!-- table-->
+<!-- Display added collecting events -->
+{% if user.print_events|length > 0 %}
+<strong>Selected collecting events:</strong>
+<table class="table" table-sm>
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">event ID</th>
+            <th scope="col">label n</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in user.print_events %}
+        <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <th scope="col">{{ event.eventID }}</th>
+            <th scope="col">{{ event.print_n }}</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+    <!-- label type 
     Label type
     <select class="form-select" aria-label="label_type" name="label_type">
         <option value="small">medium</option>
         <option value="medium">small</option>
     </select>
-    <br />
+    <br />-->
 
     <!-- Button 3-->
     <div class="mb-3">
@@ -40,35 +64,5 @@
     </div>
     <br />
 </form>
-
-<!-- table-->
-<!-- Display added collecting events -->
-{% if user.print_events|length > 0 %}
-<strong>Collecting event labels:</strong>
-<table class="table" table-sm>
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">event ID</th>
-            <th scope="col">label n</th>
-
-        </tr>
-    </thead>
-    <tbody>
-        {% for event in user.print_events %}
-        <tr>
-            <th scope="row">{{ loop.index }}</th>
-            <th scope="col">{{ event.eventID }}</th>
-            <th scope="col">{{ event.print_n }}</th>
-            <!--<th scope="col">
-                      <button type="button" class="close" onclick="deleteEvent({{ event.id }})">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                  </th>-->
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endif %}
 
 {% endblock %}

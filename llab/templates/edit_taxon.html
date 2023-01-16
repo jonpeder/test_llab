@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="/edit_taxon" method="POST">
+
+    <label for="scientificName" class="col-sm-2 form-control-label">Scientific name</label>
+    <div class="mb-3">
+        <select class="form-control selectpicker" id="scientificName" name="scientificName" data-live-search="true">
+            {% for i in taxa %}
+            <option value="{{i.scientificName}}">{{i.scientificName}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Button 1: Edit -->
+    <div class="mb-3">
+        <button type="submit" class="btn btn-secondary btn-lg" name="action1" value="VALUE1">Edit</button>
+    </div>
+
+    {% if taxon %}
+
+    <!-- Old scientific name (hidden) -->
+    <div class="mb-3">
+        <input type="text" class="form-control" id="scientificName_old" name="scientificName_old"
+            value="{{ taxon.scientificName }}" hidden>
+    </div>
+
+    Taxon ID
+    <div class="mb-3">
+        <input type="text" class="form-control" id="taxonID" name="taxonID" value="{{ taxon.taxonID }}">
+    </div>
+
+    <!-- Taxon name -->
+    Taxon name
+    <div class="mb-3">
+        <input type="text" class="form-control" id="taxonName" name="taxonName"
+            value="{{ taxon.scientificName | replace(" "+taxon.scientificNameAuthorship, "") }}">
+    </div>
+
+    <!-- Authorship -->
+    Authorship
+    <div class="mb-3">
+        <input type="text" class="form-control" id="scientificNameAuthorship" name="scientificNameAuthorship"
+            value="{{ taxon.scientificNameAuthorship }}">
+    </div>
+
+    <!-- Rank -->
+    Rank
+    <div class="mb-3">
+        <select class="form-select" aria-label="rank" name="rank" id="rank">
+            {% for i in ranks %}
+            {% if i == taxon.taxonRank %}
+            <option selected="{{ i }}">{{ i }}</option>
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+
+    Genus
+    <div class="mb-3">
+        <input type="text" class="form-control" id="genus" name="genus" value="{{ taxon.genus }}">
+    </div>
+
+    Family
+    <div class="mb-3">
+        <input type="text" class="form-control" id="family" name="family" value="{{ taxon.family }}">
+    </div>
+
+    Order
+    <div class="mb-3">
+        <input type="text" class="form-control" id="order" name="order" value="{{ taxon.order }}">
+    </div>
+
+    <div class="d-inline mb-3"></div>
+    <!-- Button 2: Update -->
+    <button type="submit" class="btn btn-success btn-lg" name="action2" value="VALUE2">Update</button>
+    <!-- Button 3: Delete -->
+    <button type="submit" class="btn btn-danger btn-lg" name="action3" value="VALUE3">Delete</button>
+    <!-- Button 4: Cancel -->
+    <button type="submit" class="btn btn-secondary btn-lg" name="action4" value="VALUE4">Cancel</button>
+    </div>
+
+    {% endif %}
+
+</form>
+
+
+{% endblock %}

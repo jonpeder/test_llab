@@ -17,7 +17,7 @@
         {% for i in range(latlon|length) %}
         <div class="col mb-1">
             <input type="text" class="form-control" id={{latlon[i]}} aria-describedby={{latlon[i]}}
-                placeholder={{latlon[i]}} name={{latlon[i]}} value="{{LATLON[i]}}" required>
+                placeholder={{latlon[i]}} name={{latlon[i]}} required>
         </div>
         {% endfor %}
     </div>
@@ -38,20 +38,24 @@
     {% for i in range(loc|length) %}
     <div class="mb-1">
         <input type="text" class="form-control" id={{loc[i]}} aria-describedby={{loc[i]}} placeholder={{loc[i]}}
-            name={{loc[i]}} value="{{LOC[i]}}">
+            name={{loc[i]}} >
     </div>
     {% endfor %}
     <br>
 
     <!-- Button 1-->
     <div class="mb-3">
+        <button type="button" class="btn btn-secondary" name="stedsnavn" if="stedsnavn" onclick="stedsnavn_call()" >Get locality from
+            position</button>
+    </div>
+    <!-- Button 1-->
+    <div class="mb-3">
         <button type="submit" class="btn btn-secondary" name="action1" value="VALUE1">Get locality from
             position</button>
     </div>
-    <p>{{ strand_id }}</p>
 
     <!-- Substrate -->
-    <a class="btn btn-success mb-3" data-toggle="collapse" href="#substrateCollapse" role="button" aria-expanded="false"
+    <a class="btn btn-success mb-3" data-bs-toggle="collapse" href="#substrateCollapse" role="button" aria-expanded="false"
         aria-controls="substrateCollapse">Specify substrate</a>
     <div class="collapse multi-collapse" id="substrateCollapse">
         Substrate name
@@ -87,7 +91,7 @@
         {% for i in range(date|length) %}
         <div class="col mb-3">
             <input type="date" class="form-control" id={{date[i]}} aria-describedby={{date[i]}} placeholder={{date[i]}}
-                name={{date[i]}} value={{DATE[i]}}>
+                name={{date[i]}} >
         </div>
         {% endfor %}
     </div>

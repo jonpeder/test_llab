@@ -88,9 +88,9 @@ class Occurrences (db.Model):
     eventID = db.Column(db.String(20), db.ForeignKey(
         'Collecting_events.eventID'))
     scientificName = db.Column(
-        db.String(100), db.ForeignKey('Taxa.scientificName'))
+        db.String(100), db.ForeignKey('taxa.scientificName'))
     identifiedBy = db.Column(
-        db.String(100), db.ForeignKey('Collectors.recordedBy'))
+        db.String(100), db.ForeignKey('collectors.recordedBy'))
     individualCount = db.Column(db.Integer)
     sex = db.Column(db.String(6))
     lifeStage = db.Column(db.String(5))
@@ -102,8 +102,8 @@ class Occurrences (db.Model):
     ownerInstitutionCode = db.Column(db.String(20))
     dateIdentified = db.Column(db.String)
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
-    modified = db.Column(db.String)
-    last_export = db.Column(db.String)
+    modified = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+    last_export = db.Column(db.DateTime)
     catalogNumber = db.Column(db.String(20))
     verbatimLabel = db.Column(db.String(250))
     catalogNumber = db.Column(db.String(20))
@@ -124,12 +124,11 @@ class Taxa (db.Model):
     nomenclaturalCode = db.Column(db.String(10))
     taxonID = db.Column(db.String(100))
 
-
 class Occurrence_images (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(200))
     imageCategory = db.Column(db.String(20))
     comment = db.Column(db.String(500))
-    occurrenceID = db.Column(db.String(50), db.ForeignKey('Occurrences.occurrenceID'))
+    occurrenceID = db.Column(db.String(50), db.ForeignKey('occurrences.occurrenceID'))
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
     createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))

@@ -21,8 +21,8 @@
     <!-- Select taxa -->
     Select taxa
     <div class="mb-3">
-        <select multiple id="taxon_name" name="taxon_name" placeholder="Click to select ..." multiselect-search="true"
-            multiselect-select-all="true" multiselect-max-items="10" multiselect-hide-x="false">
+        <select multiple class="form-select" id="taxon_name" name="taxon_name" placeholder="Click to select ..." multiselect-search="true"
+            multiselect-select-all="true" >
             {% for i in dropdown_names %}
             <option value="{{ i }};{{ dropdown_ranks[loop.index] }}">
                 {{ i }} ({{ dropdown_ranks[loop.index] }})
@@ -34,7 +34,8 @@
     <!-- Image categories -->
     Image categories
     <div class="mb-3">
-        <select class="form-select" multiple aria-label="image_categories" name="image_categories">
+        <select multiple class="form-select" aria-label="image_categories" name="image_categories" id="image_categories" placeholder="Click to select ..." multiselect-search="true"
+        multiselect-select-all="true" multiselect-max-items="10" multiselect-hide-x="false">
             {% for i in imagecat %}
             <option value="{{ i }}">{{ i }}</option>
             {% endfor %}

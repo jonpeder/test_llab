@@ -2,101 +2,144 @@
 {% block content %}
 
 <form action="/edit_event" method="POST">
-<!-- Display event data -->
+    <!-- Display event data -->
 
-{% if event %}
-{% for i in event %}
-    
+    {% if event %}
 
-<dl class="row">
-    <dt class="col-sm-3">Collecting-event ID</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="eventID" aria-describedby="eventID" value="{{i.eventID}}" name="eventID"></dd>
-    <p></p>
-    <dt class="col-sm-3">Country</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="Country" aria-describedby="Country" value="{{i.countryCode}}" name="countryCode"></dd>
-    <dt class="col-sm-3">State/Province</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="stateProvince" aria-describedby="stateProvince" value="{{i.stateProvince}}" name="stateProvince"></dd>
-    <dt class="col-sm-3">County</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="County" aria-describedby="County" value="{{i.county}}" name="county"></dd>
-    <dt class="col-sm-3">Municipality</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="municipality" aria-describedby="municipality" value="{{i.municipality}}" name="municipality"></dd>
-    <dt class="col-sm-3">Habitat</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="habitat" aria-describedby="habitat" value="{{i.habitat}}" name="habitat"></dd>
-    <dt class="col-sm-3">Locality 1</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="locality_1" aria-describedby="locality_1" value="{{i.locality_1}}" name="locality_1"></dd>
-    <dt class="col-sm-3">Locality 2</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="locality_2" aria-describedby="locality_2" value="{{i.locality_2}}" name="locality_2"></dd>
-    <dt class="col-sm-3">Method</dt>
-    <dd class="col-sm-9">
-            <select class="form-select" aria-label="samplingProtocol" name="samplingProtocol" value="{{i.samplingProtocol}}">
-            {% for o in met %}
-            {% if o.ID == i.samplingProtocol %}
-            <option selected={{ o.ID }}>{{ o.samplingProtocol }}</option>
-            {% else %}
-            <option value={{ o.ID }}>{{ o.samplingProtocol }}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </dd>
-    <dt class="col-sm-3">Date 1</dt>
-    <dd class="col-sm-9"><input type="date" class="form-control" id="eventDate_1" aria-describedby="eventDate_1" value="{{i.eventDate_1}}" name="eventDate_1"></dd>
-    <dt class="col-sm-3">Date 2</dt>
-    <dd class="col-sm-9"><input type="date" class="form-control" id="eventDate_2" aria-describedby="eventDate_2" value="{{i.eventDate_2}}" name="eventDate_2"></dd>
-    <dt class="col-sm-3">Recorded by</dt>
-    <dd class="col-sm-9">
-        <select class="form-select" multiple id="recordedBy" aria-label="recordedBy" value="{{i.recordedBy}}" name="recordedBy">
-            <option selected>{{ i.recordedBy }}</option>
-            {% for o in leg %}
-            <option value="{{ o.recordedBy }}">{{ o.recordedBy }}</option>
-            {% endfor %}
-        </select>
-    </dd>
-</dl>
-<h5>Coordinates</h5>
-<dl class="row">
-    <dt class="col-sm-3">Latitude</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="decimalLatitude" aria-describedby="decimalLatitude" value="{{i.decimalLatitude}}" name="decimalLatitude"></dd>
-    <dt class="col-sm-3">Longitude</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="decimalLongitude" aria-describedby="decimalLongitude" value="{{i.decimalLongitude}}" name="decimalLongitude"></dd>
-    <dt class="col-sm-3">Radius</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="coordinateUncertaintyInMeters" aria-describedby="coordinateUncertaintyInMeters" value="{{i.coordinateUncertaintyInMeters}}" name="coordinateUncertaintyInMeters"></dd>
-</dl>
-<h5>Substrate</h5>
-<dl class="row">
-    <dt class="col-sm-3">Name</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="substrateName" aria-describedby="substrateName" value="{{i.substrateName}}" name="substrateName"></dd>
-    <dt class="col-sm-3">Part</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="substratePlantPart" aria-describedby="substratePlantPart" value="{{i.substratePlantPart}}" name="substratePlantPart"></dd>
-    <dt class="col-sm-3">Type</dt>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="substrateType" aria-describedby="substrateType" value="{{i.substrateType}}" name="substrateType"></dd>
-</dl>
-<h5>Remarks</h5>
-    <dd class="col-sm-9"><input type="text" class="form-control" id="eventRemarks" aria-describedby="eventRemarks" value="{{i.eventRemarks}}" name="eventRemarks"></dd>
-<br />
-{% endfor %}
-    
-<p></p>
-<!-- Show images -->
-{% for i in files %}
-<strong>Image {{loop.index}}:</strong> 
-{{i.imageCategory}}:
-<dd class="col-sm-9"><input type="text" class="form-control" id="imageCategory" aria-describedby="imageCategory" value="{{i.imageCategory}}" name="imageCategory"></dd>
-<br />
-    <dd class="col-sm-9"><input type="text" class="form-control" id="comment" aria-describedby="comment" value="{{i.comment}}" name="comment"></dd>
-<div>
-    <img src="static/images/{{i.filename}}" onclick="window.open(this.src, '_blank');" height="200">
-</div>
-<br />
-{% endfor %}
-    
-    
-{% endif %}
 
-    <!-- Button -->
+    <dl class="row">
+        <dt class="col-sm-3">Collecting-event ID</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="eventID" aria-describedby="eventID"
+                value="{{event.eventID}}" name="eventID" readonly></dd>
+        <p></p>
+        <dt class="col-sm-3">Country</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="Country" aria-describedby="Country"
+                value="{{event.countryCode}}" name="countryCode"></dd>
+        <dt class="col-sm-3">State/Province</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="stateProvince" aria-describedby="stateProvince"
+                value="{{event.stateProvince}}" name="stateProvince"></dd>
+        <dt class="col-sm-3">County</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="County" aria-describedby="County"
+                value="{{event.county}}" name="county"></dd>
+        <dt class="col-sm-3">Municipality</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="municipality" aria-describedby="municipality"
+                value="{{event.municipality}}" name="municipality"></dd>
+        <dt class="col-sm-3">Habitat</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="habitat" aria-describedby="habitat"
+                value="{{event.habitat}}" name="habitat"></dd>
+        <dt class="col-sm-3">Locality 1</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="locality_1" aria-describedby="locality_1"
+                value="{{event.locality_1}}" name="locality_1"></dd>
+        <dt class="col-sm-3">Locality 2</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="locality_2" aria-describedby="locality_2"
+                value="{{event.locality_2}}" name="locality_2"></dd>
+        <dt class="col-sm-3">Method</dt>
+        <dd class="col-sm-9">
+            <select class="form-select" aria-label="samplingProtocol" name="samplingProtocol"
+                value="{{event.samplingProtocol}}">
+                {% for o in met %}
+                {% if o.ID == event.samplingProtocol %}
+                <option selected={{ o.ID }}>{{ o.samplingProtocol }}</option>
+                {% else %}
+                <option value={{ o.ID }}>{{ o.samplingProtocol }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </dd>
+        <dt class="col-sm-3">Date 1</dt>
+        <dd class="col-sm-9"><input type="date" class="form-control" id="eventDate_1" aria-describedby="eventDate_1"
+                value="{{event.eventDate_1}}" name="eventDate_1"></dd>
+        <dt class="col-sm-3">Date 2</dt>
+        <dd class="col-sm-9"><input type="date" class="form-control" id="eventDate_2" aria-describedby="eventDate_2"
+                value="{{event.eventDate_2}}" name="eventDate_2"></dd>
+        <dt class="col-sm-3">Recorded by</dt>
+        <dd class="col-sm-9">
+            <select class="form-select" multiple id="recordedBy" aria-label="recordedBy" value="{{event.recordedBy}}"
+                name="recordedBy">
+                <option selected>{{ event.recordedBy }}</option>
+                {% for o in leg %}
+                <option value="{{ o.recordedBy }}">{{ o.recordedBy }}</option>
+                {% endfor %}
+            </select>
+        </dd>
+    </dl>
+    <h5>Coordinates</h5>
+    <dl class="row">
+        <dt class="col-sm-3">Latitude</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="decimalLatitude"
+                aria-describedby="decimalLatitude" value="{{event.decimalLatitude}}" name="decimalLatitude"></dd>
+        <dt class="col-sm-3">Longitude</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="decimalLongitude"
+                aria-describedby="decimalLongitude" value="{{event.decimalLongitude}}" name="decimalLongitude"></dd>
+        <dt class="col-sm-3">Radius</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="coordinateUncertaintyInMeters"
+                aria-describedby="coordinateUncertaintyInMeters" value="{{event.coordinateUncertaintyInMeters}}"
+                name="coordinateUncertaintyInMeters"></dd>
+    </dl>
+    <h5>Substrate</h5>
+    <dl class="row">
+        <dt class="col-sm-3">Name</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="substrateName" aria-describedby="substrateName"
+                value="{{event.substrateName}}" name="substrateName"></dd>
+        <dt class="col-sm-3">Part</dt>
+        <dd class="col-sm-9">
+            <select class="form-select" aria-label="substratePlantPart" id="substratePlantPart"
+                name="substratePlantPart">
+                <option value=""></option>
+                {% for o in substrate_parts %}
+                {% if o == event.substratePlantPart %}
+                <option selected={{ o }}>{{ o }}</option>
+                {% else %}
+                <option value={{ o }}>{{ o }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </dd>
+        <dt class="col-sm-3">Type</dt>
+        <dd class="col-sm-9">
+            <select class="form-select" aria-label="substrateType" id="substrateType" name="substrateType">
+                <option value=""></option>
+                {% for o in substrate_types %}
+                {% if o == event.substrateType %}
+                <option selected={{ o }}>{{ o }}</option>
+                {% else %}
+                <option value={{ o }}>{{ o }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </dd>
+    </dl>
+
+    <h5>Remarks</h5>
     <div class="mb-3">
-        <button type="submit" class="btn btn-success btn-lg" name="action1" value="VALUE1">Update</button>
+        <input type="text" class="form-control" id="eventRemarks" aria-describedby="eventRemarks"
+            value="{{event.eventRemarks}}" name="eventRemarks">
+    </div>
+    <br />
+    
+    <!-- Show images 
+    <h5>Images</h5>
+    {% for i in files %}
+    <dl class="row">
+        <dt class="col-sm-3">Category</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="imageCategory" aria-describedby="imageCategory" value="{{i.imageCategory}}" name="imageCategory"></dd>
+        <dt class="col-sm-3">Comment</dt>
+        <dd class="col-sm-9"><input type="text" class="form-control" id="comment" aria-describedby="comment" value="{{i.comment}}" name="comment"></dd>
+    </dl>
+    <br />
+    <img src="static/images/{{i.filename}}" onclick="window.open(this.src, '_blank');" height="200">
+    <br />
+    {% endfor %}
+    -->
+
+    {% endif %}
+    <div class="d-inline mb-3"></div>
+    <!-- Button 1: Update -->
+    <button type="submit" class="btn btn-success btn-lg" name="action1" value="VALUE1">Update</button>
+    <!-- Button 2: Do not update -->
+    <button type="submit" class="btn btn-secondary btn-lg" name="action2" value="VALUE2">Cancel</button>
     </div>
 
 </form>
-    
+
 {% endblock %}

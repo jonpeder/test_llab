@@ -3,34 +3,42 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
 
+
 # Initiate web-app database
 db = SQLAlchemy()
 DB_NAME = "insects.db"
 
 # Upload folder path
-UPLOAD_FOLDER = "static/uploads/"
+home = path.expanduser("~")
+UPLOAD_FOLDER = path.join(home, "llab/llab/static/uploads")
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'secretkey'
+    app.config['SECRET_KEY'] = ''
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
     db.init_app(app)
 
     from .auth import auth
     from .cevents import cevents
     from .entomologist import entomologist
     from .images import images
-    from .queries import queries
+    from .taxa import taxa
+    from .occurrences import occurrences
+    from .filters import filters
+
 
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(cevents, url_prefix='/')
     app.register_blueprint(entomologist, url_prefix='/')
     app.register_blueprint(images, url_prefix='/')
-    app.register_blueprint(queries, url_prefix='/')
+    app.register_blueprint(taxa, url_prefix='/')
+    app.register_blueprint(occurrences, url_prefix='/')
+    app.register_blueprint(filters, url_prefix='/')
 
-    from .models import User, Note, Print_events, Event_images, Occurrences, Taxa, Occurrence_images
+    from .models import User, Print_events, Event_images, Occurrences, Taxa, Occurrence_images
 
     db.create_all(app=app)
 
@@ -44,6 +52,5 @@ def create_app():
         return User.query.get(int(id))
 
     return app
-
 
 app = create_app()

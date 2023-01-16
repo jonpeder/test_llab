@@ -1,9 +1,9 @@
 # load packages
 from .functions import newEventID, readstrand
-from flask import Blueprint, redirect, url_for, escape, request, render_template, send_file, flash, jsonify
+from flask import Blueprint, current_app, redirect, url_for, request, render_template, send_file, flash, make_response
 from flask_login import login_required, current_user
 import sqlite3
-from .models import User, Collectors, Collecting_events, Country_codes, Collecting_methods, Print_events
+from .models import User, Collectors, Collecting_events, Country_codes, Collecting_methods, Print_events, Event_images
 from . import db
 import subprocess
 import time
@@ -12,19 +12,21 @@ from os import path
 from os.path import exists
 import json
 import sys
-
+import qrcode
+import uuid
+#import pdfkit
 
 # connect to __init__ file
 cevents = Blueprint('cevents', __name__)
 
+# Specify app
+app = current_app
+
 # Variables for creating form loops
-loc = ["County", "Strand_code", "Municipality",
+loc = ["County", "Region_abbr", "Municipality",
        "Locality_1", "Locality_2", "Habitat"]
 latlon = ["Latitude", "Longitude", "Radius"]
 date = ["Date_1", "Date_2"]
-LOC = ["", "", "", "", "", ""]
-LATLON = ["", "", ""]
-DATE = ["", ""]
 substrate_types = ["gall", "mine", "colony"]
 substrate_parts = ["flower", "stem", "leaf", "shoot", "twig", "root",
                   "fruit", "seed", "cone", "female_catkin", "male_catkin", "fruitbody"]
@@ -46,7 +48,7 @@ def new_event():
         countryCode = request.form.get("Country")
         stateProvince = ""
         county = request.form.get("County")
-        strand_id = request.form.get("Strand_code")
+        strand_id = request.form.get("Region_abbr")
         municipality = request.form.get("Municipality")
         locality_1 = request.form.get("Locality_1")
         locality_2 = request.form.get("Locality_2")
@@ -62,36 +64,6 @@ def new_event():
         substrate_name = request.form.get("Substrate_name")
         substrate_type = request.form.get("Substrate_type")
         substrate_part = request.form.get("Substrate_part")
-
-        # Create global variables for remembering input from last post
-        global LOC
-        global LATLON
-        global DATE
-        LOC = ["", "", "", "", "", ""]
-        LATLON = ["", "", ""]
-        DATE = ["", ""]
-
-        # Button 1: Get input coordinates from form and find locality data based on coordinates
-        if request.form.get('action1') == 'VALUE1':
-            strand = readstrand(r_script_path='/home/jon/Dropbox/python/web_apps/llab/llab//R/strandr.R',
-                                lat=decimalLatitude, lon=decimalLongitude)
-            strand_id = strand[0]
-            municipality = strand[1]
-            county = strand[2]
-            locality_2 = strand[3]
-            # Fix problem with county 'Oslo og Akershus'
-            if county == 'Akershus og Oslo':
-                if municipality == 'Oslo':
-                    county = 'Oslo'
-                else:
-                    county = 'Akershus'
-            # Add to variables
-            LOC = [county, strand_id, municipality,
-                   locality_1, locality_2, habitat]
-            LATLON = [decimalLatitude, decimalLongitude,
-                      coordinateUncertaintyInMeters]
-            DATE = [eventDate_1, eventDate_2]
-
         # Button 2: Populate database with input from form
         if request.form.get('action2') == 'VALUE2':
             # Flash message if input eventID already exists
@@ -107,23 +79,117 @@ def new_event():
                 db.session.add(new_event)
                 # Commit
                 db.session.commit()
-                flash(f'Collecting event with event-ID {eventID} created!', category="success")
-
+                flash(
+                    f'Collecting event with event-ID {eventID} created!', category="success")
     # Suggest new eventID
     events = Collecting_events.query.all()
     IDs = []
     for i in events:
         IDs.append(i.eventID)
     new_ID = newEventID(IDs, current_user.initials)
-
     # Return html-page
-    return render_template("new_event.html", title=title, loc=loc, latlon=latlon, substrate_types=substrate_types, substrate_parts=substrate_parts, date=date, new_ID=new_ID, met=met, leg=leg, LOC=LOC, LATLON=LATLON, DATE=DATE, user=current_user)
+    return render_template("new_event.html", title=title, loc=loc, latlon=latlon, substrate_types=substrate_types, substrate_parts=substrate_parts, date=date, new_ID=new_ID, met=met, leg=leg, user=current_user)
+
+
+@cevents.route('/show_event', methods=['GET', 'POST'])
+@login_required
+def show_event():
+    title = "Show collecting events"
+    events = Collecting_events.query.filter_by(
+        createdByUserID=current_user.id).order_by(Collecting_events.eventID.desc())
+    event = ""
+    if request.method == 'POST':
+        eventID = request.form.get("eventID")
+        event = Collecting_events.query.filter_by(eventID=eventID).first()
+        files = Event_images.query.filter_by(eventID=eventID).all()
+        if eventID:
+            # Button 2: Edit event
+            if request.form.get('action2') == 'VALUE2':
+                title = "Edit collecting events"
+                leg = Collectors.query.all()
+                met = Collecting_methods.query.all()
+                return render_template("edit_event.html", title=title, user=current_user, files=files, event=event, leg=leg, met=met, substrate_parts=substrate_parts, substrate_types=substrate_types)
+            # Button 1: Show event
+            else:
+                return render_template("show_event.html", title=title, user=current_user, events=events, files=files, event=event)
+        else:
+            return render_template("show_event.html", title=title, user=current_user, events=events, event=event)
+    else:
+        return render_template("show_event.html", title=title, user=current_user, events=events, event=event)
+
+
+@cevents.route('/edit_event', methods=['GET', 'POST'])
+@login_required
+def edit_event():
+    title = "Edit collecting events"
+    if request.method == 'POST':
+        if request.form.get('action1') == 'VALUE1':
+            # Get input from form
+            eventID = request.form.get("eventID")
+            countryCode = request.form.get("countryCode")
+            stateProvince = request.form.get("stateProvince")
+            county = request.form.get("county")
+            strand_id = request.form.get("strand_code")
+            municipality = request.form.get("municipality")
+            locality_1 = request.form.get("locality_1")
+            locality_2 = request.form.get("locality_2")
+            habitat = request.form.get("habitat")
+            decimalLatitude = request.form.get("decimalLatitude")
+            decimalLongitude = request.form.get("decimalLongitude")
+            coordinateUncertaintyInMeters = request.form.get(
+                "coordinateUncertaintyInMeters")
+            samplingProtocol = request.form.get("samplingProtocol")
+            eventDate_1 = request.form.get("eventDate_1")
+            eventDate_2 = request.form.get("eventDate_2")
+            recordedBy = " | ".join(request.form.getlist("recordedBy"))
+            eventRemarks = request.form.get("eventRemarks")
+            substrateName = request.form.get("substrateName")
+            substratePlantPart = request.form.get("substratePlantPart")
+            substrateType = request.form.get("substrateType")
+            # Update record
+            event = Collecting_events.query.filter_by(eventID=eventID).first()
+            event.countryCode = countryCode
+            event.stateProvince = stateProvince
+            event.county = county
+            event.strand_id = strand_id
+            event.municipality = municipality
+            event.locality_1 = locality_1
+            event.locality_2 = locality_2
+            event.habitat = habitat
+            event.decimalLatitude = decimalLatitude
+            event.decimalLongitude = decimalLongitude
+            event.coordinateUncertaintyInMeters = coordinateUncertaintyInMeters
+            event.samplingProtocol = samplingProtocol
+            event.eventDate_1 = eventDate_1
+            event.eventDate_2 = eventDate_2
+            event.recordedBy = recordedBy
+            event.eventRemarks = eventRemarks
+            event.substrateName = substrateName
+            event.substratePlantPart = substratePlantPart
+            event.substrateType = substrateType
+            # Update database
+            db.session.commit()
+            flash(
+                f'Collecting event with event-ID {eventID} updated!', category="success")
+            # Go back to original page
+            return redirect(url_for('cevents.show_event'))
+        else:
+            # Go back to original page
+            return redirect(url_for('cevents.show_event'))
+    else:
+        # Go back to original page
+        return redirect(url_for('cevents.show_event'))
 
 
 @cevents.route('/event_labels', methods=["POST", "GET"])
 @login_required
 def labels():
     title = "Print specimen labels"
+    # Remove earlier qr-code image-files
+    files = os.listdir(app.config["UPLOAD_FOLDER"])
+    for file in files:
+        if file.startswith(f'{current_user.id}_qrlabel_'):
+            os.remove(os.path.join(app.config["UPLOAD_FOLDER"], file))
     # Post
     if request.method == 'POST':
         # Button 1: Add eventID and number of labels to be printed
@@ -139,42 +205,53 @@ def labels():
         # Button 2: Clear table
         if request.form.get('action2') == 'VALUE2':
             # Delete all records in print_events table
-            #db.session.query(Print_events).filter_by(createdByUserID = current_user.id).delete()
             Print_events.query.filter_by(
                 createdByUserID=current_user.id).delete()
             db.session.commit()
         # Button 3: Print lables
         if request.form.get('action3') == 'VALUE3':
-            label_type = request.form.get("label_type")
             # Finn eventIDer og antall etiketter som skal printes av brukeren
             user = current_user
-            e, n = [], []
-            cnt = 0
-            for event in user.print_events:
-                e.append(event.eventID)
-                n.append(str(event.print_n))
-                cnt += 1
-            eventids = ','.join(e)
-            labeln = ','.join(n)
-            if cnt == 0:
-                flash("At least one collecting event must be added",
-                      category="error")
+            events = user.print_events
+            # Dersom ingen event-id er valgt
+            if not events:
+                flash("At least one collecting event must be added", category="error")
             else:
+                # Query collecting-event-data for selected eventIDs
+                event_data = Collecting_events.query\
+                    .join(Collecting_methods, Collecting_events.samplingProtocol == Collecting_methods.ID)\
+                    .add_columns(Collecting_events.eventID, Collecting_events.countryCode, Collecting_events.county, Collecting_events.strand_id, Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, Collecting_events.habitat,Collecting_events.substrateName,Collecting_events.substratePlantPart,Collecting_events.substrateType, Collecting_events.decimalLatitude, Collecting_events.decimalLongitude, Collecting_events.coordinateUncertaintyInMeters, Collecting_events.eventDate_1, Collecting_events.eventDate_2, Collecting_methods.samplingProtocol, Collecting_methods.ID.label("samplingProtocol_app"), Collecting_events.recordedBy)\
+                    .filter(Collecting_events.eventID.in_([event.eventID for event in events]))\
+                    .order_by(Collecting_events.eventID.desc())\
+                    .all()
+                # Create qrcodes
+                for event in events:
+                    for data in event_data:
+                        if event.eventID==data.eventID:
+                            for n in range(event.print_n):
+                                filename = f'{current_user.id}_qrlabel_{event.eventID}_{n}.png'
+                                qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
+                                qr.add_data(f'{event.eventID};{uuid.uuid4()}')
+                                qr.make(fit = True)
+                                img = qr.make_image(fill_color = 'black', back_color = 'white')
+                                img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 # Print labels
-                process = subprocess.Popen(["/home/jon/Dropbox/python/web_apps/llab/llab/R/labels_exe.R",
-                                           eventids, labeln, label_type, f'{current_user.id}_labels.pdf'])
-                process.wait()
-                return redirect(url_for('cevents.label_output'))
+                print("TEST1")
+                res = render_template("label_output.html", title=title, events=events, user=current_user, event_data=event_data)
+                print("TEST2")
+                #responsestring = pdfkit.from_string(res, False)
+                print("TEST3")
+                #response = make_response(responsestring)
+                print("TEST4")
+                #response.headers['Content-Type'] = 'aplicateion/pdf'
+                #response.headers['Content-Disposition'] = 'inline;filename=event_labels.pdf'
+                # Save file
+                print("TEST5")
+                #return response
+                #return render_template("label_output.html", title=title, events=events, user=current_user, event_data=event_data)
+                return res
 
     # Søk etter event-IDer
-    events = Collecting_events.query.filter_by(
-        createdByUserID=current_user.id).order_by(Collecting_events.eventID.desc())
+    events = Collecting_events.query.filter_by(createdByUserID = current_user.id).order_by(Collecting_events.eventID.desc())
     # Return
-    return render_template("event_labels.html", title=title, events=events, user=current_user)
-
-
-@cevents.route('/label_output')
-@login_required
-def label_output():
-    time.sleep(1)
-    return send_file(f'/var/www/llab/llab/insect_labels/{current_user.id}_labels.pdf')
+    return render_template("event_labels.html", title = title, events=events, user=current_user)

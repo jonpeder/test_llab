@@ -1,0 +1,120 @@
+
+<!doctype html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Paper CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css">
+
+<style>
+
+/*
+body {
+  background: rgb(204,204,204); 
+}
+.page {
+  background: white;
+  width: 21cm;
+  height: 29.7cm;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+}
+@media print {
+  body, .page {
+    margin: 0;
+    box-shadow: 0;
+  }
+}
+*/
+
+.label {
+   font-family: Verdana;
+   font-weight: normal;
+   font-style: normal;
+   white-space:nowrap;
+   display: inline-block;
+   white-space:nowrap;
+   font-size: 3px;
+   line-height: 120%;
+   width:18mm;
+   height:5mm;
+   margin-top:0px;
+   margin-right:0px;
+   margin-left:0px;
+}
+
+.label img {
+   float:left;
+   height:120%;
+   margin-right:1px;
+}
+
+.label span {
+   height:100%;
+}
+
+</style>
+</head>
+
+<!-- Paper-CSS -->
+<body class="A4">
+<section class="sheet padding-10mm">
+
+<!-- Alternative CSS
+<body>
+<var class="page">
+-->
+
+<!-- For each eventID -->
+{% for event in events %}
+<!-- loop over event-data to find matching eventID -->
+{% for data in event_data %}
+{% if data.eventID == event.eventID %}
+<!-- Repete n times -->
+{% for n in range(event.print_n) %}
+<var class='label'>
+    <img src="static/uploads/{{user.id}}_qrlabel_{{data.eventID}}_{{n}}.png">
+    <span>
+    <!-- Line 1: Country, region, municipality -->
+    <strong>{{ data.countryCode|upper }}</strong> {% if data.stateProvince %}{{ data.stateProvince }} {% endif %}{% if data.strand_id %}{{ data.strand_id|upper }} {% endif %}{% if data.municipality %} {{ data.municipality|upper }}{% endif %}:
+    <br/>
+    <!-- Line 2: Locality -->
+    {% if data.locality_1 %}{{ data.locality_1 }}{% endif %}{% if data.locality_1 and data.locality_2 %}, {% endif %}{% if data.locality_2 %}{{ data.locality_2 }}{% endif %}{% if data.locality_1 or data.locality_2 %}<br/>{% endif %}
+    <!-- Line 3: Habitat/Substrate -->
+    {% if data.substrateName %}
+    (<i>{{ data.substrateName|scn_format}}</i>-{{ data.substratePlantPart }}-{{ data.substrateType }})
+    <br/>
+    {% elif data.habitat %}
+    ({{ data.habitat }})
+    <br/>
+    {% endif %}
+    <!-- Line 4: Latlon, radius -->
+    {% if data.decimalLatitude and data.decimalLongitude %}
+    {{ data.decimalLatitude|round(6) }} {{ data.decimalLongitude|round(6) }}
+    {% if data.coordinateUncertaintyInMeters %} &#177 {{ data.coordinateUncertaintyInMeters }}{% endif %}
+    <br/>
+    {% endif %}
+    <!-- Line 5: Method, date -->
+    {% if data.samplingProtocol %}{% if data.eventDate_1 and data.eventDate_2 %}{{ data.samplingProtocol_app|upper }}{% else %}{{ data.samplingProtocol }}{% endif %}{% if data.eventDate_1 %}: <!-- if date-1 exists -->{% if data.eventDate_2 %}<!-- if date-2 exists -->{% if (data.eventDate_2 | string_to_date | date_format("%Y")) == (data.eventDate_1 | string_to_date | date_format("%Y")) %} <!-- if in the same year -->{% if (data.eventDate_2 | string_to_date | date_format("%m")) == (data.eventDate_1 | string_to_date | date_format("%m")) %}<!-- if in the same month -->{{ data.eventDate_1 | string_to_date | date_format("%d") }}{% else %}<!-- if not in the same month -->{{ data.eventDate_1 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_1 | string_to_date | date_format("%b") }}</strong> {% endif %}{% else %}<!-- if not in the same year -->{{ data.eventDate_1 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_1 | string_to_date | date_format("%b") }}</strong> {{ data.eventDate_1 | string_to_date | date_format("%Y") }}{% endif %}-{{ data.eventDate_2 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_2 | string_to_date | date_format("%b") }}</strong> {{ data.eventDate_2 | string_to_date | date_format("%Y") }}{% else %}<!-- only date-1 exists -->{{ data.eventDate_1 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_1 | string_to_date | date_format("%b") }}</strong> {{ data.eventDate_1 | string_to_date | date_format("%Y") }}{% endif %}{% endif %}<br/>{% endif %}
+    <!-- Line 6: Leg -->
+    {% if data.recordedBy %}
+    Leg. {{ data.recordedBy | leg_format}}
+    {% endif %}
+    </span>
+</var>
+
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+<!--
+</var>
+-->
+
+</section>
+
+</body>

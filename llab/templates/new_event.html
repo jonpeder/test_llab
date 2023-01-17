@@ -55,14 +55,9 @@
         <button type="button" class="btn btn-secondary" name="stedsnavn" if="stedsnavn" onclick="stedsnavn_call()" >Get locality from
             position</button>
     </div>
-    <!-- Button 1-->
-    <div class="mb-3">
-        <button type="submit" class="btn btn-secondary" name="action1" value="VALUE1">Get locality from
-            position</button>
-    </div>
 
     <!-- Substrate -->
-    <a class="btn btn-success mb-3" data-bs-toggle="collapse" href="#substrateCollapse" role="button" aria-expanded="false"
+    <a class="btn btn-warning mb-3" data-bs-toggle="collapse" href="#substrateCollapse" role="button" aria-expanded="false"
         aria-controls="substrateCollapse">Specify substrate</a>
     <div class="collapse multi-collapse" id="substrateCollapse">
         Substrate name
@@ -118,7 +113,11 @@
     <div class="mb-3">
         <select class="form-select" multiple aria-label="Collected by" name="Collected_by">
             {% for i in leg %}
+            {% if i.recordedBy == user.entomologist_name %}
+            <option selected value="{{ i.recordedBy }}">{{ i.recordedBy }}</option>
+            {% else %}
             <option value="{{ i.recordedBy }}">{{ i.recordedBy }}</option>
+            {% endif %}
             {% endfor %}
         </select>
     </div>
@@ -132,10 +131,40 @@
 
     <!-- Button 2-->
     <div class="mb-3">
-        <button type="submit" class="btn btn-secondary" name="action2" onclick="submitForms()"
+        <button type="submit" class="btn btn-success" name="action2" onclick="submitForms()"
             value="VALUE2">Submit</button>
     </div>
     <p></p>
 </form>
+
+<script>
+    // Function to make any api call
+async function api_call(gbif_url) {
+    const response = await fetch(gbif_url);
+    const myJson = await response.json(); //extract JSON from the http response
+    // do something with myJson
+    return myJson;
+}
+
+//
+async function stedsnavn_call() {
+    // Get longitude and latitude from input form
+    let lat = document.getElementById('Latitude').value;
+    let lon = document.getElementById('Longitude').value;
+    // Prepare url for api call
+    const stedsnavn_url = 'https://ws.geonorge.no/stedsnavn/v1/punkt?nord='+lat+'&ost='+lon+'&koordsys=4326&radius=2000&utkoordsys=4326&treffPerSide=200&side=1';
+    const administReg_url = 'https://ws.geonorge.no/kommuneinfo/v1/punkt?koordsys=4326&ost='+lon+'&nord='+lat
+    // Make api calls
+    const stedsnavn_out = await api_call(stedsnavn_url);
+    const administReg_out = await api_call(administReg_url);
+    // Sort locality name by distance from point and pick the closest one
+    const stedsnavn_sorted = stedsnavn_out.navn;
+    stedsnavn_sorted.sort((a,b) => a.meterFraPunkt - b.meterFraPunkt);
+    // Add locality, county and municipality names to fields
+    if (typeof stedsnavn_sorted[0].stedsnavn[0].skrivemåte !== 'undefined') {document.getElementById("Locality_2").value = stedsnavn_sorted[0].stedsnavn[0].skrivemåte};
+    if (typeof administReg_out.fylkesnavn !== 'undefined') {document.getElementById("County").value = administReg_out.fylkesnavn};
+    if (typeof administReg_out.kommunenavn !== 'undefined') {document.getElementById("Municipality").value = administReg_out.kommunenavn};
+}
+</script>
 
 {% endblock %}

@@ -32,7 +32,7 @@ def add_entomologist():
         elif len(recordedByID) < 1:
             # New Print_events object
             new_collector = Collectors(
-                recordedBy=recordedBy, recordedByID=recordedByID)
+                recordedBy=recordedBy, recordedByID=recordedByID, createdByUserID=current_user.id)
             # Add new objects to database
             db.session.add(new_collector)
             # Commit
@@ -49,7 +49,7 @@ def add_entomologist():
         else:
             # New Print_events object
             new_collector = Collectors(
-                recordedBy=recordedBy, recordedByID=recordedByID)
+                recordedBy=recordedBy, recordedByID=recordedByID, createdByUserID=current_user.id)
             # Add new objects to database
             db.session.add(new_collector)
             # Commit

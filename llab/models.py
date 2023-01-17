@@ -8,24 +8,20 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     initials = db.Column(db.String(3))
-    notes = db.relationship('Note')
+    entomologist_name = db.Column(db.String(100), db.ForeignKey('Collectors.recordedBy'))
+    createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
     print_events = db.relationship('Print_events')
     collecting_events = db.relationship('Collecting_events')
-
-
-class Note(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    data = db.Column(db.String(10000))
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
+    occurrences = db.relationship('Occurrences')
+    collectors = db.relationship('Collectors')
+    taxa = db.relationship('Taxa')
 
 class Print_events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     eventID = db.Column(db.String(10))
     print_n = db.Column(db.Integer)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
-    createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
+    createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id')) 
 
 
 class Country_codes (db.Model):
@@ -71,6 +67,7 @@ class Collecting_events(db.Model):
 class Collectors (db.Model):
     recordedBy = db.Column(db.String(100), primary_key=True)
     recordedByID = db.Column(db.String(100))
+    createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
 
 
 class Event_images (db.Model):
@@ -123,6 +120,8 @@ class Taxa (db.Model):
     cl = db.Column("class", db.String(50))
     nomenclaturalCode = db.Column(db.String(10))
     taxonID = db.Column(db.String(100))
+    createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
+    publishedIn = db.Column(db.String(300))
 
 class Occurrence_images (db.Model):
     id = db.Column(db.Integer, primary_key=True)

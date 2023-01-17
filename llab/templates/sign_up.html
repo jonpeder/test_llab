@@ -14,6 +14,15 @@
     </div>
     <br />
     <div class="form-group">
+        <label for="entomologist">User name</label>
+        <select class="form-control selectpicker" id="entomologist" name="entomologist" data-live-search="true">
+            {% for entomologist in entomologists %}
+            <option value="{{ entomologist.recordedBy }}">{{ entomologist.recordedBy }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <br />
+    <div class="form-group">
         <label for="password1">Password</label>
         <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter password" />
         <small id="passwordHelp" class="form-text text-muted">This should be at least 6 characters</small>

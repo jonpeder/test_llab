@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User
+from .models import User, Collectors
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
@@ -42,12 +42,13 @@ def logout():
 @login_required
 def sign_up():
     title = "Sign up"
+    entomologists = Collectors.query.all()
     if request.method == "POST":
         email = request.form.get("email")
         initials = request.form.get("initials")
+        entomologist_name = request.form.get("entomologist")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
-
         user = User.query.filter_by(email=email).first()
         initials_test = User.query.filter_by(initials=initials).first()
         if user:
@@ -61,6 +62,9 @@ def sign_up():
         elif len(initials) != 3:
             pass
             flash("Initials must be 3 characters.", category="error")
+        elif entomologist_name is None:
+            pass
+            flash("Select user name from list of entomologists.", category="error")
         elif password1 != password2:
             pass
             flash("Passwords don\'t match.", category="error")
@@ -70,13 +74,13 @@ def sign_up():
         else:
             # Add user to database
             new_user = User(email=email, initials=initials, password=generate_password_hash(
-                password1, method='sha256'))
+                password1, method='sha256'), entomologist_name=entomologist_name, createdByUserID=current_user.id)
             db.session.add(new_user)
             db.session.commit()
             user = User.query.filter_by(email=email).first()
             # login_user(user, remember=True) # login user
             flash("Account created!", category="success")
-    return render_template("sign_up.html", user=current_user, title=title)
+    return render_template("sign_up.html", user=current_user, title=title, entomologists=entomologists)
 
 
 @auth.route('/change_password', methods=['GET', 'POST'])

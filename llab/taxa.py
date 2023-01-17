@@ -30,7 +30,7 @@ def add_taxon():
         genus = request.form.get("genus")
         family = request.form.get("family")
         order = request.form.get("order")
-
+        publishedIn = request.form.get("publishedIn")
         # Scientific name
         if scientificNameAuthorship is None or scientificNameAuthorship == "":
             scientificName = taxonName
@@ -41,7 +41,6 @@ def add_taxon():
             specificEpithet = taxonName.replace(f'{genus} ', "")
         else:
             specificEpithet = ""
-
         # Add taxon to database
         if request.form.get('action2') == 'VALUE2':
             # Control that scientificName is not already used
@@ -68,7 +67,7 @@ def add_taxon():
             else:
                 # Add to database
                 new_taxon = Taxa(scientificName=scientificName, taxonRank=taxonRank, scientificNameAuthorship=scientificNameAuthorship, specificEpithet=specificEpithet,
-                                 genus=genus, family=family, order=order, kingdom="Animalia", phylum="Arthropoda", cl="Insecta", nomenclaturalCode="ICZN", taxonID=taxonID)
+                                 genus=genus, family=family, order=order, kingdom="Animalia", phylum="Arthropoda", cl="Insecta", nomenclaturalCode="ICZN", taxonID=taxonID, createdByUserID=current_user.id, publishedIn=publishedIn)
                 # Add new objects to database
                 db.session.add(new_taxon)
                 # Commit
@@ -107,6 +106,7 @@ def edit_taxon():
             genus = request.form.get("genus")
             family = request.form.get("family")
             order = request.form.get("order")
+            publishedIn = request.form.get("publishedIn")
             # Scientific name
             if scientificNameAuthorship is None or scientificNameAuthorship == "":
                 scientificName_new = taxonName
@@ -160,6 +160,7 @@ def edit_taxon():
                 taxon.genus = genus
                 taxon.family = family
                 taxon.order = order
+                taxon.publishedIn = publishedIn
                 # Update all occurrences
                 updated_occ = Occurrences.query.filter_by(scientificName=scientificName_old).update({Occurrences.scientificName : scientificName_new})
                 # Commit

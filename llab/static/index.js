@@ -23,6 +23,8 @@ async function gbif_call() {
     if (typeof gbif_out.rank !== 'undefined') {document.getElementById("rank").value = gbif_out.rank.toLowerCase()};
     if (typeof gbif_out.authorship !== 'undefined') {document.getElementById("scientificNameAuthorship").value = gbif_out.authorship};
     if (typeof gbif_out.canonicalName !== 'undefined') {document.getElementById("taxonName").value = gbif_out.canonicalName};
+    if (typeof gbif_out.publishedIn !== 'undefined') {document.getElementById("publishedIn").value = gbif_out.publishedIn};
+
 }
 
 //

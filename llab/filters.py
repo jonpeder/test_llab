@@ -49,6 +49,18 @@ def scn_format(name):
         name = name[0][0].upper()+". "+name[1]
     return name
 
+# Add italic-tags to scientificName. Use three arguments: scientificName, taxonRank and scientificNameAuthorship
+@filters.app_template_filter('scn_italic')
+def scn_italic(name, rank, author):
+    # Remove autohor from name and remove trailing white-spaces
+    name = name.replace(author, "").strip()
+    # If species or genus level use italic
+    if rank=="species" or rank=="genus" or rank=="spnov":
+        name=f'<i>{name}</i>'
+    if rank == "species_group":
+        name = f'<i>{name.replace("group", "").strip()}</i> group'    
+    return name
+
 # Debug
 @filters.app_template_filter('debug')
 def debug(text):

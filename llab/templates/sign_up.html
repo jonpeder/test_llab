@@ -4,13 +4,13 @@
 <form method="POST">
     <div class="form-group">
         <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" />
+        <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" required />
     </div>
     <br />
     <div class="form-group">
         <label for="initials">Initials</label>
-        <input type="text" class="form-control" id="initials" name="initials" placeholder="Enter initials" />
-        <small id="initialsHelp" class="form-text text-muted">This should be three uppercase letters</small>
+        <input type="text" class="form-control" id="initials" name="initials" placeholder="Enter initials" required />
+        <small id="initialsHelp" class="form-text text-muted">Should contain 3 uppercase letters</small>
     </div>
     <br />
     <div class="form-group">
@@ -23,14 +23,20 @@
     </div>
     <br />
     <div class="form-group">
+        <label for="institutionCode">Institution code</label>
+        <input type="text" class="form-control" id="institutionCode" name="institutionCode" placeholder="Enter institution code" />
+        <small id="initialsHelp" class="form-text text-muted">2-10 characters</small>
+    </div>
+    <br />
+    <div class="form-group">
         <label for="password1">Password</label>
-        <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter password" />
-        <small id="passwordHelp" class="form-text text-muted">This should be at least 6 characters</small>
+        <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter password" required />
+        <small id="passwordHelp" class="form-text text-muted">at least 6 characters</small>
     </div>
     <br />
     <div class="form-group">
         <label for="password2">Password (Confirm)</label>
-        <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password" />
+        <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password" required />
     </div>
     <br />
 

@@ -28,6 +28,7 @@ def create_app():
     from .taxa import taxa
     from .occurrences import occurrences
     from .filters import filters
+    from .specimens import specimens
 
 
     app.register_blueprint(auth, url_prefix='/')
@@ -37,8 +38,9 @@ def create_app():
     app.register_blueprint(taxa, url_prefix='/')
     app.register_blueprint(occurrences, url_prefix='/')
     app.register_blueprint(filters, url_prefix='/')
+    app.register_blueprint(specimens, url_prefix='/')
 
-    from .models import User, Print_events, Event_images, Occurrences, Taxa, Occurrence_images
+    from .models import User, Collecting_events, Print_events, Print_det, Event_images, Occurrences, Taxa, Occurrence_images, Identification_events
 
     db.create_all(app=app)
 

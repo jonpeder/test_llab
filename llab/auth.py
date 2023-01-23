@@ -47,6 +47,7 @@ def sign_up():
         email = request.form.get("email")
         initials = request.form.get("initials")
         entomologist_name = request.form.get("entomologist")
+        institutionCode = request.form.get("institutionCode")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
         user = User.query.filter_by(email=email).first()
@@ -74,7 +75,7 @@ def sign_up():
         else:
             # Add user to database
             new_user = User(email=email, initials=initials, password=generate_password_hash(
-                password1, method='sha256'), entomologist_name=entomologist_name, createdByUserID=current_user.id)
+                password1, method='sha256'), entomologist_name=entomologist_name, institutionCode=institutionCode, createdByUserID=current_user.id)
             db.session.add(new_user)
             db.session.commit()
             user = User.query.filter_by(email=email).first()

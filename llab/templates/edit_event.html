@@ -37,11 +37,11 @@
         <dd class="col-sm-9">
             <select class="form-select" aria-label="samplingProtocol" name="samplingProtocol"
                 value="{{event.samplingProtocol}}">
-                {% for o in met %}
-                {% if o.ID == event.samplingProtocol %}
-                <option selected={{ o.ID }}>{{ o.samplingProtocol }}</option>
+                {% for method in met %}
+                {% if method == event.samplingProtocol %}
+                <option selected={{ method }}>{{ method }}</option>
                 {% else %}
-                <option value={{ o.ID }}>{{ o.samplingProtocol }}</option>
+                <option value={{ method }}>{{ method }}</option>
                 {% endif %}
                 {% endfor %}
             </select>

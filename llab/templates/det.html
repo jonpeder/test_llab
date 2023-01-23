@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="/det" method=post>
+
+    <!-- QR-code data -->
+    QR-code data
+    <div class="mb-3">
+        <textarea type="text" class="form-control" id="qr_data" name="qr_data"
+            placeholder="Insert decoded QR-codes here!" required></textarea>
+        <small id="qr-dataHelp" class="form-text text-muted">Decoded QR-codes from specimen-labels and det-labels
+            separated by line-breaks</small>
+    </div>
+
+    <!-- Identified by -->
+    Identified by
+    <div class="mb-3">
+        <select class="form-select" id="identifiedBy" name="identifiedBy">
+            {% for name in entomologists %}
+            {% if name.recordedBy == user.entomologist_name %}
+            <option selected value="{{name.recordedBy}}">{{name.recordedBy}}</option>
+            {% else %}
+            <option value="{{name.recordedBy}}">{{name.recordedBy}}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Owner institution code -->
+    Owner institution code
+    <div class="mb-3">
+        <input type="text" class="form-control" id="ownerInstitutionCode" name="ownerInstitutionCode"
+            value="{{user.institutionCode}}" required>
+    </div>
+
+    <!-- lifestage -->
+    Lifestage
+    <div class="mb-3">
+        <select class="form-select" name="lifeStage" id="lifeStage">
+            <option selected value="adult">adult</option>
+            <option value="nymph">nymph</option>
+            <option value="pupa">pupa</option>
+            <option value="larva">larva</option>
+        </select>
+    </div>
+
+    <!-- Preparation -->
+    Preparation
+    <div class="mb-3">
+        <select class="form-select" name="preparations" id="preparations">
+            <option selected value="pinned">pinned</option>
+            <option value="alcohol">alcohol</option>
+            <option value="card-mounted">card-mounted</option>
+            <option value="slide">slide</option>
+        </select>
+    </div>
+
+    <!-- Individual count -->
+    Individual count
+    <div class="mb-3">
+        <input type="number" class="form-control" id="individualCount" name="individualCount" min="1" value="1">
+    </div>
+
+
+    <!-- Collapse button -->
+    <a class="btn btn-secondary mb-3" data-bs-toggle="collapse" href="#detCollapse" role="button" aria-expanded="false"
+        aria-controls="detCollapse">Optional input</a>
+    <div class="collapse multi-collapse" id="detCollapse">
+        <!-- Sex -->
+        Sex
+        <div class="mb-3">
+            <select class="form-select" name="sex" id="sex">
+                <option selected value=""></option>
+                <option value="female">female</option>
+                <option value="male">male</option>
+            </select>
+        </div>
+        <!-- identificationQualifier -->
+        Identifiaction qualifyer
+        <div class="mb-3">
+            <select class="form-select" name="identificationQualifier" id="identificationQualifier">
+                <option selected value=""></option>
+                <option value="cf">female</option>
+                <option value="aff">male</option>
+                <option value="agg">male</option>
+            </select>
+        </div>
+        <!-- identificationRemarks -->
+        Identification remarks
+        <div class="mb-3">
+            <input type="text" class="form-control" id="identificationRemarks" name="identificationRemarks">
+        </div>
+        <!-- occurrenceRemarks -->
+        Occurrence remarks
+        <div class="mb-3">
+            <input type="text" class="form-control" id="occurrenceRemarks" name="occurrenceRemarks">
+        </div>
+        <!-- associatedTaxa -->
+        Associated taxa
+        <div class="mb-3">
+            <input type="text" class="form-control" id="associatedTaxa" name="associatedTaxa">
+        </div>
+        <!-- associatedReferences -->
+        Associated references
+        <div class="mb-3">
+            <input type="text" class="form-control" id="associatedReferences" name="associatedReferences">
+        </div>
+        <!-- verbatimLabel -->
+        Verbatim label
+        <div class="mb-3">
+            <input type="text" class="form-control" id="verbatimLabel" name="verbatimLabel">
+        </div>
+    </div>
+
+    <!-- Button -->
+    <div class="mb-3">
+        <button type="submit" class="btn btn-success btn-lg" name="action1" value="VALUE1">Submit</button>
+    </div>
+
+</form>
+
+{% endblock %}

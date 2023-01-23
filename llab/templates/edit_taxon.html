@@ -34,7 +34,7 @@
     Taxon name
     <div class="mb-3">
         <input type="text" class="form-control" id="taxonName" name="taxonName"
-            value="{{ taxon.scientificName | replace(" "+taxon.scientificNameAuthorship, "") }}">
+            value="{{ taxon.scientificName | replace(" "+taxon.scientificNameAuthorship, "") }}" required >
     </div>
 
     <!-- Authorship -->
@@ -77,7 +77,7 @@
 
     Order
     <div class="mb-3">
-        <input type="text" class="form-control" id="order" name="order" value="{{ taxon.order }}">
+        <input type="text" class="form-control" id="order" name="order" value="{{ taxon.order }}" required >
     </div>
 
     <div class="d-inline mb-3"></div>

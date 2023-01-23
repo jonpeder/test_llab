@@ -2,7 +2,7 @@
 from .functions import newEventID
 from flask import Blueprint, current_app, redirect, url_for, request, render_template, flash
 from flask_login import login_required, current_user
-from .models import User, Collectors, Collecting_events, Country_codes, Collecting_methods, Print_events, Event_images
+from .models import User, Collectors, Collecting_events, Country_codes, Print_events, Event_images
 from . import db
 import os
 from os import path
@@ -36,7 +36,7 @@ def new_event():
     global substrate_part
     # Finn innsamlingsmetode, innsamlere og land
     leg = Collectors.query.all()
-    met = Collecting_methods.query.all()
+    met = ["Sweep-net","Pan-trap","Reared","Yellow pan","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","White pan"]
     ctries = Country_codes.query.all()
     # If a for is posted, update database before generating the new page
     if request.method == 'POST':
@@ -104,7 +104,7 @@ def show_event():
             if request.form.get('action2') == 'VALUE2':
                 title = "Edit collecting events"
                 leg = Collectors.query.all()
-                met = Collecting_methods.query.all()
+                met = ["Sweep-net","Pan-trap","Reared","Yellow pan","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","White pan"]
                 return render_template("edit_event.html", title=title, user=current_user, files=files, event=event, leg=leg, met=met, substrate_parts=substrate_parts, substrate_types=substrate_types)
             # Button 1: Show event
             else:
@@ -232,8 +232,6 @@ def labels():
             else:
                 # Query collecting-event-data for selected eventIDs
                 event_data = Collecting_events.query\
-                    .join(Collecting_methods, Collecting_events.samplingProtocol == Collecting_methods.ID)\
-                    .add_columns(Collecting_events.eventID, Collecting_events.countryCode, Collecting_events.county, Collecting_events.strand_id, Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, Collecting_events.habitat,Collecting_events.substrateName,Collecting_events.substratePlantPart,Collecting_events.substrateType, Collecting_events.decimalLatitude, Collecting_events.decimalLongitude, Collecting_events.coordinateUncertaintyInMeters, Collecting_events.eventDate_1, Collecting_events.eventDate_2, Collecting_methods.samplingProtocol, Collecting_methods.ID.label("samplingProtocol_app"), Collecting_events.recordedBy)\
                     .filter(Collecting_events.eventID.in_([event.eventID for event in events]))\
                     .order_by(Collecting_events.eventID.desc())\
                     .all()
@@ -242,7 +240,7 @@ def labels():
                     for data in event_data:
                         if event.eventID==data.eventID:
                             for n in range(event.print_n):
-                                filename = f'{current_user.id}_qrlabel_{event.eventID}_{n}.png'
+                                filename = f'{current_user.id}_qrlabel_{event.eventID}_{event.id}{n}.png'
                                 qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
                                 qr.add_data(f'{event.eventID};{uuid.uuid4()}')
                                 qr.make(fit = True)

@@ -76,7 +76,7 @@ body {
 <!-- Repete n times -->
 {% for n in range(event.print_n) %}
 <var class='label'>
-    <img src="static/uploads/{{user.id}}_qrlabel_{{data.eventID}}_{{n}}.png">
+    <img src="static/uploads/{{user.id}}_qrlabel_{{data.eventID}}_{{event.id}}{{n}}.png">
     <span>
     <!-- Line 1: Country, region, municipality -->
     <strong>{{ data.countryCode|upper }}</strong> {% if data.stateProvince %}{{ data.stateProvince }} {% endif %}{% if data.strand_id %}{{ data.strand_id|upper }} {% endif %}{% if data.municipality %} {{ data.municipality|upper }}{% endif %}:

@@ -1,0 +1,120 @@
+
+<!doctype html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Paper CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css">
+
+<style>
+
+/*
+body {
+  background: rgb(204,204,204); 
+}
+.page {
+  background: white;
+  width: 21cm;
+  height: 29.7cm;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+}
+@media print {
+  body, .page {
+    margin: 0;
+    box-shadow: 0;
+  }
+}
+*/
+
+.label {
+   font-family: Verdana;
+   font-weight: normal;
+   font-style: normal;
+   white-space:nowrap;
+   display: inline-block;
+   white-space:nowrap;
+   font-size: 5px;
+   line-height: 100%;
+   width:35mm;
+   height:6mm;
+   margin-top:0px;
+   margin-right:0px;
+   margin-left:0px;
+}
+
+.label img {
+   float:left;
+   height:120%;
+   margin-right:1px;
+}
+
+.label span {
+   height:100%;
+}
+
+</style>
+</head>
+
+<!-- Paper-CSS -->
+<body class="A4">
+<section class="sheet padding-10mm">
+
+<!-- Alternative CSS
+<body>
+<var class="page">
+-->
+
+<!-- For each scientific name -->
+{% for det in dets %}
+<!-- loop over det-data to find matching scientific name -->
+{% for data in det_data %}
+{% if data.scientificName == det.scientificName %}
+<!-- Repete n times -->
+{% for n in range(det.print_n) %}
+<var class='label'>
+    <img src="static/uploads/{{user.id}}_detqrlabel_{{data.scientificName}}_{{det.sex}}_{{det.id}}{{n}}.png">
+    <span>
+      <!-- Line 1: Scientific name -->
+      <p style="margin: 2px; font-size: 155%;">
+      {{ data.scientificName | scn_italic(data.taxonRank, data.scientificNameAuthorship) | safe }}{% if det.identificationQualifier %} <small><b>{{ det.identificationQualifier }}.</b></small>{% endif %}
+      </p>
+      <!-- Line 2: Author -->
+      <p>
+      {% if data.scientificNameAuthorship %}
+      {{ data.scientificNameAuthorship }}
+      {% else %}
+      <br>
+      {% endif %}
+      </p>
+      <!-- Line 3: family/rank and sex -->
+      <p style="font-size: 110%; font-weight: bold;">
+          {% if data.taxonRank == "species" or data.taxonRank == "genus" or data.taxonRank == "spnov" or data.taxonRank == "species-group" %}
+          {{ data.family }}
+          {% else %}
+          {{ data.taxonRank | capitalize }}
+          {% endif %}
+      {% if det.sex %}
+      <span style="float: right; margin-right: 20%; font-size: larger;">
+        {% if det.sex=="female" %}&#9792;{% else %}&#9794;{% endif %}
+      </span>
+      {% endif %}
+      </p>
+    </span>
+</var>
+
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+<!--
+</var>
+-->
+
+</section>
+
+</body>

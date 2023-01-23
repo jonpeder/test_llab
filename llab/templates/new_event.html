@@ -102,8 +102,8 @@
     Collecting method
     <div class="mb-3">
         <select class="form-select" aria-label="Default select example" name="Collecting_method">
-            {% for i in met %}
-            <option value={{ i.ID }}>{{ i.samplingProtocol }}</option>
+            {% for method in met %}
+            <option value={{ method }}>{{ method }}</option>
             {% endfor %}
         </select>
     </div>

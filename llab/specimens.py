@@ -11,9 +11,9 @@ import datetime
 specimens = Blueprint('specimens', __name__)
 
 # Add determinations to database. Add specimens to database if not already present.
-@specimens.route('/det', methods=["POST", "GET"])
+@specimens.route('/specimen_det', methods=["POST", "GET"])
 @login_required
-def det():
+def specimen_det():
     title = "New determinations"
     entomologists = Collectors.query.all()
     # Count
@@ -141,15 +141,15 @@ def det():
         else:
             flash("A determination should be inserted!", category="error")
     # Return html-page
-    return render_template("det.html", title=title, user=current_user, entomologists=entomologists)
+    return render_template("specimen_det.html", title=title, user=current_user, entomologists=entomologists)
 
 
 # Send decoded qr-codes from specimen-labels to get specimen table
-@specimens.route('/show_specimens')
+@specimens.route('/specimen_find')
 @login_required
-def show_specimens():
-    title = "Display specimen data"
-    return render_template("show_specimens.html", title=title, user=current_user)
+def specimen_find():
+    title = "Find specimen data"
+    return render_template("specimen_find.html", title=title, user=current_user)
 
 # Quary database for specimen-data and render a specimen-table 
 @specimens.route('/specimen_list', methods=["POST", "GET"])

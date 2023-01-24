@@ -156,17 +156,24 @@ def show_specimens():
 @login_required
 def specimen_list():
     title = "Speciemen table"
+    order = ['species', 'spnov', 'species-group', 'genus', 'tribe', 'subfamily', 'family', 'superfamily', 'infraorder', 'order', 'class', 'other']
     occurrence_ids=""
-    # Get occurrence ids from decoded qr_specimen_labels
+    # If requested, get occurrence ids from decoded qr_specimen_labels
     if request.form.get('qr_specimen_labels') == 'qr_specimen_labels':
         qr_data = request.form.get("qr_data")
         occurrence_ids = qr_data.splitlines()
+    # If requested, get event-id from show_event.html
+    if request.form.get("collecting_event_id") == "collecting_event_id":
+        eventID = request.form.get("eventID")
+        event = Collecting_events.query.filter_by(eventID=eventID).first()
+        occurrence_ids = [i.occurrenceID for i in event.occurrences]
     # Make database quary
     occurrences = Occurrences.query.filter(Occurrences.occurrenceID.in_(occurrence_ids))\
             .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID)\
             .join(Taxa, Identification_events.scientificName==Taxa.scientificName)\
             .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
             .join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode)\
-            .with_entities(Country_codes.country, Collecting_events.eventID, Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, Collecting_events.habitat, Collecting_events.substrateName, Collecting_events.substratePlantPart, Collecting_events.substrateType, Collecting_events.eventDate_1, Collecting_events.eventDate_2, Collecting_events.samplingProtocol, Collecting_events.recordedBy, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.taxonRank, Identification_events.identifiedBy, Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex)\
+            .with_entities(Country_codes.country, Collecting_events.eventID, Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, Collecting_events.habitat, Collecting_events.substrateName, Collecting_events.substratePlantPart, Collecting_events.substrateType, Collecting_events.eventDate_1, Collecting_events.eventDate_2, Collecting_events.samplingProtocol, Collecting_events.recordedBy, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.taxonRank, Taxa.scientificNameAuthorship, Identification_events.identifiedBy, Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex)\
+            .order_by(Taxa.scientificName, Collecting_events.eventID)\
             .all()
-    return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences)
+    return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences, order=order)

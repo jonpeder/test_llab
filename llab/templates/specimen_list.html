@@ -2,11 +2,11 @@
 {% block content %}
 
 
-{% if occurrences %}
 
+{% if occurrences %}
 <!-- output table -->
 <div class="table-responsive">
-<table class="table table-lg table-secondary">
+<table class="table table-lg table-secondary" style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;" >
     <tr>
         <th>#</th>
         <th>Rank</th>
@@ -22,14 +22,17 @@
         <th>Leg.</th>
         <th>Event-ID</th>
     </tr>
+
+    {% for rank in order %}
     {% for occurrence in occurrences %}
+    {% if occurrence.taxonRank == rank %}
     <tr>
         <!-- Row number -->
         <td>{{ loop.index }}</td>
         <!-- Taxon rank -->
         <td>{{ occurrence.taxonRank }}</td>
         <!-- Taxon -->
-        <td>{{ occurrence.scientificName }}{% if occurrence.identificationQualifier %}, {{occurrence.identificationQualifier}}{% endif %}</td>
+        <td>{{ occurrence.scientificName | scn_italic (occurrence.taxonRank, occurrence.scientificNameAuthorship) | safe }} {{occurrence.scientificNameAuthorship}} {% if occurrence.identificationQualifier %}, {{occurrence.identificationQualifier}}{% endif %}</td>
         <!-- Sex -->
         <td>{{ occurrence.sex }}</td>
         <!-- Identified by -->
@@ -55,8 +58,15 @@
         <!-- Collected by -->
         <td>{{ occurrence.recordedBy | leg_format }}</td>
         <!-- Event-ID -->
-        <td>{{ occurrence.eventID }}</td>
+        <td>
+            <form action="/show_event" method="post">
+                <input type="text" name="eventID" id="eventID" value="{{ occurrence.eventID }}" hidden>
+                <button type="submit" class="btn btn-secondary btn-sm" name="action1" value="VALUE1">{{ occurrence.eventID }}</button>
+            </form>
+        </td>
     </tr>
+    {% endif %}
+    {% endfor %}
     {% endfor %}
 </table>
 </div>

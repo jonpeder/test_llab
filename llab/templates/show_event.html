@@ -1,16 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
 
-<form method=post>
+<form action="/show_event" method=post>
 
     Select collecting event-ID
     <div class="mb-3">
         <select class="form-control selectpicker" id="eventID" name="eventID" data-live-search="true">
             {% for i in events %}
+            {% if i.eventID == event.eventID %}
+            <option selected value="{{ i.eventID }}">{{ i.eventID }} {% if i.municipality %}- {{ i.municipality }}{% endif %} {%
+                if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if
+                i.locality_2 %}- {{ i.locality_2 }}{% endif %}
+            </option>
+            {% else %}
             <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.municipality %}- {{ i.municipality }}{% endif %} {%
                 if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if
                 i.locality_2 %}- {{ i.locality_2 }}{% endif %}
             </option>
+            {% endif %}
             {% endfor %}
         </select>
     </div>
@@ -120,6 +127,14 @@
 </div>
 <br />
 {% endfor %}
+
+<form action="/specimen_list" method=post>
+<!-- Button 3-->
+<div class="mb-3">
+    <input type="text" name="eventID" id="eventID" value="{{ event.eventID }}" hidden>
+    <button type="submit" class="btn btn-secondary btn-sm" name="collecting_event_id" value="collecting_event_id">View specimens</button>
+</div>
+</form>
 
 {% endif %}
 

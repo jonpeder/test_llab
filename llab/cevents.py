@@ -94,7 +94,6 @@ def show_event():
     title = "Show collecting events"
     events = Collecting_events.query.filter_by(
         createdByUserID=current_user.id).order_by(Collecting_events.eventID.desc())
-    event = ""
     if request.method == 'POST':
         eventID = request.form.get("eventID")
         event = Collecting_events.query.filter_by(eventID=eventID).first()
@@ -112,6 +111,7 @@ def show_event():
         else:
             return render_template("show_event.html", title=title, user=current_user, events=events, event=event)
     else:
+        event = ""
         return render_template("show_event.html", title=title, user=current_user, events=events, event=event)
 
 

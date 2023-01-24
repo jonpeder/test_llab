@@ -64,6 +64,7 @@ class Collecting_events(db.Model):
     substrateName = db.Column(db.String(50))
     substrateType = db.Column(db.String(50))
     substratePlantPart = db.Column(db.String(50))
+    occurrences = db.relationship('Occurrences')
 
 class Collectors (db.Model):
     recordedBy = db.Column(db.String(100), primary_key=True)

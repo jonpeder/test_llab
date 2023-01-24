@@ -317,7 +317,7 @@ def det_labels():
                     for data in det_data:
                         if det.scientificName==data.scientificName:
                             for n in range(det.print_n):
-                                filename = f'{current_user.id}_detqrlabel_{det.scientificName}_{det.sex}_{det.id}{n}.png'
+                                filename = f'{current_user.id}_detqrlabel_{det.id}_{n}.png'
                                 qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
                                 qr.add_data(f'det.{det.scientificName};{det.identificationQualifier};{det.sex};{uuid.uuid4()}')
                                 qr.make(fit = True)

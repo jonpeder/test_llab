@@ -240,7 +240,7 @@ def labels():
                     for data in event_data:
                         if event.eventID==data.eventID:
                             for n in range(event.print_n):
-                                filename = f'{current_user.id}_qrlabel_{event.eventID}_{event.id}{n}.png'
+                                filename = f'{current_user.id}_qrlabel_{event.id}_{n}.png'
                                 qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
                                 qr.add_data(f'{event.eventID};{uuid.uuid4()}')
                                 qr.make(fit = True)

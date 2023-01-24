@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="/specimen_list" method=post>
+
+<!-- QR-code data -->
+QR-code data
+<div class="mb-3">
+    <textarea type="text" class="form-control" id="qr_data" name="qr_data" placeholder="Insert decoded QR-codes here!"
+        required></textarea>
+    <small id="qr-dataHelp" class="form-text text-muted">Decoded QR-codes from specimen-labels</small>
+</div>
+
+<!-- Button -->
+<div class="mb-3">
+    <button type="submit" class="btn btn-success btn-lg" name="qr_specimen_labels" value="qr_specimen_labels">Submit</button>
+</div>
+
+</form>
+
+{% endblock %}

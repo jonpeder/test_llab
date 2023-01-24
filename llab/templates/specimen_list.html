@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+{% if occurrences %}
+
+<!-- output table -->
+<table>
+    <tr>
+        <th>Species</th>
+        <th>Country</th>
+        <th>Municipality</th>
+        <th>Locality</th>
+        <th>Habitat</th>
+        <th>Date</th>
+        <th>Method</th>
+        <th>Collected by</th>
+        <th>Identified by</th>
+        <th>Taxon rank</th>
+        <th>family</th>
+        <th>order</th>
+    </tr>
+    {% for occurrence in occurrences %}
+    <tr>
+        <!-- Species -->
+        <td>{{ occurrence.scientificName }}</td>
+        <!-- Country -->
+        <td>{{ occurrence.country }}</td>
+        <!-- Municipality -->
+        <td>{{ occurrence.municipality }}</td>
+        <!-- Locality -->
+        <td>{{ occurrence.locality_1 | locality_format(occurrence.locality_2) }}</td>
+        <!-- Habitat -->
+        <td>
+            {% if occurrence.substrateName %}
+            (<i>{{ occurrence.substrateName|scn_format}}</i>-{{ occurrence.substratePlantPart }}-{{ occurrence.substrateType }})
+            {% elif occurrence.habitat %}
+            ({{ occurrence.habitat }})
+            {% endif %}
+        </td>
+        <!-- Date -->
+        <td>{{ occurrence.eventDate_1 | format_dates(occurrence.eventDate_2) | safe }}</td>
+        <!-- Method -->
+        <td>{% if occurrence.samplingProtocol %}{{ occurrence.samplingProtocol }}{% endif %}</td>
+        <!-- Collected by -->
+        <td>{{ occurrence.recordedBy | leg_format}}</td>
+        <!-- Identified by -->
+        <td>{{ occurrence.identifiedBy }}</td>
+        <!-- Taxon rank -->
+        <td>{{ occurrence.taxonRank }}</td>
+        <!-- Family -->
+        <td>{{ occurrence.family }}</td>
+        <!-- Order -->
+        <td>{{ occurrence.order }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}

@@ -24,6 +24,43 @@ def string_to_date(date):
 def date_format(date, format="%d.%m.%Y"):
     return date.strftime(format)
 
+# Format dates
+@filters.app_template_filter('format_dates')
+def format_dates(date_1, date_2):
+    # If date 1
+    date = ""
+    if date_1:
+        date_1 = datetime.strptime(str(date_1), "%Y-%m-%d")
+        date = f'{date_1.strftime("%d")} <b>{date_1.strftime("%b")}</b> {date_1.strftime("%Y")}'
+        # If date 2
+        if date_2:
+            date_2 = datetime.strptime(str(date_2), "%Y-%m-%d")
+            # If same year
+            if date_1.strftime("%Y") == date_2.strftime("%Y"):
+                # If same month
+                if date_1.strftime("%m") == date_2.strftime("%m"):
+                    date = f'{date_1.strftime("%d")}-{date_2.strftime("%d")} <b>{date_2.strftime("%b")}</b> {date_2.strftime("%Y")}'
+                # If not same month
+                else:
+                    date = f'{date_1.strftime("%d")} <b>{date_1.strftime("%b")}</b>-{date_2.strftime("%d")} <b>{date_2.strftime("%b")}</b> {date_2.strftime("%Y")}'
+            # If not same year
+            else:
+                date = f'{date_1.strftime("%d")} <b>{date_1.strftime("%b")}</b> {date_1.strftime("%Y")}-{date_2.strftime("%d")} <b>{date_2.strftime("%b")}</b> {date_2.strftime("%Y")}'
+    # If only date 1
+    return date
+
+# Format Locality
+@filters.app_template_filter('locality_format')
+def locality_format(locality_1, locality_2):
+    locality = ""
+    if locality_2:
+        locality = locality_2
+    if locality_1:
+        locality = locality_1
+        if locality_2:
+            locality = f'{locality_1}, {locality_2}'
+    return locality
+
 # Format recordedBy
 @filters.app_template_filter('leg_format')
 def leg_format(leg):

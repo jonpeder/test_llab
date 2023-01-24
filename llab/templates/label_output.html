@@ -98,7 +98,37 @@ body {
     <br/>
     {% endif %}
     <!-- Line 5: Method, date -->
-    {% if data.samplingProtocol %}{% if data.eventDate_1 and data.eventDate_2 %}{{ data.samplingProtocol_app|upper }}{% else %}{{ data.samplingProtocol }}{% endif %}{% if data.eventDate_1 %}: <!-- if date-1 exists -->{% if data.eventDate_2 %}<!-- if date-2 exists -->{% if (data.eventDate_2 | string_to_date | date_format("%Y")) == (data.eventDate_1 | string_to_date | date_format("%Y")) %} <!-- if in the same year -->{% if (data.eventDate_2 | string_to_date | date_format("%m")) == (data.eventDate_1 | string_to_date | date_format("%m")) %}<!-- if in the same month -->{{ data.eventDate_1 | string_to_date | date_format("%d") }}{% else %}<!-- if not in the same month -->{{ data.eventDate_1 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_1 | string_to_date | date_format("%b") }}</strong> {% endif %}{% else %}<!-- if not in the same year -->{{ data.eventDate_1 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_1 | string_to_date | date_format("%b") }}</strong> {{ data.eventDate_1 | string_to_date | date_format("%Y") }}{% endif %}-{{ data.eventDate_2 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_2 | string_to_date | date_format("%b") }}</strong> {{ data.eventDate_2 | string_to_date | date_format("%Y") }}{% else %}<!-- only date-1 exists -->{{ data.eventDate_1 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_1 | string_to_date | date_format("%b") }}</strong> {{ data.eventDate_1 | string_to_date | date_format("%Y") }}{% endif %}{% endif %}<br/>{% endif %}
+    {% if data.samplingProtocol %}
+      {% if data.eventDate_1 and data.eventDate_2 %}
+        {{ data.samplingProtocol_app|upper }}
+      {% else %}
+        {{ data.samplingProtocol }}
+      {% endif %}
+      <!-- if date-1 exists -->
+      {% if data.eventDate_1 %}:
+        <!-- if date-2 exists -->
+        {% if data.eventDate_2 %}
+          <!-- if in the same year -->
+          {% if (data.eventDate_2 | string_to_date | date_format("%Y")) == (data.eventDate_1 | string_to_date | date_format("%Y")) %}
+            <!-- if in the same month -->
+            {% if (data.eventDate_2 | string_to_date | date_format("%m")) == (data.eventDate_1 | string_to_date | date_format("%m")) %}
+              {{ data.eventDate_1 | string_to_date | date_format("%d") }}
+            <!-- if not in the same month -->
+            {% else %}
+              {{ data.eventDate_1 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_1 | string_to_date | date_format("%b") }}</strong>
+            {% endif %}
+          <!-- if not in the same year -->
+          {% else %}
+            {{ data.eventDate_1 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_1 | string_to_date | date_format("%b") }}</strong> {{ data.eventDate_1 | string_to_date | date_format("%Y") }}
+          {% endif %}
+        -{{ data.eventDate_2 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_2 | string_to_date | date_format("%b") }}</strong> {{ data.eventDate_2 | string_to_date | date_format("%Y") }}
+        <!-- If only date-1 exists -->
+        {% else %}
+          {{ data.eventDate_1 | string_to_date | date_format("%d") }} <strong>{{ data.eventDate_1 | string_to_date | date_format("%b") }}</strong> {{ data.eventDate_1 | string_to_date | date_format("%Y") }}
+        {% endif %}
+      {% endif %}
+      <br/>
+    {% endif %}
     <!-- Line 6: Leg -->
     {% if data.recordedBy %}
     Leg. {{ data.recordedBy | leg_format}}

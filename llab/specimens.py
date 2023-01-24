@@ -10,7 +10,7 @@ import datetime
 # connect to __init__ file
 specimens = Blueprint('specimens', __name__)
 
-# Add determinations to database. Add specimen to database if not already present.
+# Add determinations to database. Add specimens to database if not already present.
 @specimens.route('/det', methods=["POST", "GET"])
 @login_required
 def det():
@@ -144,30 +144,29 @@ def det():
     return render_template("det.html", title=title, user=current_user, entomologists=entomologists)
 
 
-# Add determinations to database. Add specimen to database if not already present.
+# Send decoded qr-codes from specimen-labels to get specimen table
 @specimens.route('/show_specimens')
 @login_required
 def show_specimens():
-    title = "Display specimen list"
+    title = "Display specimen data"
     return render_template("show_specimens.html", title=title, user=current_user)
 
-# Add determinations to database. Add specimen to database if not already present.
+# Quary database for specimen-data and render a specimen-table 
 @specimens.route('/specimen_list', methods=["POST", "GET"])
 @login_required
 def specimen_list():
-    title = "Speciemen list"
+    title = "Speciemen table"
     occurrence_ids=""
-    # If input from qr_specimen_labels
+    # Get occurrence ids from decoded qr_specimen_labels
     if request.form.get('qr_specimen_labels') == 'qr_specimen_labels':
         qr_data = request.form.get("qr_data")
         occurrence_ids = qr_data.splitlines()
-
-    # Check that occurrence-id exists
+    # Make database quary
     occurrences = Occurrences.query.filter(Occurrences.occurrenceID.in_(occurrence_ids))\
             .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID)\
             .join(Taxa, Identification_events.scientificName==Taxa.scientificName)\
             .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
             .join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode)\
-            .with_entities(Country_codes.country, Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, Collecting_events.habitat, Collecting_events.substrateName, Collecting_events.substratePlantPart, Collecting_events.substrateType, Collecting_events.eventDate_1, Collecting_events.eventDate_2, Collecting_events.samplingProtocol, Collecting_events.recordedBy, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.taxonRank, Identification_events.identifiedBy)\
+            .with_entities(Country_codes.country, Collecting_events.eventID, Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, Collecting_events.habitat, Collecting_events.substrateName, Collecting_events.substratePlantPart, Collecting_events.substrateType, Collecting_events.eventDate_1, Collecting_events.eventDate_2, Collecting_events.samplingProtocol, Collecting_events.recordedBy, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.taxonRank, Identification_events.identifiedBy, Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex)\
             .all()
     return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences)

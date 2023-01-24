@@ -5,25 +5,35 @@
 {% if occurrences %}
 
 <!-- output table -->
-<table>
+<div class="table-responsive">
+<table class="table table-lg table-secondary">
     <tr>
-        <th>Species</th>
+        <th>#</th>
+        <th>Rank</th>
+        <th>Taxon</th>
+        <th>Sex</th>
+        <th>Det.</th>
         <th>Country</th>
         <th>Municipality</th>
         <th>Locality</th>
         <th>Habitat</th>
         <th>Date</th>
         <th>Method</th>
-        <th>Collected by</th>
-        <th>Identified by</th>
-        <th>Taxon rank</th>
-        <th>family</th>
-        <th>order</th>
+        <th>Leg.</th>
+        <th>Event-ID</th>
     </tr>
     {% for occurrence in occurrences %}
     <tr>
-        <!-- Species -->
-        <td>{{ occurrence.scientificName }}</td>
+        <!-- Row number -->
+        <td>{{ loop.index }}</td>
+        <!-- Taxon rank -->
+        <td>{{ occurrence.taxonRank }}</td>
+        <!-- Taxon -->
+        <td>{{ occurrence.scientificName }}{% if occurrence.identificationQualifier %}, {{occurrence.identificationQualifier}}{% endif %}</td>
+        <!-- Sex -->
+        <td>{{ occurrence.sex }}</td>
+        <!-- Identified by -->
+        <td>{{ occurrence.identifiedBy }}, {{ occurrence.dateIdentified | string_to_date | date_format("%B %Y") }}</td>
         <!-- Country -->
         <td>{{ occurrence.country }}</td>
         <!-- Municipality -->
@@ -33,28 +43,24 @@
         <!-- Habitat -->
         <td>
             {% if occurrence.substrateName %}
-            (<i>{{ occurrence.substrateName|scn_format}}</i>-{{ occurrence.substratePlantPart }}-{{ occurrence.substrateType }})
+            <i>{{ occurrence.substrateName|scn_format}}</i>-{{ occurrence.substratePlantPart }}-{{ occurrence.substrateType }}
             {% elif occurrence.habitat %}
-            ({{ occurrence.habitat }})
+            {{ occurrence.habitat }}
             {% endif %}
         </td>
         <!-- Date -->
-        <td>{{ occurrence.eventDate_1 | format_dates(occurrence.eventDate_2) | safe }}</td>
+        <td>{{ occurrence.eventDate_1 | format_dates(occurrence.eventDate_2) | striptags }}</td>
         <!-- Method -->
         <td>{% if occurrence.samplingProtocol %}{{ occurrence.samplingProtocol }}{% endif %}</td>
         <!-- Collected by -->
-        <td>{{ occurrence.recordedBy | leg_format}}</td>
-        <!-- Identified by -->
-        <td>{{ occurrence.identifiedBy }}</td>
-        <!-- Taxon rank -->
-        <td>{{ occurrence.taxonRank }}</td>
-        <!-- Family -->
-        <td>{{ occurrence.family }}</td>
-        <!-- Order -->
-        <td>{{ occurrence.order }}</td>
+        <td>{{ occurrence.recordedBy | leg_format }}</td>
+        <!-- Event-ID -->
+        <td>{{ occurrence.eventID }}</td>
     </tr>
     {% endfor %}
 </table>
+</div>
+
 {% endif %}
 
 {% endblock %}

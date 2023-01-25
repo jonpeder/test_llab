@@ -6,7 +6,7 @@
 {% if occurrences %}
 <!-- output table -->
 <div class="table-responsive">
-<table class="table table-lg table-secondary" style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;" >
+<table class="table table-lg" style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;" >
     <tr>
         <th>#</th>
         <th>Rank</th>
@@ -26,21 +26,29 @@
     {% for rank in order %}
     {% for occurrence in occurrences %}
     {% if occurrence.taxonRank == rank %}
-    <tr>
+    
+    <!-- Add colour to different taxonomic ranks -->
+    {% if rank == "species" or rank == "spnov" %}
+    <tr class="table-success">
+    {% elif rank == "genus" or rank == "species-group" %}
+    <tr class="table-primary">
+    {% else %}
+    <tr class="table-secondary">
+    {% endif %}
         <!-- Row number -->
-        <td>{{ loop.index }}</td>
+        <td><a class="btn btn-outline-dark btn-sm" href="{{ url_for('specimens.specimen_view', occurrence_id=occurrence.occurrenceID) }}" role="button">{{ loop.index }}</a></td>
         <!-- Taxon rank -->
         <td>{{ occurrence.taxonRank }}</td>
         <!-- Taxon -->
         <td>{{ occurrence.scientificName | scn_italic (occurrence.taxonRank, occurrence.scientificNameAuthorship) | safe }} {{occurrence.scientificNameAuthorship}} {% if occurrence.identificationQualifier %}, {{occurrence.identificationQualifier}}{% endif %}</td>
         <!-- Sex -->
-        <td>{{ occurrence.sex }}</td>
+        <td>{{ occurrence.sex | if_present }}</td>
         <!-- Identified by -->
         <td>{{ occurrence.identifiedBy }}, {{ occurrence.dateIdentified | string_to_date | date_format("%B %Y") }}</td>
         <!-- Country -->
-        <td>{{ occurrence.country }}</td>
+        <td>{{ occurrence.country | if_present }}</td>
         <!-- Municipality -->
-        <td>{{ occurrence.municipality }}</td>
+        <td>{{ occurrence.municipality | if_present }}</td>
         <!-- Locality -->
         <td>{{ occurrence.locality_1 | locality_format(occurrence.locality_2) }}</td>
         <!-- Habitat -->
@@ -54,14 +62,14 @@
         <!-- Date -->
         <td>{{ occurrence.eventDate_1 | format_dates(occurrence.eventDate_2) | striptags }}</td>
         <!-- Method -->
-        <td>{% if occurrence.samplingProtocol %}{{ occurrence.samplingProtocol }}{% endif %}</td>
+        <td>{{ occurrence.samplingProtocol | if_present }}</td>
         <!-- Collected by -->
-        <td>{{ occurrence.recordedBy | leg_format }}</td>
+        <td>{{ occurrence.recordedBy | leg_format | if_present }}</td>
         <!-- Event-ID -->
         <td>
             <form action="/show_event" method="post">
                 <input type="text" name="eventID" id="eventID" value="{{ occurrence.eventID }}" hidden>
-                <button type="submit" class="btn btn-secondary btn-sm" name="action1" value="VALUE1">{{ occurrence.eventID }}</button>
+                <button type="submit" class="btn btn-outline-dark btn-sm" name="action1" value="VALUE1">{{ occurrence.eventID }}</button>
             </form>
         </td>
     </tr>
@@ -70,7 +78,9 @@
     {% endfor %}
 </table>
 </div>
-
+{% else %}
+<br>
+<h5>No specimen records found</h5>
 {% endif %}
 
 {% endblock %}

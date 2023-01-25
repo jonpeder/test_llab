@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if occurrence %}
+
+{% for identification in identifications %}
+{% if identification.identificationID == occurrence.identificationID %}
+<table class="table-responsive table-sm"
+    style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;">
+    <!-- Identification table  -->
+    <tr class="border-bottom border-dark align-bottom">
+        <th>Object:</th>
+        <th></th>
+    </tr>
+    <!-- Occurrence ID -->
+    <tr>
+        <td>Occurrence ID</td>
+        <td>{{ occurrence.occurrenceID }}</td>
+    </tr>
+    <!-- Catalogue number -->
+    {{ occurrence.catalogNumber | tablerow("Catalog number") | safe }}
+    <!-- Owner institution -->
+    {{ occurrence.ownerInstitutionCode | tablerow("Owner institution") | safe }}
+    <!-- Preparations -->
+    {{ occurrence.preparations | tablerow("Preparation") | safe }}
+    <!-- Occurrence remarks -->
+    {{ occurrence.occurrenceRemarks | tablerow("Occurrence remarks") | safe }}
+    <!-- Associated taxa -->
+    {{ occurrence.associatedTaxa | tablerow("Associated taxa") | safe }}
+    <!-- Associated references -->
+    {{ occurrence.associatedReferences | tablerow("Associated references") | safe }}
+    <!-- Verbatim label -->
+    {{ occurrence.verbatimLabel | tablerow("Verbatim label") | safe }}
+    
+    <!-- Identification table  -->
+    <tr class="border-bottom border-dark align-bottom">
+        <th>Identification:</th>
+        <th></th>
+    </tr>
+    <!-- Taxon name -->
+    <tr>
+        <td>Taxon name</td>
+        <td>{{ identification.scientificName | scn_italic (identification.taxonRank,
+            identification.scientificNameAuthorship) |
+            safe }} {{identification.scientificNameAuthorship}}</td>
+    </tr>
+    <!-- Identification qualifyer -->
+    {{ identification.identificationQualifier | tablerow("Identification qualifyer") | safe }}
+    <!-- Sex -->
+    {{ identification.sex | tablerow("Sex") | safe }}
+    <!-- Life stage -->
+    {{ identification.lifeStage | tablerow("Life stage") | safe }}
+    <!-- Identified by -->
+    {{ identification.identifiedBy | tablerow("Identified by") | safe }}
+    <!-- Date identified -->
+    <tr>
+        <td>Date identified</td>
+        <td>{{ identification.dateIdentified | string_to_date | date_format("%d %B %Y") }}</td>
+    </tr>
+    <!-- Identification remarks -->
+    {{ identification.identificationRemarks | tablerow("Identification remarks") | safe }}
+
+    <!-- Taxon table -->
+    <tr class="border-bottom border-dark align-bottom">
+        <th>Taxon:</th>
+        <th></th>
+    </tr>
+    <!-- Taxon ID -->
+    {% if identification.taxonID %}
+    <tr>
+        <td>Taxon ID</td>
+        <td><a href="{{ identification.taxonID }}">{{ identification.taxonID }}</a></td>
+    </tr>
+    {% endif %}
+    <!-- Taxon rank -->
+    {{ identification.taxonRank | tablerow("Taxon rank") | safe }}
+    <!-- Scientific name -->
+    {{ identification.scientificName | tablerow("Scientific name") | safe }}
+    <!-- Authorship -->
+    {{ identification.scientificNameAuthorship | tablerow("Authorship") | safe }}
+    <!-- Specific epithet -->
+    {{ identification.specificEpithet | tablerow("Specific epithet") | safe }}
+    <!-- Genus -->
+    {{ identification.genus | tablerow("Genus") | safe }}
+    <!-- Family -->
+    {{ identification.family | tablerow("Family") | safe }}
+    <!-- Order -->
+    {{ identification.order | tablerow("Order") | safe }}
+    <!-- Class -->
+    {{ identification.cl | tablerow("Class") | safe }}
+
+    <!-- Event table -->
+    <tr class="border-bottom border-dark align-bottom">
+        <th>Event:</th>
+        <th></th>
+    </tr>
+    <!-- Event ID -->
+    {{ occurrence.eventID | tablerow("Event ID") | safe }}
+    <!-- Country -->
+    {{ occurrence.country | tablerow("Country") | safe }}
+    <!-- Municipality -->
+    {{ occurrence.municipality | tablerow("Municipality") | safe }}
+    <!-- Locality -->
+    {{ occurrence.locality_1 | locality_format(occurrence.locality_2) | tablerow("Locality") | safe }}
+    <!-- Coordinates -->
+    <tr>
+        <td>Coordinates</td>
+        <td><a href="http://maps.google.com/maps?q={{ occurrence.decimalLatitude }},{{ occurrence.decimalLongitude }}">{{ occurrence.decimalLatitude }}, {{ occurrence.decimalLongitude }}</a></td>
+    </tr>
+    <!-- Coordinate uncertainty (m) -->
+    {{ occurrence.coordinateUncertaintyInMeters | tablerow("Coordinate uncertainty (m)") | safe }}
+    <!-- Habitat -->
+    {{ occurrence.habitat | tablerow("Habitat") | safe }}
+    <!-- Substrate -->
+    {{ occurrence.substrateName | format_substrate(occurrence.substratePlantPart, occurrence.substrateType) | tablerow("Substrate") | safe }}
+    <!-- Method -->
+    {{ occurrence.samplingProtocol | tablerow("Method") | safe }}
+    <!-- Event date -->
+    {{ occurrence.eventDate_1 | format_dates(occurrence.eventDate_2) | striptags | tablerow("Event date") | safe }}
+    <!-- Collected by -->
+    {{ occurrence.recordedBy | tablerow("Collected by") | safe }}
+    <!-- Event remarks -->
+    {{ occurrence.eventRemarks | tablerow("Event remarks") | safe }}
+    
+</table>
+
+{% endif %}
+{% endfor %}
+
+<br>
+<br>
+
+<h5>Identifications:</h5>
+
+<div class="table-responsive">
+    <table class="table table-lg"
+        style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;">
+        {% for identification in identifications %}
+        <tr>
+            <td></td>
+            <td>Taxon</td>
+            <td>Identification qualifyer</td>
+            <td>Sex</td>
+            <td>Life stage</td>
+            <td>Identified by</td>
+            <td>Date identified</td>
+            <td>Identification remarks</td>
+            <td>Taxon rank</td>
+            <td>Genus</td>
+            <td>Family</td>
+            <td>Order</td>
+            <td>Class</td>
+        </tr>
+        <!-- Distinguish current and previous identification events -->
+        <!-- Current identification -->
+        {% if identification.identificationID == occurrence.identificationID %}
+        <tr class="table-success">
+            <th></th>
+            <!-- Previous identifications -->
+            {% else %}
+        <tr class="table-danger">
+            <th></th>
+            {% endif %}
+
+            <!-- Taxon -->
+            <td>{{ identification.scientificName | scn_italic (identification.taxonRank,
+                identification.scientificNameAuthorship) |
+                safe }} {{identification.scientificNameAuthorship}}</td>
+            <!-- Identification qualifyer -->
+            <td>{{ identification.identificationQualifier | if_present }}</td>
+            <!-- Sex -->
+            <td>{{ identification.sex | if_present }}</td>
+            <!-- Life stage -->
+            <td>{{ identification.lifeStage | if_present }}</td>
+            <!-- Identified by -->
+            <td>{{ identification.identifiedBy }}</td>
+            <!-- Date identified -->
+            <td>{{ identification.dateIdentified | string_to_date | date_format("%d %B %Y") }}</td>
+            <!-- Identification remarks -->
+            <td>{{ identification.identificationRemarks | if_present }}</td>
+            <!-- Taxon rank -->
+            <td>{{ identification.taxonRank }}</td>
+            <!-- Genus -->
+            <td>{{ identification.genus | if_present }}</td>
+            <!-- Family -->
+            <td>{{ identification.family | if_present }}</td>
+            <!-- Order -->
+            <td>{{ identification.order | if_present }}</td>
+            <!-- Class -->
+            <td>{{ identification.cl | if_present }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endif %}
+
+{% endblock %}

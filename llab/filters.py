@@ -98,9 +98,44 @@ def scn_italic(name, rank, author):
         name = f'<i>{name.replace("group", "").strip()}</i> group'    
     return name
 
+# if_present
+@filters.app_template_filter('if_present')
+def if_present(variable):
+    if variable:
+        variable_out = variable
+    else:
+        variable_out = ""
+    return variable_out
+
+# tablerow
+@filters.app_template_filter('tablerow')
+def if_present(value, header):
+    if value:
+        row = f'<tr><td>{header}</td><td>{value}</td></tr>'
+    else:
+        row = ""
+    return row
+
+# substrate
+@filters.app_template_filter('format_substrate')
+def format_substrate(substrateName, substratePlantPart, substrateType):
+    if substrateName:
+        if substratePlantPart:
+            if substrateType:
+                substrate = f'<i>{substrateName}</i>-{substratePlantPart}-{substrateType}'
+            else:
+                substrate = f'<i>{substrateName}</i>-{substratePlantPart}'
+        elif substrateType:
+            substrate = f'<i>{substrateName}</i>-{substrateType}'
+        else:
+            substrate = f'<i>{substrateName}</i>'
+    else:
+        substrate = ""
+    return substrate
+
 # Debug
 @filters.app_template_filter('debug')
 def debug(text):
-  print (text)
-  return ''
+    print (text)
+    return ''
 

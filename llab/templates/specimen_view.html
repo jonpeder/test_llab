@@ -5,7 +5,8 @@
 
 {% for identification in identifications %}
 {% if identification.identificationID == occurrence.identificationID %}
-<table class="table-responsive table-sm"
+<div class="table-responsive">
+<table class="table table-sm"
     style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;">
     <!-- Identification table  -->
     <tr class="border-bottom border-dark align-bottom">
@@ -123,6 +124,7 @@
     {{ occurrence.eventRemarks | tablerow("Event remarks") | safe }}
     
 </table>
+</div>
 
 {% endif %}
 {% endfor %}

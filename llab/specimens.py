@@ -6,6 +6,7 @@ from .models import User, Collectors, Occurrences, Taxa, Identification_events, 
 from . import db
 import re
 import datetime
+import numpy as np
 
 # connect to __init__ file
 specimens = Blueprint('specimens', __name__)
@@ -145,11 +146,20 @@ def specimen_det():
 
 
 # Send decoded qr-codes from specimen-labels to get specimen table
-@specimens.route('/specimen_find')
+@specimens.route('/specimen_get')
 @login_required
-def specimen_find():
-    title = "Find specimen data"
-    return render_template("specimen_find.html", title=title, user=current_user)
+def specimen_get():
+    title = "Get specimen data"
+    # Prepare list of taxa for dropdown-select-search bar
+    taxa = Taxa.query.all()  # Database query for taxa
+    order = tuple(np.unique([i.order for i in taxa if i.order]))
+    family = tuple(np.unique([i.family for i in taxa if i.family]))
+    genus = tuple(np.unique([i.genus for i in taxa if i.genus]))
+    scientificName = tuple(np.unique([i.scientificName for i in taxa]))
+    dropdown_names = order+family+genus+scientificName
+    dropdown_ranks = tuple(len(order)*["order"]+len(family)*["family"]+len(genus)*[
+                           "genus"]+len(scientificName)*["scientificName"])
+    return render_template("specimen_get.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks)
 
 # Query database for specimen-data and render a specimen-table 
 @specimens.route('/specimen_list', methods=["POST", "GET"])
@@ -158,10 +168,49 @@ def specimen_list():
     title = "Speciemen table"
     order = ['species', 'spnov', 'species-group', 'genus', 'tribe', 'subfamily', 'family', 'superfamily', 'infraorder', 'order', 'class', 'other']
     occurrence_ids=""
-    # If requested, get occurrence ids from decoded qr_specimen_labels
-    if request.form.get('qr_specimen_labels') == 'qr_specimen_labels':
-        qr_data = request.form.get("qr_data")
-        occurrence_ids = qr_data.splitlines()
+    # Get data from specimen_get
+    if request.form.get('specimen_find') == 'specimen_find':
+        #
+        # 1. Event-label QR-code data
+        qr_data = request.form.get("occurrence_ids")
+        occurrence_ids_1 = qr_data.splitlines()
+        #
+        # 2. Select taxa
+        taxa = request.form.getlist("taxon_name")
+        # Loop over selected taxa and get scientific names of (children) species
+        scientific_names = list()
+        for i in taxa:
+            taxon = i.split(";")
+            # Query occurrences of given taxon
+            if (taxon[1] == "scientificName"):
+                scientific_names_tmp = [taxon[0]]
+            else:
+                if (taxon[1] == "order"):
+                    taxa_db = Taxa.query.filter_by(order=taxon[0])
+                if (taxon[1] == "family"):
+                    taxa_db = Taxa.query.filter_by(family=taxon[0])
+                if (taxon[1] == "genus"):
+                    taxa_db = Taxa.query.filter_by(genus=taxon[0])
+                scientific_names_tmp = [
+                    i.scientificName for i in taxa_db if i.scientificName]
+            scientific_names = scientific_names+list(scientific_names_tmp)
+        scientific_names = np.unique(scientific_names)
+        # Get occurrences for selected taxa
+        #occurrences_db = Occurrences.query.filter(Occurrences.scientificName.in_(scientific_names)).all()
+        occurrences_db = Occurrences.query\
+            .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID)\
+            .with_entities(Occurrences.occurrenceID, Identification_events.scientificName)\
+            .filter(Identification_events.scientificName.in_(scientific_names))\
+            .all()
+        occurrence_ids_2 = [i.occurrenceID for i in occurrences_db if i.occurrenceID]
+        ## 3. Unit qr-codes
+        unit_ids = request.form.get("unit_ids")
+        unit_ids = unit_ids.splitlines()
+        unit_ids = [i.split(";")[3] for i in unit_ids]
+        occurrences_db = Occurrences.query.filter(Occurrences.unit_id.in_(unit_ids))
+        occurrence_ids_3 = [i.occurrenceID for i in occurrences_db]
+        ## Concateneate occurrence-ID lists from the differnt sources
+        occurrence_ids = np.unique(occurrence_ids_1 + occurrence_ids_2 + occurrence_ids_3)
     # If requested, get event-id from show_event.html
     if request.form.get("collecting_event_id") == "collecting_event_id":
         eventID = request.form.get("eventID")
@@ -173,7 +222,13 @@ def specimen_list():
             .join(Taxa, Identification_events.scientificName==Taxa.scientificName)\
             .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
             .join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode)\
-            .with_entities(Occurrences.occurrenceID, Country_codes.country, Collecting_events.eventID, Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, Collecting_events.habitat, Collecting_events.substrateName, Collecting_events.substratePlantPart, Collecting_events.substrateType, Collecting_events.eventDate_1, Collecting_events.eventDate_2, Collecting_events.samplingProtocol, Collecting_events.recordedBy, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.taxonRank, Taxa.scientificNameAuthorship, Identification_events.identifiedBy, Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex)\
+            .with_entities(Occurrences.occurrenceID, Country_codes.country, Collecting_events.eventID, 
+            Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, 
+            Collecting_events.habitat, Collecting_events.substrateName, Collecting_events.substratePlantPart, 
+            Collecting_events.substrateType, Collecting_events.eventDate_1, Collecting_events.eventDate_2, 
+            Collecting_events.samplingProtocol, Collecting_events.recordedBy, Taxa.scientificName, Taxa.family, 
+            Taxa.order, Taxa.taxonRank, Taxa.scientificNameAuthorship, Identification_events.identifiedBy, 
+            Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex)\
             .order_by(Taxa.scientificName, Collecting_events.eventID)\
             .all()
     return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences, order=order)

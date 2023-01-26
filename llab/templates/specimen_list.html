@@ -6,9 +6,9 @@
 {% if occurrences %}
 <!-- output table -->
 <div class="table-responsive">
-<table class="table table-lg" style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;" >
+<table class="table table-lg table-hover" style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;" >
     <tr>
-        <th>#</th>
+        <th></th>
         <th>Rank</th>
         <th>Taxon</th>
         <th>Sex</th>
@@ -31,12 +31,12 @@
     {% if rank == "species" or rank == "spnov" %}
     <tr class="table-success">
     {% elif rank == "genus" or rank == "species-group" %}
-    <tr class="table-primary">
+    <tr class="table-primary" >
     {% else %}
-    <tr class="table-secondary">
+    <tr class="table-secondary" >
     {% endif %}
         <!-- Row number -->
-        <td><a class="btn btn-outline-dark btn-sm" href="{{ url_for('specimens.specimen_view', occurrence_id=occurrence.occurrenceID) }}" role="button">{{ loop.index }}</a></td>
+        <td><a class="btn btn-outline-dark btn-sm" href="{{ url_for('specimens.specimen_view', occurrence_id=occurrence.occurrenceID) }}" role="button">Specimen</a></td>
         <!-- Taxon rank -->
         <td>{{ occurrence.taxonRank }}</td>
         <!-- Taxon -->

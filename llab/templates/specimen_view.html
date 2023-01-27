@@ -137,7 +137,6 @@
 <div class="table-responsive">
     <table class="table table-lg"
         style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;">
-        {% for identification in identifications %}
         <tr>
             <td></td>
             <td>Taxon</td>
@@ -153,6 +152,8 @@
             <td>Order</td>
             <td>Class</td>
         </tr>
+
+        {% for identification in identifications %}
         <!-- Distinguish current and previous identification events -->
         <!-- Current identification -->
         {% if identification.identificationID == occurrence.identificationID %}

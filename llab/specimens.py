@@ -6,6 +6,8 @@ from .models import User, Collectors, Occurrences, Taxa, Identification_events, 
 from . import db
 import re
 import datetime
+import uuid
+import requests
 import numpy as np
 
 # connect to __init__ file
@@ -65,6 +67,7 @@ def specimen_det():
                         if len(det.splitlines()) > 1:
                             # For each specimen identified to the current taxon, add record to database (populate Occurrences)
                             for specimen in det.splitlines()[1:]:
+                                specimen = specimen.replace("http://purl.org/nhmuio/id/", "") # Remove NHMO shit
                                 # Function for creating a new identification-event-record
                                 def new_id():
                                     new_identification=Identification_events(
@@ -100,8 +103,8 @@ def specimen_det():
                                     # Commit 
                                     occ_update_count+=1
                                     db.session.commit()
-                                # Create a new occurrence-record if the occurrence-id does not exist:
-                                else:
+                                # If collecting_event exist, create a new occurrence-record if the occurrence-id does not exist:
+                                elif Collecting_events.query.filter_by(eventID=specimen.split(";")[0]).first():
                                     # First create the Identification-record
                                     new_identification = new_id()
                                     db.session.add(new_identification)
@@ -128,6 +131,8 @@ def specimen_det():
                                     # Commit
                                     occ_count+=1
                                     db.session.commit()
+                                else:
+                                    flash(f"Occurrence-ID {specimen} does not exist and does not include a valid event-ID. Occurrence-record was not created.", category="error")
                             if occ_count > 0:
                                 flash(f'Occurrences added: {occ_count}')
                             if occ_update_count > 0:
@@ -174,6 +179,7 @@ def specimen_list():
         # 1. Event-label QR-code data
         qr_data = request.form.get("occurrence_ids")
         occurrence_ids_1 = qr_data.splitlines()
+        occurrence_ids_1 = [i.replace("http://purl.org/nhmuio/id/", "") for i in occurrence_ids_1]
         #
         # 2. Select taxa
         taxa = request.form.getlist("taxon_name")
@@ -258,5 +264,85 @@ def specimen_view(occurrence_id):
         Taxa.taxonRank, Taxa.genus, Taxa.family, Taxa.order, Taxa.cl, Identification_events.identificationID,
         Identification_events.identificationQualifier, Identification_events.sex, Identification_events.lifeStage, 
         Identification_events.identifiedBy, Identification_events.dateIdentified, Identification_events.identificationRemarks)\
+        .order_by(Identification_events.dateIdentified.desc())\
         .all()
     return render_template("specimen_view.html", title=title, user=current_user, occurrence=occurrence, identifications=identifications)
+
+# Get specimen data from GBIF
+@specimens.route('/specimen_gbif', methods=['GET', 'POST'])
+@login_required
+def specimen_gbif():
+    title = "Add specimen from GBIF"
+    # Function to return value from dictionary or empty value if the value does not exist
+    def if_exists(name, dict_name):
+        if name in dict_name:
+            return dict_name[name]
+        else:
+            return ""
+    # Post request
+    if request.method == 'POST':
+        occurrence_ids = request.form.get("occurrence_ids")
+        occurrence_ids = occurrence_ids.splitlines()
+        # Loop through list of occurrence IDs
+        for occurrence_id in occurrence_ids:
+            # Prepare URL
+            url = f'https://api.gbif.org/v1/occurrence/search?q={occurrence_id}'
+            # Make API call
+            response = requests.get(url)
+            # Get records in results
+            all = response.json()["results"]
+            # Loop over each record and try to match occurrence_id
+            first = ""
+            for i in all:
+                if "materialSampleID" in i:
+                    if i["materialSampleID"] == occurrence_id:
+                        first = i
+                        occurrence_id = occurrence_id.replace("http://purl.org/nhmuio/id/", "")
+            if first:
+                # Add Collecting event to database
+                if "eventID" in first:
+                    event_id = first["eventID"]
+                else:
+                    event_id = f'NHMO_{if_exists("recordedBy", first)}{if_exists("decimalLatitude", first)}{if_exists("decimalLongitude", first)}{if_exists("eventDate", first)[0:10]}'
+                # New event
+                if not Collecting_events.query.filter_by(eventID=event_id).first():
+                    new_event = Collecting_events(eventID=event_id, countryCode=if_exists("countryCode", first), 
+                        stateProvince=if_exists("stateProvince", first), county=if_exists("county", first), 
+                        municipality=if_exists("municipality", first), locality_1=if_exists("locality", first), 
+                        habitat=if_exists("habitat", first), decimalLatitude=if_exists("decimalLatitude", first), 
+                        decimalLongitude=if_exists("decimalLongitude", first), coordinateUncertaintyInMeters=if_exists("coordinateUncertaintyInMeters", first), 
+                        samplingProtocol=if_exists("samplingProtocol", first), eventDate_1=if_exists("eventDate", first)[0:10], recordedBy=if_exists("recordedBy", first).replace(",", "|"), 
+                        eventRemarks=if_exists("eventRemarks", first), createdByUserID=current_user.id)
+                    # Add new objects to database
+                    db.session.add(new_event)
+                    # Commit
+                    db.session.commit()
+                # Add new identification record
+                if not Occurrences.query.filter_by(occurrenceID=occurrence_id).first():
+                    new_identification=Identification_events(
+                                        occurrenceID=occurrence_id,
+                                        scientificName="Pteromalidae",
+                                        identifiedBy="Jon Peder Lindemann",
+                                        lifeStage="adult",
+                                        createdByUserID=current_user.id)
+                    # Add new objects to database
+                    db.session.add(new_identification)
+                    # Commit
+                    db.session.commit()
+                    # Get event-ID
+                    db.session.refresh(new_identification)
+                    # new occurrence
+                    new_occurrence=Occurrences(
+                        occurrenceID = occurrence_id,
+                        catalogNumber = if_exists("catalogNumber", first),
+                        eventID = event_id,
+                        identificationID = new_identification.identificationID,
+                        ownerInstitutionCode = "NHMO",
+                        individualCount = if_exists("individualCount", first),
+                        preparations = if_exists("preparations", first),
+                        occurrenceRemarks = if_exists("occurrenceRemarks", first),
+                        createdByUserID = current_user.id
+                    )
+                    db.session.add(new_occurrence)
+                    db.session.commit()
+    return render_template("specimen_gbif.html", title=title, user=current_user)

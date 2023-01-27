@@ -133,6 +133,7 @@ def format_substrate(substrateName, substratePlantPart, substrateType):
         substrate = ""
     return substrate
 
+
 # Debug
 @filters.app_template_filter('debug')
 def debug(text):

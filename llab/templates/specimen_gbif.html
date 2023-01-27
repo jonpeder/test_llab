@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="/specimen_gbif" method=post>
+
+<!-- Input QR-code data -->
+QR-code label data
+<div class="mb-3">
+    <textarea type="text" class="form-control" id="occurrence_ids" name="occurrence_ids" placeholder="Insert decoded QR-codes here!" ></textarea>
+    <small id="qr-dataHelp" class="form-text text-muted">Decoded QR-codes from labels</small>
+</div>
+
+<!-- Button -->
+<div class="mb-3">
+    <button type="submit" class="btn btn-success btn-lg" >Import specimens</button>
+</div>
+
+</form>
+{% endblock %}

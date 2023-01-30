@@ -26,7 +26,6 @@ def create_app():
     from .entomologist import entomologist
     from .images import images
     from .taxa import taxa
-    from .occurrences import occurrences
     from .filters import filters
     from .specimens import specimens
 
@@ -36,11 +35,10 @@ def create_app():
     app.register_blueprint(entomologist, url_prefix='/')
     app.register_blueprint(images, url_prefix='/')
     app.register_blueprint(taxa, url_prefix='/')
-    app.register_blueprint(occurrences, url_prefix='/')
     app.register_blueprint(filters, url_prefix='/')
     app.register_blueprint(specimens, url_prefix='/')
 
-    from .models import User, Collecting_events, Print_events, Print_det, Event_images, Occurrences, Taxa, Occurrence_images, Identification_events
+    from .models import User, Catalog_number_counter, Print_events, Print_det, Event_images, Occurrence_images, Identification_events
 
     db.create_all(app=app)
 

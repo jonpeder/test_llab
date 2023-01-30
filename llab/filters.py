@@ -8,11 +8,6 @@ filters = Blueprint('filters', __name__)
 filters.trim_blocks = True
 filters.lstrip_blocks = True
 
-# custum filter
-@filters.app_template_filter('add_dear')
-def add_dear(name):
-    return f'dear {name}'
-
 # Parse string to date format 
 @filters.app_template_filter('string_to_date')
 def string_to_date(date):
@@ -72,7 +67,10 @@ def leg_format(leg):
         leg = [i.strip() for i in leg]
         # Keep only surnames
         leg = [i.split(" ")[len(i.split(" "))-1] for i in leg]
-        leg_out = ", ".join(leg[0:-1])+" & "+leg[-1]
+        if len(leg) == 2:
+            leg_out = ", ".join(leg[0:-1])+" & "+leg[-1]
+        else:
+            leg_out = f'{leg[0]} <i>et al.</i>'
     else:
         leg_out = leg[0]
     return leg_out
@@ -90,7 +88,8 @@ def scn_format(name):
 @filters.app_template_filter('scn_italic')
 def scn_italic(name, rank, author):
     # Remove autohor from name and remove trailing white-spaces
-    name = name.replace(author, "").strip()
+    if author:
+        name = name.replace(author, "").strip()
     # If species or genus level use italic
     if rank=="species" or rank=="genus" or rank=="spnov":
         name=f'<i>{name}</i>'
@@ -133,6 +132,14 @@ def format_substrate(substrateName, substratePlantPart, substrateType):
         substrate = ""
     return substrate
 
+
+# Method abbreviation
+@filters.app_template_filter('abbr')
+def abbr(name):
+    name = name.replace("-", " ")
+    name = name.split(" ")
+    name = "".join([i[0] for i in name])
+    return name
 
 # Debug
 @filters.app_template_filter('debug')

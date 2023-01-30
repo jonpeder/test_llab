@@ -135,3 +135,6 @@ class Identification_events (db.Model):
     identificationRemarks = db.Column(db.String(100))
     dateIdentified = db.Column(db.String, default=str(date.today()))
     createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
+
+class Catalog_number_counter(db.Model):
+    id = db.Column(db.Integer, primary_key=True)

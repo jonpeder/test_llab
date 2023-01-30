@@ -2,7 +2,7 @@
 from .functions import newEventID
 from flask import Blueprint, current_app, redirect, url_for, request, render_template, flash
 from flask_login import login_required, current_user
-from .models import User, Collectors, Collecting_events, Country_codes, Print_events, Event_images
+from .models import User, Collectors, Collecting_events, Country_codes, Print_events, Event_images, Catalog_number_counter
 from . import db
 import os
 from os import path
@@ -235,19 +235,29 @@ def labels():
                     .filter(Collecting_events.eventID.in_([event.eventID for event in events]))\
                     .order_by(Collecting_events.eventID.desc())\
                     .all()
-                # Create qrcodes
+                # For each label create qr-code
+                catalog_numbers = {} # Dictionary for catalog-numbers
                 for event in events:
                     for data in event_data:
                         if event.eventID==data.eventID:
                             for n in range(event.print_n):
+                                # Add record to catalg_number_counter
+                                new_number = Catalog_number_counter()
+                                db.session.add(new_number)
+                                db.session.commit()
+                                db.session.refresh(new_number)
+                                catalog_number = current_user.initials + "-" + "{:0>6}".format(new_number.id)
+                                # Add catalog-numbers to dictionary
+                                catalog_numbers[f'{current_user.id}_{event.id}_{n}'] = catalog_number
+                                # Create qr-code image files
                                 filename = f'{current_user.id}_qrlabel_{event.id}_{n}.png'
                                 qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
-                                qr.add_data(f'{event.eventID};{uuid.uuid4()}')
+                                qr.add_data(f'{current_user.institutionCode}:{event.eventID}:{catalog_number}')
                                 qr.make(fit = True)
                                 img = qr.make_image(fill_color = 'black', back_color = 'white')
                                 img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 # Return labels
-                return render_template("label_output.html", title=title, events=events, user=current_user, event_data=event_data)
+                return render_template("label_output.html", title=title, events=events, user=current_user, event_data=event_data, catalog_numbers=catalog_numbers)
 
     # Søk etter event-IDer
     events = Collecting_events.query.filter_by(createdByUserID = current_user.id).order_by(Collecting_events.eventID.desc())

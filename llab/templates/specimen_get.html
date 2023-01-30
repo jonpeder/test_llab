@@ -4,17 +4,17 @@
 <form action="/specimen_list" method=post>
 
 <!-- 1. Event-label QR-codes -->
-Event label data
+Specimen IDs
 <div class="mb-3">
     <textarea type="text" class="form-control" id="occurrence_ids" name="occurrence_ids" placeholder="Insert decoded QR-codes here!" ></textarea>
     <small id="qr-dataHelp" class="form-text text-muted">Decoded QR-codes from event-labels</small>
 </div>
 
 <!-- 3. Unit qr-codes -->
-Unit label data
+Unit IDs
 <div class="mb-3">
     <textarea type="text" class="form-control" id="unit_ids" name="unit_ids" placeholder="Insert decoded QR-codes here!"></textarea>
-    <small id="qr-dataHelp" class="form-text text-muted">Decoded QR-codes from unit labels</small>
+    <small id="qr-dataHelp" class="form-text text-muted">Decoded QR-codes from det-labels</small>
 </div>
 
 <!-- 2. Select taxa -->
@@ -23,8 +23,8 @@ Select taxa
     <select multiple class="form-select" id="taxon_name" name="taxon_name" placeholder="Click to select ..." multiselect-search="true"
         multiselect-select-all="true" >
         {% for i in dropdown_names %}
-        <option value="{{ i }};{{ dropdown_ranks[loop.index] }}">
-            {{ i }} ({{ dropdown_ranks[loop.index] }})
+        <option value="{{ i }};{{ dropdown_ranks[loop.index0] }}">
+            {{ i }} ({{ dropdown_ranks[loop.index0] }})
         </option>
         {% endfor %}
     </select>

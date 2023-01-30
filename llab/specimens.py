@@ -7,6 +7,7 @@ from . import db
 import re
 import datetime
 import uuid
+import time
 import requests
 import numpy as np
 
@@ -157,12 +158,13 @@ def specimen_get():
     title = "Get specimen data"
     # Prepare list of taxa for dropdown-select-search bar
     taxa = Taxa.query.all()  # Database query for taxa
+    cl = tuple(np.unique([i.cl for i in taxa if i.cl]))
     order = tuple(np.unique([i.order for i in taxa if i.order]))
     family = tuple(np.unique([i.family for i in taxa if i.family]))
     genus = tuple(np.unique([i.genus for i in taxa if i.genus]))
     scientificName = tuple(np.unique([i.scientificName for i in taxa]))
-    dropdown_names = order+family+genus+scientificName
-    dropdown_ranks = tuple(len(order)*["order"]+len(family)*["family"]+len(genus)*[
+    dropdown_names = cl+order+family+genus+scientificName
+    dropdown_ranks = tuple(len(cl)*["class"]+len(order)*["order"]+len(family)*["family"]+len(genus)*[
                            "genus"]+len(scientificName)*["scientificName"])
     return render_template("specimen_get.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks)
 
@@ -191,14 +193,15 @@ def specimen_list():
             if (taxon[1] == "scientificName"):
                 scientific_names_tmp = [taxon[0]]
             else:
+                if (taxon[1] == "class"):
+                    taxa_db = Taxa.query.filter_by(cl=taxon[0])
                 if (taxon[1] == "order"):
                     taxa_db = Taxa.query.filter_by(order=taxon[0])
                 if (taxon[1] == "family"):
                     taxa_db = Taxa.query.filter_by(family=taxon[0])
                 if (taxon[1] == "genus"):
                     taxa_db = Taxa.query.filter_by(genus=taxon[0])
-                scientific_names_tmp = [
-                    i.scientificName for i in taxa_db if i.scientificName]
+                scientific_names_tmp = [i.scientificName for i in taxa_db if i.scientificName]
             scientific_names = scientific_names+list(scientific_names_tmp)
         scientific_names = np.unique(scientific_names)
         # Get occurrences for selected taxa
@@ -237,6 +240,11 @@ def specimen_list():
             Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex)\
             .order_by(Taxa.scientificName, Collecting_events.eventID)\
             .all()
+    # Report if any of the specified occurrenceIDs are not present in database.
+    for occurrence in occurrence_ids:
+        if occurrence not in [i.occurrenceID for i in occurrences]:
+            flash(f'{occurrence} not in database', category="error")
+    # Return template
     return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences, order=order)
 
 # Query database for specimen-data and render a specimen-table 
@@ -303,7 +311,7 @@ def specimen_gbif():
                 if "eventID" in first:
                     event_id = first["eventID"]
                 else:
-                    event_id = f'NHMO_{if_exists("recordedBy", first)}{if_exists("decimalLatitude", first)}{if_exists("decimalLongitude", first)}{if_exists("eventDate", first)[0:10]}'
+                    event_id = f'NHMO_{if_exists("decimalLatitude", first)}{if_exists("decimalLongitude", first)}{if_exists("eventDate", first)[0:10]}{if_exists("habitat", first)}'
                 # New event
                 if not Collecting_events.query.filter_by(eventID=event_id).first():
                     new_event = Collecting_events(eventID=event_id, countryCode=if_exists("countryCode", first), 
@@ -345,4 +353,5 @@ def specimen_gbif():
                     )
                     db.session.add(new_occurrence)
                     db.session.commit()
+            time.sleep(1)
     return render_template("specimen_gbif.html", title=title, user=current_user)

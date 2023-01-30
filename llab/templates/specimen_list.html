@@ -4,6 +4,15 @@
 
 
 {% if occurrences %}
+
+
+{% for occurrence in occurrences %}
+{% if loop.last %}
+<br>
+<h5>{{ loop.index }} specimens </h5>
+{% endif %}
+{% endfor %}
+
 <!-- output table -->
 <div class="table-responsive">
 <table class="table table-lg table-hover" style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;" >
@@ -40,7 +49,7 @@
         <!-- Taxon rank -->
         <td>{{ occurrence.taxonRank }}</td>
         <!-- Taxon -->
-        <td>{{ occurrence.scientificName | scn_italic (occurrence.taxonRank, occurrence.scientificNameAuthorship) | safe }} {{occurrence.scientificNameAuthorship}} {% if occurrence.identificationQualifier %}, {{occurrence.identificationQualifier}}{% endif %}</td>
+        <td>{{ occurrence.scientificName | scn_italic (occurrence.taxonRank, occurrence.scientificNameAuthorship) | safe }} {{occurrence.scientificNameAuthorship | if_present}} {% if occurrence.identificationQualifier %}, {{occurrence.identificationQualifier}}{% endif %}</td>
         <!-- Sex -->
         <td>{{ occurrence.sex | if_present }}</td>
         <!-- Identified by -->
@@ -80,7 +89,7 @@
 </div>
 {% else %}
 <br>
-<h5>No specimen records found</h5>
+<h6>No specimens found</h6>
 {% endif %}
 
 {% endblock %}

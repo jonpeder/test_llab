@@ -35,8 +35,7 @@
                 value="{{event.locality_2}}" name="locality_2"></dd>
         <dt class="col-sm-3">Method</dt>
         <dd class="col-sm-9">
-            <select class="form-select" aria-label="samplingProtocol" name="samplingProtocol"
-                value="{{event.samplingProtocol}}">
+            <select class="form-select" aria-label="samplingProtocol" name="samplingProtocol" >
                 {% for method in met %}
                 {% if method == event.samplingProtocol %}
                 <option selected={{ method }}>{{ method }}</option>
@@ -54,8 +53,7 @@
                 value="{{event.eventDate_2}}" name="eventDate_2"></dd>
         <dt class="col-sm-3">Recorded by</dt>
         <dd class="col-sm-9">
-            <select class="form-select" multiple id="recordedBy" aria-label="recordedBy" value="{{event.recordedBy}}"
-                name="recordedBy">
+            <select class="form-select" multiple id="recordedBy" aria-label="recordedBy" name="recordedBy">
                 <option selected>{{ event.recordedBy }}</option>
                 {% for o in leg %}
                 <option value="{{ o.recordedBy }}">{{ o.recordedBy }}</option>

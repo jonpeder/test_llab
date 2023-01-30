@@ -48,7 +48,7 @@ body {
 
 .label img {
    float:left;
-   height:120%;
+   height:127%;
    margin-right:1px;
 }
 
@@ -79,7 +79,7 @@ body {
     <img src="static/uploads/{{user.id}}_qrlabel_{{event.id}}_{{n}}.png">
     <span>
     <!-- Line 1: Country, region, municipality -->
-    <strong>{{ data.countryCode|upper }}</strong> {% if data.stateProvince %}{{ data.stateProvince }} {% endif %}{% if data.strand_id %}{{ data.strand_id|upper }} {% endif %}{% if data.municipality %} {{ data.municipality|upper }}{% endif %}:
+    <strong>{{ data.countryCode|upper }}</strong> {% if data.stateProvince %}{{ data.stateProvince }} {% endif %}{% if data.strand_id %}{{ data.strand_id|upper }}{% else %}{{data.county}} {% endif %}{% if data.municipality %} {{ data.municipality|upper }}{% endif %}:
     <br/>
     <!-- Line 2: Locality -->
     {% if data.locality_1 %}{{ data.locality_1 }}{% endif %}{% if data.locality_1 and data.locality_2 %}, {% endif %}{% if data.locality_2 %}{{ data.locality_2 }}{% endif %}{% if data.locality_1 or data.locality_2 %}<br/>{% endif %}
@@ -100,7 +100,7 @@ body {
     <!-- Line 5: Method, date -->
     {% if data.samplingProtocol %}
       {% if data.eventDate_1 and data.eventDate_2 %}
-        {{ data.samplingProtocol_app|upper }}
+        {{ data.samplingProtocol | abbr | upper }}
       {% else %}
         {{ data.samplingProtocol }}
       {% endif %}
@@ -131,8 +131,11 @@ body {
     {% endif %}
     <!-- Line 6: Leg -->
     {% if data.recordedBy %}
-    Leg. {{ data.recordedBy | leg_format}}
+    Leg. {{ data.recordedBy | leg_format | safe }}
+    <br/>
     {% endif %}
+    <!-- Line 7: Catalog number -->
+    <b>{{ catalog_numbers[user.id~"_"~event.id~"_"~n] }}</b>
     </span>
 </var>
 

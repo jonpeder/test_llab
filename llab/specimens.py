@@ -29,12 +29,11 @@ def specimen_det():
         # Mandatory fields
         qr_data = request.form.get("qr_data")
         identifiedBy = request.form.get("identifiedBy")
-        ownerInstitutionCode = request.form.get("ownerInstitutionCode")
-        sex_tmp = request.form.get("sex")
-        lifeStage = request.form.get("lifeStage")
         individualCount = request.form.get("individualCount")
         preparations = request.form.get("preparations")
         identificationQualifier_tmp = request.form.get("identificationQualifier")
+        sex_tmp = request.form.get("sex")
+        lifeStage = request.form.get("lifeStage")
         # Optional fields
         identificationRemarks = request.form.get("identificationRemarks")
         occurrenceRemarks = request.form.get("occurrenceRemarks")
@@ -49,19 +48,21 @@ def specimen_det():
                 if det:
                     # get det-data
                     det_data = det.splitlines()[0]
+                    print(det_data)
                     # get scientific name
-                    scientificName = det_data.split(";")[0]
+                    scientificName = det_data.split(":")[0]
+                    print(scientificName)
                     # Get identification-qualifier and sex
-                    if det_data.split(";")[1]:
-                        identificationQualifier = det_data.split(";")[1]
+                    if det_data.split(":")[1]:
+                        identificationQualifier = det_data.split(":")[1]
                     else:
                         identificationQualifier = identificationQualifier_tmp
-                    if det_data.split(";")[2]:
-                        sex = det_data.split(";")[2]
+                    if det_data.split(":")[2]:
+                        sex = det_data.split(":")[2]
                     else:
                         sex = sex_tmp
                     # Get unit-ID
-                    unit_id = det_data.split(";")[3]
+                    unit_id = det_data.split(":")[3]
                     # Check that the taxon exists in Taxa-table
                     if Taxa.query.filter_by(scientificName=scientificName).first():
                         # Check that a specimen have been scanned after the taxon
@@ -87,9 +88,9 @@ def specimen_det():
                                     #flash(f'{specimen} exists')
                                     occurrence = Occurrences.query.filter_by(occurrenceID=specimen).first()
                                     identification = Identification_events.query.filter_by(identificationID=occurrence.identificationID).first()
-                                    # If identification-event does not exist or if the scientific name has been changed, 
+                                    # If the scientific name has changed 
                                     # create a new identification-event-record and update Occurrence-record
-                                    if occurrence.identificationID == "" or identification.scientificName != scientificName:
+                                    if identification.scientificName != scientificName:
                                         new_identification = new_id()
                                         db.session.add(new_identification)
                                         # Commit new identification
@@ -98,14 +99,14 @@ def specimen_det():
                                         db.session.refresh(new_identification)
                                         occurrence.identificationID = new_identification.identificationID
                                         occurrence.unit_id = unit_id
-                                    # If Identification_event exists and the scientific name is the same as before, update Occurrence
+                                    # If Identification_event exists and the scientific name is the same as before, update the unit-ID
                                     else:
                                         occurrence.unit_id = unit_id
                                     # Commit 
                                     occ_update_count+=1
                                     db.session.commit()
-                                # If collecting_event exist, create a new occurrence-record if the occurrence-id does not exist:
-                                elif Collecting_events.query.filter_by(eventID=specimen.split(";")[0]).first():
+                                # If occurrenceID not exist and if eventID exist create a new occurrence-record:
+                                elif Collecting_events.query.filter_by(eventID=specimen.split(":")[1]).first():
                                     # First create the Identification-record
                                     new_identification = new_id()
                                     db.session.add(new_identification)
@@ -116,9 +117,10 @@ def specimen_det():
                                     # Then the Occurrence-record
                                     new_occurrence=Occurrences(
                                         occurrenceID = specimen,
-                                        eventID = specimen.split(";")[0],
+                                        catalogNumber = specimen.split(":")[2],
+                                        eventID = specimen.split(":")[1],
                                         identificationID = new_identification.identificationID,
-                                        ownerInstitutionCode = ownerInstitutionCode,
+                                        ownerInstitutionCode = specimen.split(":")[0],
                                         individualCount = individualCount,
                                         preparations = preparations,
                                         occurrenceRemarks = occurrenceRemarks,

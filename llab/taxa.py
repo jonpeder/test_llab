@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, flash, request, render_template, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Taxa, Occurrence_images, Occurrences, Identification_events, Print_det
+from .models import Taxa, Occurrence_images, Occurrences, Identification_events, Print_det, Illustrations
 from . import db
 import numpy as np
 from werkzeug.utils import secure_filename
@@ -26,14 +26,14 @@ def add_taxon():
     # POST
     if request.method == 'POST':
         # Get input from form
-        taxonID = request.form.get("taxonID")
-        taxonName = request.form.get("taxonName")
-        scientificNameAuthorship = request.form.get("scientificNameAuthorship")
-        taxonRank = request.form.get("rank")
-        genus = request.form.get("genus")
-        family = request.form.get("family")
-        order = request.form.get("order")
-        publishedIn = request.form.get("publishedIn")
+        taxonID = request.form.get("taxonID").strip()
+        taxonName = request.form.get("taxonName").strip()
+        scientificNameAuthorship = request.form.get("scientificNameAuthorship").strip()
+        taxonRank = request.form.get("rank").strip()
+        genus = request.form.get("genus").strip()
+        family = request.form.get("family").strip()
+        order = request.form.get("order").strip()
+        publishedIn = request.form.get("publishedIn").strip()
         # Scientific name
         if scientificNameAuthorship is None or scientificNameAuthorship == "":
             scientificName = taxonName
@@ -191,8 +191,6 @@ def edit_taxon():
         return render_template("edit_taxon.html", title=title, user=current_user, ranks=ranks, taxa=taxa)
 
 
-# Function to print taxon-/unit-labels
-
 # Function to view images of selected taxa
 @taxa.route('/taxon_image', methods=['GET', 'POST'])
 @login_required
@@ -200,7 +198,7 @@ def taxon_image():
     title = "Taxon images"
     imagecat = ['habitus', 'in-situ', 'lateral', 'ventral',
                 'dorsal', 'face', 'fore-wing', 'hind-wing']
-    dir_path = "static/images/specimens"
+    dir_path = "static/images/"
     # Prepare list of taxa for dropdown-select-search bar
     taxa = Taxa.query.all()  # Database query for taxa
     order = tuple(np.unique([i.order for i in taxa if i.order]))
@@ -246,25 +244,36 @@ def taxon_image():
         occurrence_ids = tuple(
             np.unique([i.occurrenceID for i in occurrences_db if i.occurrenceID]))
         # Get images for selected taxa
-        images = Occurrence_images.query\
+        occurrence_images = Occurrence_images.query\
             .join(Occurrences, Occurrence_images.occurrenceID == Occurrences.occurrenceID)\
             .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID)\
             .with_entities(Occurrence_images.filename, Occurrence_images.imageCategory, Occurrence_images.comment, Occurrence_images.occurrenceID, Identification_events.scientificName)\
             .filter(Occurrence_images.occurrenceID.in_(occurrence_ids))\
             .filter(Occurrence_images.imageCategory.in_(image_categories))\
             .all()
+        taxa1 = [i.scientificName for i in occurrence_images]
         # list of occurrenceIDs associated with images
-        occurrenceIDs_imaged = [
-            i.occurrenceID for i in images if i.occurrenceID]
+        #occurrenceIDs_imaged = [
+        #    i.occurrenceID for i in occurrence_images if i.occurrenceID]
         # taxa associated with occurrenceIDs
-        imaged_taxa = Taxa.query\
-            .join(Identification_events, Taxa.scientificName == Identification_events.scientificName)\
-            .join(Occurrences, Identification_events.identificationID==Occurrences.identificationID)\
-            .with_entities(Taxa.scientificName, Taxa.taxonRank, Taxa.genus, Taxa.specificEpithet, Taxa.scientificNameAuthorship, Occurrences.occurrenceID)\
-            .filter(Occurrences.occurrenceID.in_(occurrenceIDs_imaged))\
-            .all()
+        #imaged_taxa = Taxa.query\
+        #    .join(Identification_events, Taxa.scientificName == Identification_events.scientificName)\
+        #    .join(Occurrences, Identification_events.identificationID==Occurrences.identificationID)\
+        #    .with_entities(Taxa.scientificName, Taxa.taxonRank, Taxa.genus, Taxa.specificEpithet, Taxa.scientificNameAuthorship, Occurrences.occurrenceID)\
+        #    .filter(Occurrences.occurrenceID.in_(occurrenceIDs_imaged))\
+        #    .all()
+        
+        # Get illustrations for selected taxa
+        illustration_images = Illustrations.query.filter(Illustrations.scientificName.in_(scientific_names)).all()
+        taxa2 = [i.scientificName for i in illustration_images]
+        # Make a list of imaged taxa
+        taxa_list = []
+        for i in taxa1+taxa2:
+            if i not in taxa_list:
+                taxa_list.append(i)
+        imaged_taxa = Taxa.query.filter(Taxa.scientificName.in_(taxa_list)).all()
         # Render html
-        return render_template("taxon_image.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks, imagecat=imagecat, images=images, imaged_taxa=imaged_taxa, dir_path=dir_path)
+        return render_template("taxon_image.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks, imagecat=imagecat, images=occurrence_images, illustration_images=illustration_images, imaged_taxa=imaged_taxa, dir_path=dir_path)
     else:
         return render_template("taxon_image.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks, imagecat=imagecat)
 
@@ -319,7 +328,7 @@ def det_labels():
                             for n in range(det.print_n):
                                 filename = f'{current_user.id}_detqrlabel_{det.id}_{n}.png'
                                 qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
-                                qr.add_data(f'det.{det.scientificName};{det.identificationQualifier};{det.sex};{uuid.uuid4()}')
+                                qr.add_data(f'det.{det.scientificName}:{det.identificationQualifier}:{det.sex}:{uuid.uuid4()}')
                                 qr.make(fit = True)
                                 img = qr.make_image(fill_color = 'black', back_color = 'white')
                                 img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))

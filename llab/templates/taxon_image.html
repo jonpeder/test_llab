@@ -46,6 +46,7 @@
         {% endif %}
     </h5>
 
+    <!-- Specimen images -->
     {% for image in images %}
     {% if image.scientificName == taxa.scientificName %}
 
@@ -55,7 +56,19 @@
     {{image.comment}}
     {% endif %}
     <div>
-        <img src="{{dir_path}}/{{image.filename}}" onclick="window.open(this.src, '_blank');" height="200">
+        <img src="{{dir_path}}/specimens/{{image.filename}}" onclick="window.open(this.src, '_blank');" height="200">
+    </div>
+    <br />
+
+    {% endif %}
+    {% endfor %}
+
+    <!-- Illustrations -->
+    {% for image in illustration_images %}
+    {% if image.scientificName == taxa.scientificName %}
+    <strong>{{ image.category[0]|upper}}{{image.category[1:] }}</strong>
+    <div>
+        <img src="{{dir_path}}/illustrations/{{image.filename}}" onclick="window.open(this.src, '_blank');" height="200">
     </div>
     <br />
 

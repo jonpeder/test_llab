@@ -33,7 +33,7 @@ class Print_det(db.Model):
     print_n = db.Column(db.Integer)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
-    
+
 class Country_codes (db.Model):
     countryCode = db.Column(db.String(2), primary_key=True)
     country = db.Column(db.String(100))
@@ -50,12 +50,12 @@ class Collecting_events(db.Model):
     locality_1 = db.Column(db.String(50))
     locality_2 = db.Column(db.String(50))
     habitat = db.Column(db.String(100))
-    decimalLatitude = db.Column(db.Numeric)
-    decimalLongitude = db.Column(db.Numeric)
+    decimalLatitude = db.Column(db.Numeric(11,8))
+    decimalLongitude = db.Column(db.Numeric(11,8))
     coordinateUncertaintyInMeters = db.Column(db.Integer)
     samplingProtocol = db.Column(db.String(20))
-    eventDate_1 = db.Column(db.String)
-    eventDate_2 = db.Column(db.String)
+    eventDate_1 = db.Column(db.String(10))
+    eventDate_2 = db.Column(db.String(10))
     recordedBy = db.Column(db.String(50))
     eventRemarks = db.Column(db.String(100))
     geodeticDatum = db.Column(db.String(5), default='WGS84')
@@ -97,7 +97,7 @@ class Occurrences (db.Model):
     last_export = db.Column(db.DateTime)
     catalogNumber = db.Column(db.String(20))
     verbatimLabel = db.Column(db.String(250))
-    createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Taxa (db.Model):
     scientificName = db.Column(db.String(100), primary_key=True)
@@ -112,7 +112,7 @@ class Taxa (db.Model):
     cl = db.Column("class", db.String(50))
     nomenclaturalCode = db.Column(db.String(10), default="ICZN")
     taxonID = db.Column(db.String(100))
-    createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
     publishedIn = db.Column(db.String(300))
 
 class Occurrence_images (db.Model):
@@ -122,7 +122,7 @@ class Occurrence_images (db.Model):
     comment = db.Column(db.String(500))
     occurrenceID = db.Column(db.String(50), db.ForeignKey('occurrences.occurrenceID'))
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
-    createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Identification_events (db.Model):
     identificationID = db.Column(db.Integer, primary_key=True)
@@ -133,8 +133,60 @@ class Identification_events (db.Model):
     sex = db.Column(db.String(6))
     lifeStage = db.Column(db.String(5))
     identificationRemarks = db.Column(db.String(100))
-    dateIdentified = db.Column(db.String, default=str(date.today()))
-    createdByUserID = db.Column(db.String(20), db.ForeignKey('user.id'))
+    dateIdentified = db.Column(db.String(10), default=str(date.today()))
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Catalog_number_counter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+
+class Illustrations (db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(200))
+    imageType = db.Column(db.String(20))
+    category = db.Column(db.String(20))
+    scientificName = db.Column(db.String(50))
+    sex = db.Column(db.String(6))
+    lifeStage = db.Column(db.String(5))
+    identificationQualifier = db.Column(db.String(10))
+    identifiedBy = db.Column(db.String(100))
+    typeStatus = db.Column(db.String(100))
+    ownerInstitutionCode = db.Column(db.String(100))
+    rightsHolder = db.Column(db.String(100))
+    license = db.Column(db.String(100))
+    associatedReference = db.Column(db.String(100))
+    remarks = db.Column(db.String(500))
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
+    databased = db.Column(db.DateTime(timezone=True), default=func.now())
+
+# Pteromalidae database
+class pteromalidae_events(db.Model):
+    #__bind_key__ = "pteromalidae"
+    eventID = db.Column(db.String(100), primary_key=True)
+    country = db.Column(db.String(255))
+    county = db.Column(db.String(255))
+    strand = db.Column(db.String(255))
+    municipality = db.Column(db.String(255))
+    locality = db.Column(db.String(255))
+    habitat = db.Column(db.String(255))
+    decimalLatitude = db.Column(db.Numeric(11,8))
+    decimalLongitude = db.Column(db.Numeric(11,8))
+    coordinateUncertaintyInMeters = db.Column(db.Integer)
+    samplingProtocol = db.Column(db.String(100))
+    eventDate_1 = db.Column(db.String(10))
+    eventDate_2 = db.Column(db.String(10))
+    recordedBy = db.Column(db.String(255))
+    note = db.Column(db.String(255))
+    method = db.Column(db.String(20))
+
+class Pteromalidae_occurrences(db.Model):
+    #__bind_key__ = "pteromalidae"
+    occurrenceID = db.Column(db.String(100), primary_key=True)
+    eventID = db.Column(db.String(100))
+    scientificName = db.Column(db.String(100))
+    notes = db.Column(db.String(255))
+    reference = db.Column(db.String(255))
+    institutionCode = db.Column(db.String(20))
+    source = db.Column(db.String(20))
+    sex = db.Column(db.String(10))
+    individualCount = db.Column(db.Integer)
+    identifiedBy = db.Column(db.String(200))

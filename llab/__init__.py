@@ -1,21 +1,26 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import path
+import os
 from flask_login import LoginManager
 
 
 # Initiate web-app database
 db = SQLAlchemy()
-DB_NAME = "insects.db"
+#DB_NAME = "insects.db"
 
 # Upload folder path
-home = path.expanduser("~")
-UPLOAD_FOLDER = path.join(home, "llab/llab/static/uploads")
+home = os.getcwd()
+UPLOAD_FOLDER = os.path.join(home, "llab/static/uploads")
+
+#home_dir = path.expanduser("~")
+#UPLOAD_FOLDER = path.join(home_dir, "llab/llab/static/uploads")
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = ''
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SECRET_KEY'] = 'pteromalidsareugly'
+    #app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    #app.config['SQLALCHEMY_BINDS'] = {"pteromalidae": "mysql+pymysql://root:hane#1v1N@localhost/Pteromalidae?charset=utf8mb4"}
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:hane#1v1N@localhost/llab?charset=utf8mb4"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -40,7 +45,10 @@ def create_app():
 
     from .models import User, Catalog_number_counter, Print_events, Print_det, Event_images, Occurrence_images, Identification_events
 
-    db.create_all(app=app)
+    with app.app_context():
+        db.create_all()
+
+    #db.create_all(app=app)
 
     login_manager = LoginManager()
     # Redirect to login-page if not logged in

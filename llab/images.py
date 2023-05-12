@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, flash, request, redirect, url_for, render_template, send_from_directory
 from flask_login import login_required, current_user
-from .models import User, Collecting_events, Event_images, Occurrences, Occurrence_images
+from .models import User, Collecting_events, Event_images, Occurrences, Occurrence_images, Illustrations
 from . import db
 import os
 import shutil
@@ -19,12 +19,16 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 # Specify image categories
 imagecat = ['habitat', 'trap', 'substrate', 'colony', 'behaviour', 'other']
-
-# Specify image categories
-imagecat2 = ['habitus', 'in-situ', 'lateral', 'ventral', 'dorsal', 'face', 'fore-wing', 'hind-wing']
-
+imagecat2 = ['lateral', 'ventral', 'dorsal', 'anterior', 'face', 'fore-wing', 'hind-wing', 'propodeum', 'label', 'in-situ']
+licenses = ["All-rights-served", "Public-domain", "CC-by-4", "CC-by-2", "CC-by-sa-2", "CC-by-nc-2", "CC-by-nd-2", "CC-by-nc-nd-2"]
+id_qualifier = ["", "?", "cf", "aff", "agg"]
+type_status = ["", "holotype", "paratype", "lectotype", "neotype", "syntype"]
+sexes = ["", "female", "male"]
+lifestage = ["adult", "larva", "pupa"]
+imagetype = ["photo", "drawing"]
 
 @images.route('/event_image', methods=['GET', 'POST'])
 @login_required
@@ -109,3 +113,70 @@ def specimen_image():
 
     return render_template("specimen_image.html", title=title, user=current_user, imagecat=imagecat2)
 
+@images.route('/add_illustrations', methods=['GET', 'POST'])
+@login_required
+def add_illustrations():
+    title = "Add illustrations"
+    dir_path = "/var/www/llab/llab/static/images/illustrations"
+    last_values = None
+    if request.method == 'POST':
+        # Button 3: Clear values
+        if request.form.get('clear_files') == 'VALUE3':
+            return redirect(url_for("images.add_illustrations")) 
+        # Button 2: Copy input values from previous record
+        if request.form.get('action2') == 'VALUE2':
+            last_values = Illustrations.query.order_by(Illustrations.id.desc()).first()
+        # Button 1: submit new record
+        if request.form.get('action1') == 'VALUE1':
+            # Request form input
+            imageType = request.form.get("imageType")
+            category = request.form.get("category")
+            scientificName = request.form.get("scientificName")
+            sex = request.form.get("sex")
+            lifeStage = request.form.get("lifeStage")
+            rightsHolder = request.form.get("rightsHolder")
+            license = request.form.get("license")
+            associatedReference = request.form.get("associatedReference")
+            remarks = request.form.get("remarks")
+            identificationQualifier = request.form.get("identificationQualifier")
+            identifiedBy = request.form.get("identifiedBy")
+            typeStatus = request.form.get("typeStatus")
+            ownerInstitutionCode = request.form.get("ownerInstitutionCode")
+            # For each file in post request
+            for file in request.files.getlist("files"):
+                # If the user does not select a file
+                if file.filename == '':
+                    flash('No selected file', category="error")
+                    return redirect(request.url)
+                # Secure the filenames and save 
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    filename2 = f'{scientificName.split(" ")[0]}_{scientificName.split(" ")[1]}_{sex}_{category}_{filename}'
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2)) # Save file to upload folder
+                    shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/{filename2}") # Move file to image-folder
+                    os.remove(f"{app.config['UPLOAD_FOLDER']}/{filename2}") # Remove file from upload-folder
+                    # New Print_events object
+                    new_illustration = Illustrations(
+                        filename = filename2,
+                        imageType = imageType,
+                        category = category,
+                        scientificName = scientificName,
+                        sex = sex,
+                        lifeStage = lifeStage,
+                        rightsHolder = rightsHolder,
+                        license = license,
+                        associatedReference = associatedReference,
+                        remarks = remarks,
+                        identificationQualifier = identificationQualifier,
+                        identifiedBy = identifiedBy,
+                        typeStatus = typeStatus,
+                        ownerInstitutionCode = ownerInstitutionCode,
+                        createdByUserID=current_user.id
+                    )
+                    # Add new objects to database
+                    db.session.add(new_illustration)
+                    # Commit
+                    db.session.commit()
+            flash('Illustration added', category="success")
+            return redirect(url_for("images.add_illustrations")) 
+    return render_template("illustrations.html", title=title, user=current_user, imagecat = imagecat2, licenses=licenses, id_qualifier=id_qualifier, type_status=type_status, sexes=sexes, lifestage=lifestage, imagetype=imagetype, last_values=last_values)

@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method=post enctype=multipart/form-data>
+
+    <!-- Scientific name -->
+    <div class="mb-3">
+        Scientific name
+        {% if last_values is not none %}
+        <input type="text" class="form-control" name="scientificName" value="{{ last_values.scientificName }}">
+        {% else %}
+        <input type="text" class="form-control" name="scientificName">
+        {% endif %}
+    </div>
+
+    <!-- Sex -->
+    <div class="mb-3">
+        Sex
+        <select class="form-select" name="sex">
+            {% for i in sexes %}
+            {% if last_values is not none %}
+            {% if last_values.sex == i %}
+            <option selected value="{{ i }}">{{ i }}</option>
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Sex -->
+    <div class="mb-3">
+        Lifestage
+        <select class="form-select" name="lifeStage">
+            {% for i in lifestage %}
+            {% if last_values is not none %}
+            {% if last_values.lifeStage == i %}
+            <option selected value="{{ i }}">{{ i }}</option>
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- image type -->
+    <div class="mb-3">
+        Illustration type
+        <select class="form-select" name="imageType">
+            {% for i in imagetype %}
+            {% if last_values is not none %}
+            {% if last_values.imageType == i %}
+            <option selected value="{{ i }}">{{ i }}</option>
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+
+     <!-- Category -->
+    <div class="mb-3">
+        Category
+        <select class="form-select" name="category">
+            {% for i in imagecat %}
+            {% if last_values is not none %}
+            {% if last_values.category == i %}
+            <option selected value="{{ i }}">{{ i }}</option>
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- rightsHolder -->
+    <div class="mb-3">
+        Rights-holder
+        {% if last_values is not none %}
+        <input type="text" class="form-control" name="rightsHolder" value="{{ last_values.rightsHolder }}">
+        {% else %}
+        <input type="text" class="form-control" name="rightsHolder">
+        {% endif %}
+    </div>
+
+    <!-- license -->
+    <div class="mb-3">
+        License
+        <select class="form-select" name="license">
+            {% for i in licenses %}
+            {% if last_values is not none %}
+            {% if last_values.license == i %}
+            <option selected value="{{ i }}">{{ i }}</option>
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- associatedReference -->
+    <div class="mb-3">
+        Reference
+        {% if last_values is not none %}
+        <input type="text" class="form-control" name="associatedReference" value="{{ last_values.associatedReference }}">
+        {% else %}
+        <input type="text" class="form-control" name="associatedReference">
+        {% endif %}
+    </div>
+    
+
+    <!-- Collapse some of the less important input fields -->
+    <!-- Collapse button -->
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
+        Show more fields
+    </button>
+    <!-- Collapse start -->
+    <div class="collapse" id="collapseForm">
+
+    <!-- identificationQualifier -->
+    <div class="mb-3">
+        Identification qualifier
+        <select class="form-select" name="identificationQualifier">
+            {% for i in id_qualifier %}
+            {% if last_values is not none %}
+            {% if last_values.identificationQualifier == i %}
+            <option selected value="{{ i }}">{{ i }}</option>
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- identifiedBy -->
+    <div class="mb-3">
+        Identified by
+        {% if last_values is not none %}
+        <input type="text" class="form-control" name="identifiedBy" value="{{ last_values.identifiedBy }}">
+        {% else %}
+        <input type="text" class="form-control" name="identifiedBy">
+        {% endif %}
+    </div>
+
+    <!-- typeStatus -->
+    <div class="mb-3">
+        Type status
+        <select class="form-select" name="typeStatus">
+            {% for i in type_status %}
+            {% if last_values is not none %}
+            {% if last_values.typeStatus == i %}
+            <option selected value="{{ i }}">{{ i }}</option>
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    
+    <!-- ownerInstitutionCode -->
+    <div class="mb-3">
+        Owner institution code
+        {% if last_values is not none %}
+        <input type="text" class="form-control" name="ownerInstitutionCode" value="{{ last_values.ownerInstitutionCode }}">
+        {% else %}
+        <input type="text" class="form-control" name="ownerInstitutionCode">
+        {% endif %}
+    </div>
+
+    <!-- remarks -->
+    <div class="mb-3">
+        Remarks
+        {% if last_values is not none %}
+        <input type="text" class="form-control" name="remarks" value="{{ last_values.remarks }}">
+        {% else %}
+        <input type="text" class="form-control" name="remarks">
+        {% endif %}
+    </div>
+
+    <!-- Collapse end -->
+    </div>
+
+    <!-- Select images -->
+    <div class="mb-3">
+        <label for="files">Select images</label>
+        <input type=file id="imgInp" multiple="multiple" accept="image/jpeg, image/png, image/jpg" class="form-control"
+            name=files onchange="loadFiles(event)" >
+        <div class="img_container" id="result">
+        </div>
+    </div>
+
+    <!-- Button 1 and 2 -->
+    <div class="d-inline mb-3">
+        <!-- Button 2-->
+        <button type="submit" class="btn btn-secondary" name="action2" value="VALUE2">Copy from last record</button>
+        <!-- Button 3-->
+        <button type="submit" class="btn btn-warning" name="clear_files" value="VALUE3" onclick="clearFiles()" >Clear</button>
+    </div>
+    <p></p>
+    <div class="mb-3">
+    <!-- Button 1-->
+    <button type="submit" class="btn btn-lg btn-success" name="action1" value="VALUE1">Upload</button>
+    </div>
+    <p></p>
+
+</form>
+
+<script>
+    // Find document variable
+    const output = document.querySelector("#result");
+
+    // Get input images and loop over each image
+    function loadFiles(event) {
+        output.innerHTML = ""
+        for (let i = 0; i < event.target.files.length; i++) {
+            var img_item = document.createElement("div"); // Create new div element
+            img_item.className = "img_item";
+            img_item.appendChild(imageAppend(event.target.files[i])); // Append element to img_item
+            output.appendChild(img_item);
+        }
+    }
+
+    function clearFiles() {
+        output.innerHTML = ""
+        document.getElementById("imgInp").value = ""
+    }
+
+    // Append image to output
+    function imageAppend(x) {
+        var image = document.createElement("img"); // Create new image element
+        image.src = URL.createObjectURL(x); // Add soure to image element
+        image.id = x.name; // Add name to image element
+        // free memory
+        image.onload = function () {
+            URL.revokeObjectURL(image.src); // free memory
+        };
+        // Return img element
+        return (image);
+    }
+
+</script>
+
+{% endblock %}

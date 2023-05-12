@@ -264,7 +264,7 @@ def taxon_image():
         #    .all()
         
         # Get illustrations for selected taxa
-        illustration_images = Illustrations.query.filter(Illustrations.scientificName.in_(scientific_names)).all()
+        illustration_images = Illustrations.query.filter(Illustrations.scientificName.in_(scientific_names)).filter(Illustrations.category.in_(image_categories)).all()
         taxa2 = [i.scientificName for i in illustration_images]
         # Make a list of imaged taxa
         taxa_list = []

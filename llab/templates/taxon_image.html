@@ -36,7 +36,7 @@
     {% for taxa in imaged_taxa %}
 
     <h5>
-        <strong>Taxon:</strong>
+        <!-- <strong>Taxon:</strong>-->
         {% if taxa.taxonRank == "species" %}
         <em>{{taxa.genus}} {{taxa.specificEpithet}}</em> {{taxa.scientificNameAuthorship}}
         {% elif taxa.taxonRank == "genus" %}
@@ -50,13 +50,13 @@
     {% for image in images %}
     {% if image.scientificName == taxa.scientificName %}
 
-    <strong>{{ image.imageCategory[0]|upper}}{{image.imageCategory[1:] }}</strong>
+    <!--<strong>{{ image.imageCategory[0]|upper}}{{image.imageCategory[1:] }}</strong>-->
     {% if image.comment %}
     <br />
     {{image.comment}}
     {% endif %}
     <div>
-        <img src="{{dir_path}}/specimens/{{image.filename}}" onclick="window.open(this.src, '_blank');" height="200">
+        <img src="{{dir_path}}/specimens/{{image.filename}}" onclick="window.open(this.src, '_blank');" width="400">
     </div>
     <br />
 
@@ -66,9 +66,10 @@
     <!-- Illustrations -->
     {% for image in illustration_images %}
     {% if image.scientificName == taxa.scientificName %}
-    <strong>{{ image.category[0]|upper}}{{image.category[1:] }}</strong>
+    <!-- <strong>{{ image.category[0]|upper}}{{image.category[1:] }}</strong> -->
     <div>
-        <img src="{{dir_path}}/illustrations/{{image.filename}}" onclick="window.open(this.src, '_blank');" height="200">
+        <img src="{{dir_path}}/illustrations/{{image.filename}}" onclick="window.open(this.src, '_blank');" width="400">
+        <!-- <img src="{{dir_path}}/illustrations/{{image.filename}}" onclick='imagePopup(this.src, "{{ image.scientificName }}", "{{ image.remarks }}", "Rights-holder: {{ image.rightsHolder }}");' width="400" > -->
     </div>
     <br />
 
@@ -78,6 +79,23 @@
 
 
     <script type="text/javascript" src="{{ url_for('static', filename='multiselect-dropdown.js')}}"></script>
+    
+    <script type="text/javascript">
+        function image_window(input) {
+            var w = window.open(input, '_blank');
+            //w.document.write('<title>My PDF File Title</title>');
+            setTimeout(() => w.document.title = 'This is a test',0);
+        }
 
+        function imagePopup(myImage, myTitle, myCaption, mySource) {
+            var myWindow = window.open("", myTitle, "_blank", "toolbar=no,scrollbars=no,resizable=yes");
+            myWindow.document.write("<head><title>" + myTitle + "</title></head>");
+            myWindow.document.write("<big><b>Figure Caption:</big></b>" + myCaption + "<p>");
+            myWindow.document.write("<big><b>Figure Source:</big></b>" + mySource + "<p>");
+            myWindow.document.write("<img src=" + myImage + ">");
+   return myWindow;
+};
+    </script>
+    
 
     {% endblock %}

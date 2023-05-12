@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, flash, request, redirect, url_for, render_template, send_from_directory
 from flask_login import login_required, current_user
-from .models import User, Collecting_events, Event_images, Occurrences, Occurrence_images, Illustrations
+from .models import User, Collecting_events, Event_images, Occurrences, Occurrence_images, Illustrations, Taxa
 from . import db
 import os
 import shutil
@@ -119,6 +119,9 @@ def add_illustrations():
     title = "Add illustrations"
     dir_path = "/var/www/llab/llab/static/images/illustrations"
     last_values = None
+    # Get taxon data
+    taxa = Taxa.query.all()
+    # POST
     if request.method == 'POST':
         # Button 3: Clear values
         if request.form.get('clear_files') == 'VALUE3':
@@ -179,4 +182,4 @@ def add_illustrations():
                     db.session.commit()
             flash('Illustration added', category="success")
             return redirect(url_for("images.add_illustrations")) 
-    return render_template("illustrations.html", title=title, user=current_user, imagecat = imagecat2, licenses=licenses, id_qualifier=id_qualifier, type_status=type_status, sexes=sexes, lifestage=lifestage, imagetype=imagetype, last_values=last_values)
+    return render_template("illustrations.html", title=title, user=current_user, imagecat = imagecat2, licenses=licenses, id_qualifier=id_qualifier, type_status=type_status, sexes=sexes, lifestage=lifestage, imagetype=imagetype, last_values=last_values, taxa=taxa)

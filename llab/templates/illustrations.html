@@ -6,11 +6,19 @@
     <!-- Scientific name -->
     <div class="mb-3">
         Scientific name
-        {% if last_values is not none %}
-        <input type="text" class="form-control" name="scientificName" value="{{ last_values.scientificName }}">
-        {% else %}
-        <input type="text" class="form-control" name="scientificName">
-        {% endif %}
+        <select class="form-control selectpicker" id="scientificName" name="scientificName" data-live-search="true">
+            {% for i in taxa %}
+            {% if last_values is not none %}
+            {% if last_values.scientificName == i.scientificName %}
+            <option selected value="{{i.scientificName}}">{{i.scientificName}}</option>
+            {% else %}
+            <option value="{{i.scientificName}}">{{i.scientificName}}</option>
+            {% endif %}
+            {% else %}
+            <option value="{{i.scientificName}}">{{i.scientificName}}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
     </div>
 
     <!-- Sex -->

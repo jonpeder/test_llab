@@ -196,8 +196,7 @@ def edit_taxon():
 @login_required
 def taxon_image():
     title = "Taxon images"
-    imagecat = ['habitus', 'in-situ', 'lateral', 'ventral',
-                'dorsal', 'face', 'fore-wing', 'hind-wing']
+    imagecat = ['lateral', 'ventral', 'dorsal', 'anterior', 'face', 'fore-wing', 'hind-wing', 'propodeum', 'label', 'in-situ']
     dir_path = "static/images/"
     # Prepare list of taxa for dropdown-select-search bar
     taxa = Taxa.query.all()  # Database query for taxa

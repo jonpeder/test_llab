@@ -144,6 +144,7 @@ def add_illustrations():
             identificationQualifier = request.form.get("identificationQualifier")
             identifiedBy = request.form.get("identifiedBy")
             typeStatus = request.form.get("typeStatus")
+            typeID = request.form.get("typeID")
             ownerInstitutionCode = request.form.get("ownerInstitutionCode")
             # For each file in post request
             for file in request.files.getlist("files"):
@@ -173,6 +174,7 @@ def add_illustrations():
                         identificationQualifier = identificationQualifier,
                         identifiedBy = identifiedBy,
                         typeStatus = typeStatus,
+                        typeID = typeID,
                         ownerInstitutionCode = ownerInstitutionCode,
                         createdByUserID=current_user.id
                     )

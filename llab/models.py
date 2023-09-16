@@ -156,6 +156,7 @@ class Illustrations (db.Model):
     associatedReference = db.Column(db.String(100))
     remarks = db.Column(db.String(500))
     createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
+    typeID = db.Column(db.String(255))
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
 
 # Pteromalidae database

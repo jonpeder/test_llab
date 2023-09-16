@@ -186,6 +186,16 @@
         </select>
     </div>
     
+    <!-- typeID -->
+    <div class="mb-3">
+        Type ID
+        {% if last_values is not none %}
+        <input type="text" class="form-control" name="typeID" value="{{ last_values.typeID }}">
+        {% else %}
+        <input type="text" class="form-control" name="typeID">
+        {% endif %}
+    </div>
+
     <!-- ownerInstitutionCode -->
     <div class="mb-3">
         Owner institution code

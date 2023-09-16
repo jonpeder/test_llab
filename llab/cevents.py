@@ -8,6 +8,7 @@ import os
 from os import path
 from os.path import exists
 import qrcode
+import sqlalchemy
 import uuid
 #import pdfkit
 #import subprocess
@@ -26,6 +27,7 @@ date = ["Date_1", "Date_2"]
 substrate_types = ["gall", "mine", "colony"]
 substrate_parts = ["flower", "stem", "leaf", "shoot", "twig", "root",
                   "fruit", "seed", "cone", "female_catkin", "male_catkin", "fruitbody"]
+met = ["Sweep-net","Pan-trap","Reared","Yellow pan","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","White pan"]
 
 
 @cevents.route('/new_event', methods=["POST", "GET"])
@@ -36,7 +38,6 @@ def new_event():
     global substrate_part
     # Finn innsamlingsmetode, innsamlere og land
     leg = Collectors.query.all()
-    met = ["Sweep-net","Pan-trap","Reared","Yellow pan","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","White pan"]
     ctries = Country_codes.query.all()
     # If a for is posted, update database before generating the new page
     if request.method == 'POST':
@@ -69,6 +70,11 @@ def new_event():
             if already_existing_evnetID:
                 flash('event-ID aready exists', category='error')
             else:
+                # Set date to NULL if not specified
+                if not eventDate_1:
+                    eventDate_1 = None #"0000-00-00"
+                if not eventDate_2:
+                    eventDate_2 = None #"0000-00-00"
                 # new Collecting_events object
                 new_event = Collecting_events(eventID=eventID, countryCode=countryCode, stateProvince=stateProvince, county=county, strand_id=strand_id, municipality=municipality, locality_1=locality_1, locality_2=locality_2, habitat=habitat, decimalLatitude=decimalLatitude, decimalLongitude=decimalLongitude,
                                               coordinateUncertaintyInMeters=coordinateUncertaintyInMeters, samplingProtocol=samplingProtocol, eventDate_1=eventDate_1, eventDate_2=eventDate_2, recordedBy=" | ".join(recordedBy), eventRemarks=eventRemarks, createdByUserID=current_user.id, substrateName=substrate_name, substrateType=substrate_type, substratePlantPart=substrate_part)
@@ -91,7 +97,7 @@ def new_event():
 @cevents.route('/show_event', methods=['GET', 'POST'])
 @login_required
 def show_event():
-    title = "Show collecting events"
+    title = "Collecting events"
     events = Collecting_events.query.filter_by(
         createdByUserID=current_user.id).order_by(Collecting_events.eventID.desc())
     if request.method == 'POST':
@@ -101,7 +107,7 @@ def show_event():
         if eventID:
             # Button 2: Edit event
             if request.form.get('action2') == 'VALUE2':
-                title = "Edit collecting events"
+                title = "Edit event"
                 leg = Collectors.query.all()
                 met = ["Sweep-net","Pan-trap","Reared","Yellow pan","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","White pan"]
                 return render_template("edit_event.html", title=title, user=current_user, files=files, event=event, leg=leg, met=met, substrate_parts=substrate_parts, substrate_types=substrate_types)
@@ -174,8 +180,14 @@ def edit_event():
             event.decimalLongitude = decimalLongitude
             event.coordinateUncertaintyInMeters = coordinateUncertaintyInMeters
             event.samplingProtocol = samplingProtocol
-            event.eventDate_1 = eventDate_1
-            event.eventDate_2 = eventDate_2
+            if not eventDate_1:
+                event.eventDate_1 = None
+            else:
+                event.eventDate_1 = eventDate_1
+            if not eventDate_2:
+                event.eventDate_2 = None
+            else:
+                event.eventDate_2 = eventDate_2
             event.recordedBy = recordedBy
             event.eventRemarks = eventRemarks
             event.substrateName = substrateName

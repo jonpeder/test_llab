@@ -77,12 +77,6 @@
     {{ identification.taxonRank | tablerow("Taxon rank") | safe }}
     <!-- Scientific name -->
     {{ identification.scientificName | tablerow("Scientific name") | safe }}
-    <!-- Authorship -->
-    {{ identification.scientificNameAuthorship | tablerow("Authorship") | safe }}
-    <!-- Specific epithet -->
-    {{ identification.specificEpithet | tablerow("Specific epithet") | safe }}
-    <!-- Genus -->
-    {{ identification.genus | tablerow("Genus") | safe }}
     <!-- Family -->
     {{ identification.family | tablerow("Family") | safe }}
     <!-- Order -->
@@ -97,12 +91,29 @@
     </tr>
     <!-- Event ID -->
     {{ occurrence.eventID | tablerow("Event ID") | safe }}
+    <!-- Method -->
+    {{ occurrence.samplingProtocol | tablerow("Method") | safe }}
+    <!-- Event date -->
+    {{ occurrence.eventDate_1 | format_dates(occurrence.eventDate_2) | striptags | tablerow("Event date") | safe }}
+    <!-- Habitat -->
+    {{ occurrence.habitat | tablerow("Habitat") | safe }}
+    <!-- Substrate -->
+    {{ occurrence.substrateName | format_substrate(occurrence.substratePlantPart, occurrence.substrateType) | tablerow("Substrate") | safe }}
+    <!-- Collected by -->
+    {{ occurrence.recordedBy | tablerow("Collected by") | safe }}
+    <!-- Event remarks -->
+    {{ occurrence.eventRemarks | tablerow("Event remarks") | safe }}
+    <!-- Locality table -->
+    <tr class="border-bottom border-dark align-bottom">
+        <th>Locality:</th>
+        <th></th>
+    </tr>
     <!-- Country -->
     {{ occurrence.country | tablerow("Country") | safe }}
     <!-- Municipality -->
     {{ occurrence.municipality | tablerow("Municipality") | safe }}
-    <!-- Locality -->
-    {{ occurrence.locality_1 | locality_format(occurrence.locality_2) | tablerow("Locality") | safe }}
+    <!-- Locality name -->
+    {{ occurrence.locality_1 | locality_format(occurrence.locality_2) | tablerow("Locality name") | safe }}
     <!-- Coordinates -->
     <tr>
         <td>Coordinates</td>
@@ -110,18 +121,6 @@
     </tr>
     <!-- Coordinate uncertainty (m) -->
     {{ occurrence.coordinateUncertaintyInMeters | tablerow("Coordinate uncertainty (m)") | safe }}
-    <!-- Habitat -->
-    {{ occurrence.habitat | tablerow("Habitat") | safe }}
-    <!-- Substrate -->
-    {{ occurrence.substrateName | format_substrate(occurrence.substratePlantPart, occurrence.substrateType) | tablerow("Substrate") | safe }}
-    <!-- Method -->
-    {{ occurrence.samplingProtocol | tablerow("Method") | safe }}
-    <!-- Event date -->
-    {{ occurrence.eventDate_1 | format_dates(occurrence.eventDate_2) | striptags | tablerow("Event date") | safe }}
-    <!-- Collected by -->
-    {{ occurrence.recordedBy | tablerow("Collected by") | safe }}
-    <!-- Event remarks -->
-    {{ occurrence.eventRemarks | tablerow("Event remarks") | safe }}
     
 </table>
 </div>

@@ -3,7 +3,7 @@
 
 <form action="/show_event" method=post>
 
-    Select collecting event-ID
+    Select collecting event
     <div class="mb-3">
         <select class="form-control selectpicker" id="eventID" name="eventID" data-live-search="true">
             {% for i in events %}
@@ -32,91 +32,71 @@
 <br />
 
 {% if event %}
-<!-- Display event name -->
-<h3> # {{ event.eventID }}{% if event.locality_1 %} - {{ event.locality_1 }}{% endif %}{% if event.locality_2 %} - {{ event.locality_2 }}{% endif %}</h3>
-<br />
-
-<!-- Display event data -->
-<dl class="row">
-    <dt class="col-sm-3">Country</dt>
-    <dd class="col-sm-9">{{event.countryCode}}</dd>
-    {% if event.county %}
-    <dt class="col-sm-3">County</dt>
-    <dd class="col-sm-9">{{event.county}}</dd>
-    {% endif %}
-    {% if event.municipality %}
-    <dt class="col-sm-3">Municipality</dt>
-    <dd class="col-sm-9">{{event.municipality}}</dd>
-    {% endif %}
-    {% if event.habitat %}
-    <dt class="col-sm-3">Habitat</dt>
-    <dd class="col-sm-9">{{event.habitat}}</dd>
-    {% endif %}
-    {% if event.locality_1 %}
-    <dt class="col-sm-3">Locality 1</dt>
-    <dd class="col-sm-9">{{event.locality_1}}</dd>
-    {% endif %}
-    {% if event.locality_2 %}
-    <dt class="col-sm-3">Locality 2</dt>
-    <dd class="col-sm-9">{{event.locality_2}}</dd>
-    {% endif %}
-    {% if event.samplingProtocol %}
-    <dt class="col-sm-3">Method</dt>
-    <dd class="col-sm-9">{{event.samplingProtocol}}</dd>
-    {% endif %}
-    {% if event.eventDate_1 %}
-    <dt class="col-sm-3">Date 1</dt>
-    <dd class="col-sm-9">{{event.eventDate_1}}</dd>
-    {% endif %}
-    {% if event.eventDate_2 %}
-    <dt class="col-sm-3">Date 2</dt>
-    <dd class="col-sm-9">{{event.eventDate_2}}</dd>
-    {% endif %}
-    {% if event.recordedBy %}
-    <dt class="col-sm-3">Recorded by</dt>
-    <dd class="col-sm-9">{{event.recordedBy}}</dd>
-    {% endif %}
-</dl>
-
-{% if event.decimalLatitude %}
-<h5>Coordinates</h5>
-<dl class="row">
-    <dt class="col-sm-3">Latitude</dt>
-    <dd class="col-sm-9">{{event.decimalLatitude}}</dd>
-    {% if event.decimalLongitude %}
-    <dt class="col-sm-3">Longitude</dt>
-    <dd class="col-sm-9">{{event.decimalLongitude}}</dd>
-    {% endif %}
-    {% if event.coordinateUncertaintyInMeters %}
-    <dt class="col-sm-3">Radius</dt>
-    <dd class="col-sm-9">{{event.coordinateUncertaintyInMeters}}</dd>
-    {% endif %}
-</dl>
-{% endif %}
-
-{% if event.substrateName %}
-<h5>Substrate</h5>
-<dl class="row">
-    <dt class="col-sm-3">Name</dt>
-    <dd class="col-sm-9">{{event.substrateName}}</dd>
-    {% if event.substratePlantPart %}
-    <dt class="col-sm-3">Part</dt>
-    <dd class="col-sm-9">{{event.substratePlantPart}}</dd>
-    {% endif %}
-    {% if event.substrateType %}
-    <dt class="col-sm-3">Type</dt>
-    <dd class="col-sm-9">{{event.substrateType}}</dd>
-    {% endif %}
-</dl>
-{% endif %}
-
-{% if event.eventRemarks %}
-<h5>Remarks</h5>
-{{event.eventRemarks}}
-{% endif %}
 
 <br />
+
+<!-- Leaflet -->
+<div id="map" style="height: 250px;"></div>
+<script type="text/javascript">
+    // The first parameters are the coordinates of the center of the map, the second parameter is the zoom level
+    var map = L.map('map', {fullscreenControl: true}).setView([{{ event.decimalLatitude }}, {{ event.decimalLongitude }}], 11);
+    // Add leaflet map as a new layer
+    var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+    }).addTo(map);
+    // It even opens up a popup when you click it!
+    L.marker([{{ event.decimalLatitude }}, {{ event.decimalLongitude }}]).addTo(map)
+</script>
+<br />
+
+<!-- Display event data in responsive table -->
+<div class="table-responsive">
+    <table class="table table-sm" style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;">
+    <!-- Table header -->
+    <tr class="border-bottom border-dark align-bottom">
+        <th>{{ event.eventID }}{% if event.locality_1 %} - {{ event.locality_1 }}{% endif %}{% if event.locality_2 %} - {{ event.locality_2 }}{% endif %}:</th>
+        <th></th>
+    </tr>
+    <!-- Protocol -->
+    {{ event.samplingProtocol | tablerow("Method") | safe }}
+    <!-- Date -->
+    {{ event.eventDate_1 | format_dates(event.eventDate_2) | striptags | tablerow("Date") | safe }}
+    <!-- Habitat -->
+    {{ event.habitat | tablerow("Habitat") | safe }}
+    <!-- Substrate -->
+    {{ event.substrateName | format_substrate(event.substratePlantPart, event.substrateType) | tablerow("Substrate") | safe }}
+    <!-- Recorded by -->
+    {{ event.recordedBy | tablerow("Recorded by") | safe }}
+    <!-- Remarks -->
+    {{ event.eventRemarks | tablerow("Remarks") | safe }}
+
+    <tr class="border-bottom border-dark align-bottom">
+        <th>Locality:</th>
+        <th></th>
+    </tr>
+    <!-- Country -->
+    {{ event.countryCode | tablerow("Country") | safe }}
+    <!-- County -->
+    {{ event.county | tablerow("County") | safe }}
+    <!-- Municipality -->
+    {{ event.municipality | tablerow("Municipality") | safe }}
+    <!-- Locality name -->
+    {{ event.locality_1 | locality_format(event.locality_2) | tablerow("Locality name") | safe }}
+    <!-- Coordinates -->
+    <tr>
+        <td>Coordinates</td>
+        <td><a href="http://maps.google.com/maps?q={{ event.decimalLatitude }},{{ event.decimalLongitude }}">{{ event.decimalLatitude }}, {{ event.decimalLongitude }}</a></td>
+    </tr>
+    <!-- Coordinate uncertainty (m) -->
+    {{ event.coordinateUncertaintyInMeters | tablerow("Coordinate uncertainty (m)") | safe }}
+
+</table>
+</div>
+
+<br />
+
 <p></p>
+
 <!-- Show images -->
 {% for i in files %}
 <strong>Image {{loop.index}}:</strong> {{i.imageCategory}}
@@ -129,7 +109,8 @@
 {% endfor %}
 
 <form action="/specimen_list" method=post>
-<!-- Button 3-->
+
+    <!-- Button 3-->
 <div class="mb-3">
     <input type="text" name="eventID" id="eventID" value="{{ event.eventID }}" hidden>
     <button type="submit" class="btn btn-secondary btn-sm" name="collecting_event_id" value="collecting_event_id">View specimens</button>

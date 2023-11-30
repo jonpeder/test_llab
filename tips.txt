@@ -1,0 +1,7 @@
+export FLASK_APP=test_llab.py # Bruk python skript
+flask run # kjør nettside
+flask run --host 0.0.0.0 # Kjør nettside på lokalt nettverk
+export FLASK_DEBUG=1 # oppdater nettside kontinuerlig fra python skriptet
+
+
+flask shell # Flask testing i terminal

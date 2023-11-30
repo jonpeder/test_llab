@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method=post enctype=multipart/form-data>
+
+    <!-- Select images -->
+    <div class="mb-3">
+        <label for="files">Select images</label>
+        <input type=file id="imgInp" multiple="multiple" accept="image/jpeg, image/png, image/jpg" class="form-control"
+            name=files >
+        <div class="img_container" id="result">
+        </div>
+    </div>
+
+    <!-- Button 1-->
+    <button type="submit" class="btn btn-lg btn-success" name="action1" value="VALUE1">Upload</button>
+    <br>
+    <p></p>
+    {% if qr_codes %}
+    <div class="mb-3">
+        <p>Number of decoded qr-codes: {{ qr_codes | length }}</p>
+        <p>DECODED QR-CODES:</p>
+        {% for id in qr_codes %}
+            <p>{{ id }}</p>
+        {% endfor %}
+    </div>
+    <!-- Display decoded qr-codes in images -->
+    <div class="mb-3">
+    {% for n in range(img_count) %}
+    <div class="img_container">
+        <img class="img_item" src="static/uploads/qr_codes_decoded_{{n+1}}.jpg" >
+    </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+
+</form>
+
+
+
+{% endblock %}

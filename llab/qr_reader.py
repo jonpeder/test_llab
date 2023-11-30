@@ -1,53 +1,14 @@
-# Read strandr.tmp csv file to python dictionary
-import csv
-# Importing libraries for QrReader
+# Importing library
 import cv2
 import numpy as np
 from pyzbar.pyzbar import decode
 from pyzbar.pyzbar import ZBarSymbol
 
-
-def readcsv(file):
-    reader = csv.DictReader(open(file, newline=''),
-                            delimiter=' ', quotechar='"')
-    dictobj = next(reader)
-    return (dictobj)
-
-# Define query function
-def query(conn, sql):
-    c = conn.cursor()
-    c.execute(sql)
-    return c.fetchall()
-
-# Define query function
-def headers(conn, sql):
-    # Create a cursor
-    c = conn.cursor()
-    # Execute query
-    c.execute(sql)
-    # Return headers
-    return list(map(lambda x: x[0], c.description))
-
-# Function: suggest new eventID
-def newEventID(eventID_list, prefix):
-    while True:
-        try:
-            tmp = [i for i in eventID_list if f'{prefix}_A' == i[0:5]]
-            tmp2 = []
-            for i in tmp:
-                tmp2.append(int(i[5:15]))
-            tmp2.sort(reverse=True)
-            return f'{prefix}_A{tmp2[0]+1:04d}'
-        except:
-            return f'{prefix}_A0001'
-
-
-# Make one method to decode thcone barcode
+# Make one method to decode the barcode
 def BarcodeReader(image):
 
     # read the image in numpy array using cv2
-    #img = cv2.imread(image, cv2.IMREAD_GRAYSCALE)
-    img = image
+    img = cv2.imread(image, cv2.IMREAD_GRAYSCALE)
     
     # Create two differently processed images
     test1 = img
@@ -83,14 +44,12 @@ def BarcodeReader(image):
         test2_data.append(i.data)
     
     
-
     # If not detected then print the message
     if not set(test1_data).union(test2_data):
-        #print("Barcode Not Detected!")
-        return ""
+        print("Barcode Not Detected!")
     else:
         # Print the barcode data
-        #print(set(test1_data).union(test2_data))
+        print(set(test1_data).union(test2_data))
         
         # Convert image from grayscale to color
         img=cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
@@ -114,10 +73,7 @@ def BarcodeReader(image):
             (a, b, c, d) = barcode.polygon
             pts = np.array([[a.x*scale, a.y*scale], [b.x*scale, b.y*scale], [c.x*scale, c.y*scale], [d.x*scale, d.y*scale]], np.int32)
             img = cv2.polylines(img, [pts], isClosed, color, thickness)
-        
-        # Return combined barcode-data-sets and image with decoded barcodes
-        return set(test1_data).union(test2_data), img
-"""
+                
     #Display the image
     cv2.imshow("Image", img)
     cv2.waitKey(0)
@@ -127,4 +83,3 @@ if __name__ == "__main__":
 # Take the image from user
     image="Img.jpg"
     BarcodeReader(image)
-"""

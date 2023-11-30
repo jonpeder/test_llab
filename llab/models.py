@@ -120,7 +120,7 @@ class Occurrence_images (db.Model):
     filename = db.Column(db.String(200))
     imageCategory = db.Column(db.String(20))
     comment = db.Column(db.String(500))
-    occurrenceID = db.Column(db.String(50), db.ForeignKey('occurrences.occurrenceID'))
+    occurrenceID = db.Column(db.String(80), db.ForeignKey('occurrences.occurrenceID'))
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
     createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
 
@@ -157,6 +157,8 @@ class Illustrations (db.Model):
     remarks = db.Column(db.String(500))
     createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
     typeID = db.Column(db.String(255))
+    scaleBar = db.Column(db.String(50))
+    typeName = db.Column(db.String(100))
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
 
 # Pteromalidae database

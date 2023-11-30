@@ -27,7 +27,7 @@ date = ["Date_1", "Date_2"]
 substrate_types = ["gall", "mine", "colony"]
 substrate_parts = ["flower", "stem", "leaf", "shoot", "twig", "root",
                   "fruit", "seed", "cone", "female_catkin", "male_catkin", "fruitbody"]
-met = ["Sweep-net","Pan-trap","Reared","Yellow pan","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","White pan"]
+met = ["Sweep-net","Reared","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","Color-pan","Yellow-pan","White-pan"]
 
 
 @cevents.route('/new_event', methods=["POST", "GET"])

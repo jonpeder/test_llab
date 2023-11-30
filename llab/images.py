@@ -2,9 +2,13 @@ from flask import Blueprint, current_app, flash, request, redirect, url_for, ren
 from flask_login import login_required, current_user
 from .models import User, Collecting_events, Event_images, Occurrences, Occurrence_images, Illustrations, Taxa
 from . import db
+from .functions import BarcodeReader
 import os
 import shutil
 import glob
+import cv2
+import numpy as np
+import base64
 from werkzeug.utils import secure_filename
 
 # connect to __init__ file
@@ -98,9 +102,9 @@ def specimen_image():
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     filename2 = f'{occurrence}_{filename}'
-                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2)) # Save file to upload folder
-                    shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/{filename2}") # Move file to image-folder
-                    os.remove(f"{app.config['UPLOAD_FOLDER']}/{filename2}") # Remove file from upload-folder
+                    #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2)) # Save file to upload folder
+                    #shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/{filename2}") # Move file to image-folder
+                    #os.remove(f"{app.config['UPLOAD_FOLDER']}/{filename2}") # Remove file from upload-folder
                     # New Print_events object
                     new_specimen_image = Occurrence_images(
                         filename=filename2, imageCategory=imageCategory, comment=comment, occurrenceID=occurrence, createdByUserID=current_user.id)
@@ -145,6 +149,8 @@ def add_illustrations():
             identifiedBy = request.form.get("identifiedBy")
             typeStatus = request.form.get("typeStatus")
             typeID = request.form.get("typeID")
+            scaleBar = request.form.get("scaleBar")
+            typeName = request.form.get("typeName")
             ownerInstitutionCode = request.form.get("ownerInstitutionCode")
             # For each file in post request
             for file in request.files.getlist("files"):
@@ -175,6 +181,8 @@ def add_illustrations():
                         identifiedBy = identifiedBy,
                         typeStatus = typeStatus,
                         typeID = typeID,
+                        scaleBar = scaleBar,
+                        typeName = typeName,
                         ownerInstitutionCode = ownerInstitutionCode,
                         createdByUserID=current_user.id
                     )
@@ -185,3 +193,38 @@ def add_illustrations():
             flash('Illustration added', category="success")
             return redirect(url_for("images.add_illustrations")) 
     return render_template("illustrations.html", title=title, user=current_user, imagecat = imagecat2, licenses=licenses, id_qualifier=id_qualifier, type_status=type_status, sexes=sexes, lifestage=lifestage, imagetype=imagetype, last_values=last_values, taxa=taxa)
+
+@images.route('/read_qr', methods=['GET', 'POST'])
+@login_required
+def read_qr():
+    title = "Read qr-codes"
+    # Reference variables
+    qr_codes = ""
+    img_count = 0
+    # Remove earlier qr-code image-files
+    files = os.listdir(app.config["UPLOAD_FOLDER"])
+    for file in files:
+        if file.startswith("qr_codes_"):
+            os.remove(os.path.join(app.config["UPLOAD_FOLDER"], file))
+    # POST
+    if request.method == 'POST':
+        # For each file in post request
+        qr_codes = {}
+        for file in request.files.getlist("files"):
+            img_count+=1
+            # If the user does not select a file
+            if file.filename == '':
+                flash('No selected file', category="error")
+                return redirect(request.url)
+            else:
+                response = file.read()
+                # read the image in numpy array using cv2
+                frame = cv2.imdecode(np.fromstring(response, np.uint8), cv2.IMREAD_GRAYSCALE)
+                # use BarcodeReader function to get decoded qr-code-data and image with displayed decoded qr-codes
+                qr, img = BarcodeReader(frame)
+                qr_codes=set(qr).union(qr_codes)
+                cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], f'qr_codes_decoded_{img_count}.jpg'), img)
+        # Count qr-codes
+        qr_codes = list(qr_codes)
+                 
+    return render_template("read_qr.html", title=title, user=current_user, qr_codes=qr_codes, img_count=img_count)

@@ -168,6 +168,16 @@
         {% endif %}
     </div>
 
+    <!-- scaleBar -->
+    <div class="mb-3">
+        Scale bar
+        {% if last_values is not none %}
+        <input type="text" class="form-control" name="scaleBar" value="{{ last_values.scaleBar }}">
+        {% else %}
+        <input type="text" class="form-control" name="scaleBar">
+        {% endif %}
+    </div>
+
     <!-- typeStatus -->
     <div class="mb-3">
         Type status
@@ -186,6 +196,16 @@
         </select>
     </div>
     
+    <!-- typeName -->
+    <div class="mb-3">
+        Type of scientific name
+        {% if last_values is not none %}
+        <input type="text" class="form-control" name="typeName" value="{{ last_values.typeName }}">
+        {% else %}
+        <input type="text" class="form-control" name="typeName">
+        {% endif %}
+    </div>
+
     <!-- typeID -->
     <div class="mb-3">
         Type ID

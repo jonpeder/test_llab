@@ -24,13 +24,19 @@
     <!-- TITLE BLOCK -->
     <title>The Lindemann lab</title>
 
+    <style>
+        .dark-mode {
+          background-color: rgb(35, 35, 39);
+          color: white;
+        }
+    </style>
 </head>
 
 <body>
 
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" onclick="myFunction()">
             <img src="{{url_for('static', filename='ladybug.svg')}}" width="30" height="30"
                 class="d-inline-block align-top" alt="">
         </a>
@@ -85,6 +91,20 @@
                         </div>
                     </li>
                 </ul>
+
+                <!-- Datasets dropdown-->
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">
+                            Datasets
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" id="landmarks" href="/landmark_dataset">landmarks</a>
+                        </div>
+                    </li>
+                </ul>
+
 
                 <!-- Print dropdown -->
                 <ul class="navbar-nav">

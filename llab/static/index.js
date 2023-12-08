@@ -158,3 +158,9 @@ function imageAppend(x) {
     // Return img element
     return (image);
 }
+
+// Dark mode
+function myFunction() {
+  var element = document.body;
+  element.classList.toggle("dark-mode");
+}

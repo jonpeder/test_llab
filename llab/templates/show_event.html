@@ -98,12 +98,12 @@
 <p></p>
 
 <!-- Show images -->
-{% for i in files %}
-<strong>Image {{loop.index}}:</strong> {{i.imageCategory}}
+{% for file in files %}
+<strong>Image {{loop.index}}:</strong> {{file.imageCategory}}
 <br />
-{{i.comment}}
+{{file.comment}}
 <div>
-    <img src="static/images/events/{{i.filename}}" onclick="window.open(this.src, '_blank');" height="200">
+    <img src="static/images/compressed/{{file.filename}}" onclick="window.open(window.location.origin+'/static/images/events/{{file.filename}}', '_blank');" height="200">
 </div>
 <br />
 {% endfor %}

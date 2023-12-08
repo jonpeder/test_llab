@@ -27,9 +27,11 @@
         </select>
     </div>
 
-    <!-- Button 3-->
-    <div class="mb-3">
+    <!-- Button 1-->
+    <div class="d-inline mb-3">
         <button type="submit" class="btn btn-success btn-lg" name="action1" value="VALUE1">Show</button>
+    <!-- Button 2-->
+        <button type="submit" class="btn btn-secondary btn-lg" name="action2" value="VALUE2">Add landmarks</button>
     </div>
 
     <!-- Show images -->
@@ -56,7 +58,7 @@
     {{image.comment}}
     {% endif %}
     <div>
-        <img src="{{dir_path}}/specimens/{{image.filename}}" onclick="window.open(this.src, '_blank');" width="400">
+        <img src="{{dir_path}}/compressed/{{image.filename}}" onclick="window.open(window.location.origin+'/{{dir_path}}/specimens/{{image.filename}}', '_blank');" width="400">
     </div>
     <br />
 
@@ -68,7 +70,7 @@
     {% if image.scientificName == taxa.scientificName %}
     <!-- <strong>{{ image.category[0]|upper}}{{image.category[1:] }}</strong> -->
     <div>
-        <img src="{{dir_path}}/illustrations/{{image.filename}}" onclick="window.open(this.src, '_blank');" width="400">
+        <img src="{{dir_path}}/compressed/{{image.filename}}" onclick="window.open(window.location.origin+'/{{dir_path}}/illustrations/{{image.filename}}', '_blank');" width="400">
         <!-- <img src="{{dir_path}}/illustrations/{{image.filename}}" onclick='imagePopup(this.src, "{{ image.scientificName }}", "{{ image.remarks }}", "Rights-holder: {{ image.rightsHolder }}");' width="400" > -->
     </div>
     <br />
@@ -77,9 +79,8 @@
     {% endfor %}
     {% endfor %}
 
-
     <script type="text/javascript" src="{{ url_for('static', filename='multiselect-dropdown.js')}}"></script>
-    
+    <!-- 
     <script type="text/javascript">
         function image_window(input) {
             var w = window.open(input, '_blank');
@@ -93,9 +94,10 @@
             myWindow.document.write("<big><b>Figure Caption:</big></b>" + myCaption + "<p>");
             myWindow.document.write("<big><b>Figure Source:</big></b>" + mySource + "<p>");
             myWindow.document.write("<img src=" + myImage + ">");
-   return myWindow;
-};
+        return myWindow;
+        };
     </script>
-    
+    -->
 
-    {% endblock %}
+</form>
+{% endblock %}

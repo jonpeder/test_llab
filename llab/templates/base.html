@@ -22,11 +22,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     
     <!-- TITLE BLOCK -->
-    {% if title %}
-    <title>Lindemanns lab - {{ title }}</title>
-    {% else %}
-    <title>Lindemanns lab</title>
-    {% endif %}
+    <title>The Lindemann lab</title>
 
 </head>
 
@@ -153,7 +149,7 @@
 
     <!-- HEADER -->
     <br />
-    <h3 align="center">{{ title }}</h3>
+    <h3 align="center">{{ title | safe}}</h3>
     <br />
 
     <!-- CONTENT BLOCK -->

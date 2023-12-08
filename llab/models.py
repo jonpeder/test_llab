@@ -161,6 +161,26 @@ class Illustrations (db.Model):
     typeName = db.Column(db.String(100))
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
 
+class Landmark_datasets(db.Model):
+    datasetName = db.Column(db.String(100), primary_key=True)
+    landmarks = db.Column(db.String)
+    taxa = db.Column(db.String)
+    imageCategory = db.Column(db.String)
+    imageIDs = db.Column(db.String)
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
+    databased = db.Column(db.DateTime(timezone=True), default=func.now())
+
+
+class Landmarks(db.Model):
+    landmark = db.Column(db.String(10), primary_key=True)
+    filename = db.Column(db.Integer, primary_key=True)
+    datasetName = db.Column(db.String(100), primary_key=True)
+    xCoordinate = db.Column(db.Numeric)
+    yCoordinate = db.Column(db.Numeric)
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
+    databased = db.Column(db.DateTime(timezone=True), default=func.now())
+
+
 # Pteromalidae database
 class pteromalidae_events(db.Model):
     #__bind_key__ = "pteromalidae"

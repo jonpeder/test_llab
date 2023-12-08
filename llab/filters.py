@@ -14,6 +14,11 @@ def string_to_date(date):
     date_format = datetime.strptime(str(date), "%Y-%m-%d")
     return date_format
 
+# scale numeric value by factor
+@filters.app_template_filter('scale_value')
+def scale_value(value, factor):
+    return value*factor
+
 # Format date
 @filters.app_template_filter('date_format')
 def date_format(date, format="%d.%m.%Y"):

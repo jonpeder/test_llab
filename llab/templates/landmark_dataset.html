@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method=post>
+
+    <div class="form-group">
+        Select landmark dataset
+        <select name="datasetName" id="datasetName" class="form-control" >
+            {% for dataset in datasets %}
+            <option value="{{dataset.datasetName}}">{{dataset.datasetName}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <br>
+    <!-- Buttons -->
+    <div class="d-inline mb-3">
+        <!-- Button 1-->
+        <button type="submit" class="btn btn-success btn-lg" name="action1" value="VALUE1">Add landmarks</button>
+        <!-- Button 2-->
+        <button type="submit" class="btn btn-secondary btn-lg" name="action2" value="VALUE2">View coordinate table</button>
+        <!-- Button 3-->
+        <button type="submit" class="btn btn-secondary btn-lg" name="action3" value="VALUE3">View landmarks</button>
+    </div>
+</form>
+    <br>
+    <br>
+    <br>
+    <!-- Table of landmarks in dataset -->
+    {% if condition == 'coordinates' %}
+    <table class="table" table-sm>
+        <thead>
+            <tr>
+                <th scope="col">image #</th>
+                {% for landmark_name in landmark_names %}
+                <th scope="col">{{landmark_name}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for occurrence_image in occurrence_images %}
+        {% set image_index = loop.index %}
+            <tr>
+                <th scope="row">{{image_index}}</th>
+                {% for landmark_name in landmark_names %}
+                <th scope="col">
+                {% for landmark in landmarks %}
+                {% if landmark.filename == occurrence_image.filename and landmark.landmark == landmark_name %}
+                {{ landmark.xCoordinate }}, {{ landmark.yCoordinate }}
+                {% endif %}
+                {% endfor %}
+                <a href="/landmark_image/{{datasetName}}/{{occurrence_image.filename}}/{{landmark_name}}/{{image_index}}/" style="text-decoration: none;color: rgb(255, 0, 0);">+</a>
+                </th>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <!-- display images with landmarks -->
+    {% if condition == 'images' %}
+    {% for occurrence_image in occurrence_images %}
+    <p style="font-size: 20px;">{{ loop.index }}</p>
+    <div style="position:relative;padding:7px;margin:5px;">
+        <img src="/static/images/compressed/{{occurrence_image.filename}}" width="1000">
+        {% for landmark_name in landmark_names %}
+        {% for landmark in landmarks %}
+        {% if landmark.filename == occurrence_image.filename and landmark.landmark == landmark_name %}
+        {% set scale = 0.66666%}
+        {% set x = landmark.xCoordinate*scale %}
+        {% set y = landmark.yCoordinate*scale-12 %}
+        {% set label_x = landmark.xCoordinate*scale+20 %}
+        {% set label_y = landmark.yCoordinate*scale %}
+        <div style="position:absolute;left:{{x}}px;top:{{y}}px;font-size:25px;color:rgb(255,0,0);">+</div>
+        <div style="position:absolute;left:{{label_x}}px;top:{{label_y}}px;font-size:20px">{{landmark_name}}</div>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+{% endblock %}

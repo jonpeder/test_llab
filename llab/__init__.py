@@ -33,6 +33,7 @@ def create_app():
     from .taxa import taxa
     from .filters import filters
     from .specimens import specimens
+    from .landmarks import landmarks
 
 
     app.register_blueprint(auth, url_prefix='/')
@@ -42,6 +43,8 @@ def create_app():
     app.register_blueprint(taxa, url_prefix='/')
     app.register_blueprint(filters, url_prefix='/')
     app.register_blueprint(specimens, url_prefix='/')
+    app.register_blueprint(landmarks, url_prefix='/')
+
 
     from .models import User, Catalog_number_counter, Print_events, Print_det, Event_images, Occurrence_images, Identification_events
 

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method=post>
+
+    <!-- dataset name -->
+    <div class="mb-3">
+        Dataset name
+        <input type="text" class="form-control" id="datasetName" aria-describedby="dataset name" placeholder="datasetName"
+            name="datasetName" required>
+    </div>
+    <br>
+    <!-- landmark names -->
+    <div class="mb-3">
+        Landmark-names (Comma separated)
+        <input type="text" class="form-control" id="landmarks" aria-describedby="landmark names" placeholder="landmarks"
+            name="landmarks" required>
+    </div>
+    <br>
+
+    <!-- Button 1-->
+    <div class="mb-3">
+        <button type="submit" class="btn btn-success btn-lg" name="action1" value="VALUE1">Create</button>
+    </div>
+
+
+
+</form>
+
+{% endblock %}

@@ -197,7 +197,7 @@ def edit_taxon():
 def taxon_image():
     title = "Taxon images"
     imagecat = ['lateral', 'ventral', 'dorsal', 'anterior', 'face', 'fore-wing', 'hind-wing', 'propodeum', 'label', 'in-situ']
-    dir_path = "static/images/"
+    dir_path = "static/images"
     # Prepare list of taxa for dropdown-select-search bar
     taxa = Taxa.query.all()  # Database query for taxa
     order = tuple(np.unique([i.order for i in taxa if i.order]))
@@ -246,7 +246,7 @@ def taxon_image():
         occurrence_images = Occurrence_images.query\
             .join(Occurrences, Occurrence_images.occurrenceID == Occurrences.occurrenceID)\
             .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID)\
-            .with_entities(Occurrence_images.filename, Occurrence_images.imageCategory, Occurrence_images.comment, Occurrence_images.occurrenceID, Identification_events.scientificName)\
+            .with_entities(Occurrence_images.id, Occurrence_images.filename, Occurrence_images.imageCategory, Occurrence_images.comment, Occurrence_images.occurrenceID, Identification_events.scientificName)\
             .filter(Occurrence_images.occurrenceID.in_(occurrence_ids))\
             .filter(Occurrence_images.imageCategory.in_(image_categories))\
             .all()
@@ -272,7 +272,24 @@ def taxon_image():
                 taxa_list.append(i)
         imaged_taxa = Taxa.query.filter(Taxa.scientificName.in_(taxa_list)).all()
         # Render html
-        return render_template("taxon_image.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks, imagecat=imagecat, images=occurrence_images, illustration_images=illustration_images, imaged_taxa=imaged_taxa, dir_path=dir_path)
+        # Button for displaying images
+        if request.form.get('action1') == 'VALUE1':
+            return render_template("taxon_image.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks, imagecat=imagecat, images=occurrence_images, illustration_images=illustration_images, imaged_taxa=imaged_taxa, dir_path=dir_path)
+        # Button for creating landmark-dataset
+        if request.form.get('action2') == 'VALUE2':
+            # Return error message if more than one image-category
+            image_ids = [i.id for i in occurrence_images]
+            taxa = " | ".join([i.split(";")[0] for i in taxa])
+            if len(image_categories) > 1:
+                flash(f'Only one image category should be selected!', category="error")
+                return redirect(url_for("taxa.taxon_image"))
+            image_categories = "".join(image_categories)
+            if len(image_ids) < 1:
+                flash(f'At least one taxon with one image should be selected', category="error")
+                return redirect(url_for("taxa.taxon_image"))
+            image_ids = " | ".join(str(i) for i in image_ids)
+            # Send parameters to new_landmarks route
+            return redirect(url_for('landmarks.landmark_add_dataset', taxa=taxa, image_category=image_categories, image_ids=image_ids))
     else:
         return render_template("taxon_image.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks, imagecat=imagecat)
 

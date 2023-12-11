@@ -60,7 +60,8 @@
     <!-- display images with landmarks -->
     {% if condition == 'images' %}
     {% for occurrence_image in occurrence_images %}
-    <p style="font-size: 20px;">{{ loop.index }}</p>
+    {% set image_index = loop.index %}
+    <p style="font-size: 20px;">{{ image_index }}</p>
     <div style="position:relative;padding:7px;margin:5px;">
         <img src="/static/images/compressed/{{occurrence_image.filename}}" width="1000">
         {% for landmark_name in landmark_names %}
@@ -71,7 +72,8 @@
         {% set y = landmark.yCoordinate*scale-12 %}
         {% set label_x = landmark.xCoordinate*scale+20 %}
         {% set label_y = landmark.yCoordinate*scale %}
-        <div style="position:absolute;left:{{x}}px;top:{{y}}px;font-size:25px;color:rgb(255,0,0);">+</div>
+        <!--<div style="position:absolute;left:{{x}}px;top:{{y}}px;font-size:25px;color:rgb(255,0,0);">+</div>-->
+        <a href="/landmark_image/{{datasetName}}/{{occurrence_image.filename}}/{{landmark_name}}/{{image_index}}/" style="position:absolute;left:{{x}}px;top:{{y}}px;font-size:25px;text-decoration:none;color:rgb(255,0,0);">+</a>
         <div style="position:absolute;left:{{label_x}}px;top:{{label_y}}px;font-size:20px">{{landmark_name}}</div>
         {% endif %}
         {% endfor %}

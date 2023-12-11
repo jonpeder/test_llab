@@ -32,6 +32,7 @@ def select_next_image(datasetName, filename = None, landmark = None):
             if f == filename:
                 if index == len(filenames):
                     next_image = filenames[0]
+                    index = 0
                     index2 = 0
                     for lm in landmarks:
                         index2 += 1
@@ -120,7 +121,7 @@ def landmark_image(datasetName, filename, landmark, image_index):
 @landmarks.route('/add_to_database/<datasetName>/<filename>/<landmark>/<int:condition>/')
 @login_required
 def add_to_database(datasetName, filename, landmark, condition):
-    # If image was clicked condition 1
+    # If landmark was placed on image by click (condition 1)
     if condition == 1:
         if len(request.args) == 0:
             return redirect(url_for("landmark_image", datasetName=datasetName, filename=filename, landmark=landmark))
@@ -140,5 +141,14 @@ def add_to_database(datasetName, filename, landmark, condition):
             existing_landmark.createdByUserID = current_user.id
         # Commit
         db.session.commit()
+    # If landmark cannot be placed on image (condition 0)
+    if condition == 0:
+        # Delete landmark if it already exist
+        # Check if combination of image and landmark allready exists
+        existing_landmark = Landmarks.query.filter_by(landmark=landmark).filter_by(filename=filename).filter_by(datasetName=datasetName).first()
+        # If combination does not exist, create new record
+        if existing_landmark:
+            db.session.delete(existing_landmark)
+            db.session.commit()
     # Return to select next image
     return  select_next_image(datasetName=datasetName, filename=filename, landmark=landmark)

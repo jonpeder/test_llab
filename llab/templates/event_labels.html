@@ -46,19 +46,15 @@
         {% endfor %}
     </tbody>
 </table>
-{% endif %}
 
-    <!-- label type 
-    Label type
-    <select class="form-select" aria-label="label_type" name="label_type">
-        <option value="small">medium</option>
-        <option value="medium">small</option>
-    </select>
-    <br />-->
+<!-- Summarize labels -->
+<p style="font-size: 20px;">Labels on A4-sheet: {{ user.print_events | sum(attribute = 'print_n') }}/400</p>
+
+{% endif %}
 
     <!-- Button 3-->
     <div class="mb-3">
-        <a href="/label_output" target="_blank">
+        <a href="/event_labels_output" target="_blank">
             <button type="submit" class="btn btn-success btn-lg" name="action3" value="VALUE3">Print</button>
         </a>
     </div>

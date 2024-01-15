@@ -1,0 +1,65 @@
+
+<!doctype html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Paper CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css">
+
+<style>
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+  gap: 1px;
+  padding: 0px;
+  background-color: #ffffff;
+}
+
+.label {
+    width:68px;
+    height:23px;
+    font-size: 3px;
+    line-height: 107%;
+    font-family: Verdana;
+    font-weight: normal;
+    font-style: normal;
+    white-space:nowrap;
+    background-color: rgb(255, 255, 255);
+}
+
+.label img {
+   float:left;
+   height:100%;
+   margin-right:1px;
+}
+
+</style>
+</head>
+<!-- Paper-CSS -->
+<body class="A4">
+<section class="sheet padding-10mm">
+
+<var class="grid-container">
+    {% for i in range(30) %}
+    <var class='label'>
+    <img src="static/1_qrlabel_80_0.png">
+    <b>NO</b> TRI STORFJORD:
+    <br/>
+    Skibotndalen, Buvsassjohka
+    <br/>
+    (Canyon)
+    <br/>
+    69.238470 20.619999 ± 50
+    <br/>
+    Sweep-net : 07 <b>Jul</b> 2019
+    <br/>
+    Leg. Jon Peder Lindemann
+    <br/>
+    <b>JPL-004420&emsp;A163</b>
+    </var>
+{% endfor %}
+</var>
+  </section>
+</body>

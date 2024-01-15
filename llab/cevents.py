@@ -30,9 +30,9 @@ substrate_parts = ["flower", "stem", "leaf", "shoot", "twig", "root",
 met = ["Sweep-net","Reared","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","Color-pan","Yellow-pan","White-pan"]
 
 
-@cevents.route('/new_event', methods=["POST", "GET"])
+@cevents.route('/event_new', methods=["POST", "GET"])
 @login_required
-def new_event():
+def event_new():
     title = "New collecting event"
     global substrate_type
     global substrate_part
@@ -91,12 +91,12 @@ def new_event():
         IDs.append(i.eventID)
     new_ID = newEventID(IDs, current_user.initials)
     # Return html-page
-    return render_template("new_event.html", title=title, loc=loc, latlon=latlon, substrate_types=substrate_types, substrate_parts=substrate_parts, date=date, new_ID=new_ID, met=met, leg=leg, ctries=ctries, user=current_user)
+    return render_template("event_new.html", title=title, loc=loc, latlon=latlon, substrate_types=substrate_types, substrate_parts=substrate_parts, date=date, new_ID=new_ID, met=met, leg=leg, ctries=ctries, user=current_user)
 
 
-@cevents.route('/show_event', methods=['GET', 'POST'])
+@cevents.route('/event_show', methods=['GET', 'POST'])
 @login_required
-def show_event():
+def event_show():
     title = "Collecting events"
     events = Collecting_events.query.filter_by(
         createdByUserID=current_user.id).order_by(Collecting_events.eventID.desc())
@@ -109,21 +109,20 @@ def show_event():
             if request.form.get('action2') == 'VALUE2':
                 title = "Edit event"
                 leg = Collectors.query.all()
-                met = ["Sweep-net","Pan-trap","Reared","Yellow pan","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","White pan"]
-                return render_template("edit_event.html", title=title, user=current_user, files=files, event=event, leg=leg, met=met, substrate_parts=substrate_parts, substrate_types=substrate_types)
+                return render_template("event_edit.html", title=title, user=current_user, files=files, event=event, leg=leg, met=met, substrate_parts=substrate_parts, substrate_types=substrate_types)
             # Button 1: Show event
             else:
-                return render_template("show_event.html", title=title, user=current_user, events=events, files=files, event=event)
+                return render_template("event_show.html", title=title, user=current_user, events=events, files=files, event=event)
         else:
-            return render_template("show_event.html", title=title, user=current_user, events=events, event=event)
+            return render_template("event_show.html", title=title, user=current_user, events=events, event=event)
     else:
         event = ""
-        return render_template("show_event.html", title=title, user=current_user, events=events, event=event)
+        return render_template("event_show.html", title=title, user=current_user, events=events, event=event)
 
 
-@cevents.route('/edit_event', methods=['GET', 'POST'])
+@cevents.route('/event_edit', methods=['GET', 'POST'])
 @login_required
-def edit_event():
+def event_edit():
     title = "Edit collecting events"
     if request.method == 'POST':
         if request.form.get('action1') == 'VALUE1':
@@ -197,13 +196,13 @@ def edit_event():
             flash(
                 f'Collecting event with event-ID {eventID} updated!', category="success")
             # Go back to original page
-            return redirect(url_for('cevents.show_event'))
+            return redirect(url_for('cevents.event_show'))
         else:
             # Go back to original page
-            return redirect(url_for('cevents.show_event'))
+            return redirect(url_for('cevents.event_show'))
     else:
         # Go back to original page
-        return redirect(url_for('cevents.show_event'))
+        return redirect(url_for('cevents.event_show'))
 
 
 @cevents.route('/event_labels', methods=["POST", "GET"])
@@ -275,3 +274,9 @@ def labels():
     events = Collecting_events.query.filter_by(createdByUserID = current_user.id).order_by(Collecting_events.eventID.desc())
     # Return
     return render_template("event_labels.html", title = title, events=events, user=current_user)
+
+
+@cevents.route('/test_labels', methods=["POST", "GET"])
+@login_required
+def test_labels():
+    return render_template("label_test_output.html", user=current_user)

@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
+from os import getcwd
 from flask_login import LoginManager
 import pymysql
 
@@ -9,8 +10,8 @@ db = SQLAlchemy()
 #DB_NAME = "insects.db"
 
 # Upload folder path
-#home_dir = os.getcwd()
-home_dir = path.expanduser("~")
+home_dir = getcwd()
+#home_dir = path.expanduser("~")
 UPLOAD_FOLDER = path.join(home_dir, "llab/static/uploads")
 
 def create_app():

@@ -76,7 +76,7 @@
         <td>{{ occurrence.recordedBy | leg_format | if_present }}</td>
         <!-- Event-ID -->
         <td>
-            <form action="/show_event" method="post">
+            <form action="/event_show" method="post">
                 <input type="text" name="eventID" id="eventID" value="{{ occurrence.eventID }}" hidden>
                 <button type="submit" class="btn btn-outline-dark btn-sm" name="action1" value="VALUE1">{{ occurrence.eventID }}</button>
             </form>

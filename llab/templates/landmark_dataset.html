@@ -31,6 +31,7 @@
         <thead>
             <tr>
                 <th scope="col">image #</th>
+                <th scope="col">image id</th>
                 {% for landmark_name in landmark_names %}
                 <th scope="col">{{landmark_name}}</th>
                 {% endfor %}
@@ -41,6 +42,7 @@
         {% set image_index = loop.index %}
             <tr>
                 <th scope="row">{{image_index}}</th>
+                <th scope="row">{{occurrence_image.id}}</th>
                 {% for landmark_name in landmark_names %}
                 <th scope="col">
                 {% for landmark in landmarks %}
@@ -61,7 +63,7 @@
     {% if condition == 'images' %}
     {% for occurrence_image in occurrence_images %}
     {% set image_index = loop.index %}
-    <p style="font-size: 20px;">{{ image_index }}</p>
+    <p style="font-size: 20px;"><strong>{{ image_index }}.</strong>  Image id: {{ occurrence_image.id }}</p>
     <div style="position:relative;padding:7px;margin:5px;">
         <img src="/static/images/compressed/{{occurrence_image.filename}}" width="1000">
         {% for landmark_name in landmark_names %}

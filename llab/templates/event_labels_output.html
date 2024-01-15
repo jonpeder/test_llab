@@ -9,51 +9,30 @@
 
 <style>
 
-/*
-body {
-  background: rgb(204,204,204); 
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+  gap: 1px;
+  padding: 0px;
+  background-color: #ffffff;
 }
-.page {
-  background: white;
-  width: 21cm;
-  height: 29.7cm;
-  display: block;
-  margin: 0 auto;
-  margin-bottom: 0.5cm;
-  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-}
-@media print {
-  body, .page {
-    margin: 0;
-    box-shadow: 0;
-  }
-}
-*/
 
 .label {
-   font-family: Verdana;
-   font-weight: normal;
-   font-style: normal;
-   white-space:nowrap;
-   display: inline-block;
-   white-space:nowrap;
-   font-size: 3px;
-   line-height: 120%;
-   width:18mm;
-   height:5mm;
-   margin-top:0px;
-   margin-right:0px;
-   margin-left:0px;
+    width:68px;
+    height:23px;
+    font-size: 3px;
+    line-height: 107%;
+    font-family: Verdana;
+    font-weight: normal;
+    font-style: normal;
+    white-space:nowrap;
+    background-color: rgb(255, 255, 255);
 }
 
 .label img {
    float:left;
-   height:127%;
-   margin-right:1px;
-}
-
-.label span {
    height:100%;
+   margin-right:1px;
 }
 
 </style>
@@ -63,10 +42,8 @@ body {
 <body class="A4">
 <section class="sheet padding-10mm">
 
-<!-- Alternative CSS
-<body>
-<var class="page">
--->
+<!-- Grid -->
+<var class="grid-container">
 
 <!-- For each eventID -->
 {% for event in events %}
@@ -77,21 +54,20 @@ body {
 {% for n in range(event.print_n) %}
 <var class='label'>
     <img src="static/uploads/{{user.id}}_qrlabel_{{event.id}}_{{n}}.png">
-    <span>
     <!-- Line 1: Country, region, municipality -->
-    <strong>{{ data.countryCode|upper }}</strong> {% if data.stateProvince %}{{ data.stateProvince }} {% endif %}{% if data.strand_id %}{{ data.strand_id|upper }}{% else %}{{data.county}} {% endif %}{% if data.municipality %} {{ data.municipality|upper }}{% endif %}:
+    <strong>{{ data.countryCode|upper }}</strong> {% if data.stateProvince %}{{ data.stateProvince }} {% endif %}{% if data.strand_id %}{{ data.strand_id|upper }} {% endif %}{% if data.municipality %} {{ data.municipality|upper }}{% endif %}:
     <br/>
     <!-- Line 2: Locality -->
     {% if data.locality_1 %}{{ data.locality_1 }}{% endif %}{% if data.locality_1 and data.locality_2 %}, {% endif %}{% if data.locality_2 %}{{ data.locality_2 }}{% endif %}{% if data.locality_1 or data.locality_2 %}<br/>{% endif %}
     <!-- Line 3: Habitat/Substrate -->
     {% if data.substrateName %}
-    (<i>{{ data.substrateName|scn_format}}</i>-{{ data.substratePlantPart }}-{{ data.substrateType }})
+    (<i>{{ data.substrateName|scn_format }}</i>-{{ data.substratePlantPart }}-{{ data.substrateType }})
     <br/>
     {% elif data.habitat %}
     ({{ data.habitat }})
     <br/>
     {% endif %}
-    <!-- Line 4: Latlon, radius -->
+    <!-- Line 4: Lat-lon, radius -->
     {% if data.decimalLatitude and data.decimalLongitude %}
     {{ data.decimalLatitude|round(6) }} {{ data.decimalLongitude|round(6) }}
     {% if data.coordinateUncertaintyInMeters %} &#177 {{ data.coordinateUncertaintyInMeters }}{% endif %}
@@ -134,9 +110,8 @@ body {
     Leg. {{ data.recordedBy | leg_format | safe }}
     <br/>
     {% endif %}
-    <!-- Line 7: Catalog number -->
-    <b>{{ catalog_numbers[user.id~"_"~event.id~"_"~n] }}</b>
-    </span>
+    <!-- Line 7: Catalog number and event-ID -->
+    <b>{{ catalog_numbers[user.id~"_"~event.id~"_"~n] }}&emsp;{{ data.eventID[4:] }}</b>
 </var>
 
 {% endfor %}
@@ -144,9 +119,7 @@ body {
 {% endfor %}
 {% endfor %}
 
-<!--
 </var>
--->
 
 </section>
 

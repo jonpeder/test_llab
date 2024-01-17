@@ -179,8 +179,10 @@ def edit_taxon():
             taxon = Taxa.query.filter_by(scientificName=scientificName_old).first()
             db.session.delete(taxon)
             # Delete identification events
-            updated_id = Identification_events.query.filter_by(scientificName=scientificName_old).all()
-            db.session.delete(updated_id)
+            delete_identification_events = Identification_events.query.filter_by(scientificName=scientificName_old).all()
+            if delete_identification_events:
+                db.session.delete(delete_identification_events)
+            # Commit changes
             db.session.commit()
             flash(f'{scientificName_old} deleted!', category="success")
             return redirect(url_for('taxa.edit_taxon'))

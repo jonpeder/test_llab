@@ -268,7 +268,7 @@ def labels():
                                 img = qr.make_image(fill_color = 'black', back_color = 'white')
                                 img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 # Return labels
-                return render_template("label_output.html", title=title, events=events, user=current_user, event_data=event_data, catalog_numbers=catalog_numbers)
+                return render_template("event_labels_output.html", title=title, events=events, user=current_user, event_data=event_data, catalog_numbers=catalog_numbers)
 
     # Søk etter event-IDer
     events = Collecting_events.query.filter_by(createdByUserID = current_user.id).order_by(Collecting_events.eventID.desc())

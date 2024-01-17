@@ -23,20 +23,13 @@
     
     <!-- TITLE BLOCK -->
     <title>The Lindemann lab</title>
-
-    <style>
-        .dark-mode {
-          background-color: rgb(35, 35, 39);
-          color: white;
-        }
-    </style>
 </head>
 
 <body>
 
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" onclick="myFunction()">
+        <a class="navbar-brand" href="/">
             <img src="{{url_for('static', filename='ladybug.svg')}}" width="30" height="30"
                 class="d-inline-block align-top" alt="">
         </a>
@@ -130,6 +123,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" id="passwd" href="/change_password">Change password</a>
                         <a class="dropdown-item" id="signUp" href="/sign-up">Add user</a>
+                        <a class="dropdown-item" id="addentomologist" href="/add_entomologist">Add entomologist</a>
                         <a class="dropdown-item" id="logout" href="/logout">Logout</a>
                     </div>
                 </li>

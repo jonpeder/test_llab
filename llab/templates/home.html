@@ -1,20 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h6 style="text-align: center">Events</h6>
+<!-- Leaflet -->
+<div id="map" style="height: 350px;"></div>
+
+<!-- leaflet script -->
+<script type="text/javascript">
+    // The first parameters are the coordinates of the center of the map, the second parameter is the zoom level
+    var map = L.map('map', {fullscreenControl: true}).setView([60,0], 2);
+    // Add leaflet map as a new layer
+    var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+    }).addTo(map);
+    // It even opens up a popup when you click it!
+    {% for event in events %}
+    var marker{{ loop.index }} = L.marker([{{ event.decimalLatitude }}, {{ event.decimalLongitude }}]).addTo(map);
+    marker{{ loop.index }}.bindPopup('<form action="/event_show" method="post"><input type="text" name="eventID" id="eventID" value="{{ event.eventID }}" hidden><button type="submit" name="action1" value="VALUE1">{{ event.eventID }}</button></form>');
+    {% endfor %}
+</script>
+
+<br />
+
+<h4 style="text-align: center">Events</h4>
 <div class="row flex-nowrap overflow-auto">
 <div class="col-4" id="event_year_plot" style="width: 500px;"></div>
 <div class="col-4" id="event_month_plot" style="width: 500px;"></div>
 </div>
 
-<h6 style="text-align: center">Occurrences</h6>
+<h4 style="text-align: center">Occurrences</h4>
 <div class="row flex-nowrap overflow-auto">
 <div class="col-4" id="occurrence_year_plot" style="width:500px"></div>
 <div class="col-4" id="occurrence_month_plot" style="width:500px"></div>
 <div class="col-4" id="occurrence_method_plot" style="width:500px"></div>
 </div>
 
-<h6 style="text-align: center">Groups</h6>
+<h4 style="text-align: center">Groups</h4>
 <div class="row flex-nowrap overflow-auto">
 <div class="col-4" id="occurrence_taxonRank_plot" style="width:500px"></div>
 <div class="col-4" id="occurrence_order_plot" style="width:500px"></div>
@@ -35,7 +55,7 @@ function myBarplot(myplot, orient, type, title, yArray, xArray) {
     data = [{x:xArray, y:yArray, type:type, orientation:orient, marker:{color:"rgba(0,0,255,0.6)"}}];
   }
   const layout = {title:title};
-  return Plotly.newPlot(myplot, data, layout);
+  return Plotly.newPlot(myplot, data, layout, {displayModeBar: false});
 }
 
 myBarplot("event_year_plot", "v", "bar", "Year", {{ event_year["count"] }}, {{ event_year["label"] | safe }})

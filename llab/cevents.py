@@ -299,8 +299,8 @@ def home():
         samplingProtocol.append(row.samplingProtocol)
         eventDate_1.append(row.eventDate_1)
         databased.append(row.databased)
-    events = {"EventID":eventID, "samplingProtocol":samplingProtocol, "date":eventDate_1, "databased":databased}
-    events_df = pd.DataFrame(events)
+    events_dict = {"EventID":eventID, "samplingProtocol":samplingProtocol, "date":eventDate_1, "databased":databased}
+    events_df = pd.DataFrame(events_dict)
      # Yearly
     event_year = bar_plot_dict(events_df, "year", 0)
     # Monthly
@@ -359,4 +359,4 @@ def home():
     # Yearly
     identification_year = bar_plot_dict(identification_df, "year", 0)
 
-    return render_template("home.html", user=current_user, event_year=event_year, event_month=event_month, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank, identification_year=identification_year)
+    return render_template("home.html", user=current_user, events = events, event_year=event_year, event_month=event_month, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank, identification_year=identification_year)

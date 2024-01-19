@@ -13,7 +13,7 @@ from pyzbar.pyzbar import ZBarSymbol
 def bar_plot_dict(dataframe, gr, percentage):
     # Group occurrences by predefined group
     if gr == "year" or gr == "month" or gr == "yearmonth":
-        dataframe["date"] = dataframe["date"].astype("datetime64")
+        dataframe["date"] = dataframe["date"].astype("datetime64[ns]")
         if gr == "month":
             gr = "date"
             group = dataframe[gr].groupby(dataframe["date"].dt.month).count()

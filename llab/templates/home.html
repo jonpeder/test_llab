@@ -1,8 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="col mb-3">
-    <a class="btn btn-secondary btn-lg btn-block" role="button" id="newevent" href="/new_event">New event</a>
-    <a class="btn btn-secondary btn-lg btn-block" role="button" id="eventlabels" href="/event_labels">Specimen
-        labels</a>
+
+<h6 style="text-align: center">Events</h6>
+<div class="row flex-nowrap overflow-auto">
+<div class="col-4" id="event_year_plot" style="width: 500px;"></div>
+<div class="col-4" id="event_month_plot" style="width: 500px;"></div>
 </div>
+
+<h6 style="text-align: center">Occurrences</h6>
+<div class="row flex-nowrap overflow-auto">
+<div class="col-4" id="occurrence_year_plot" style="width:500px"></div>
+<div class="col-4" id="occurrence_month_plot" style="width:500px"></div>
+<div class="col-4" id="occurrence_method_plot" style="width:500px"></div>
+</div>
+
+<h6 style="text-align: center">Groups</h6>
+<div class="row flex-nowrap overflow-auto">
+<div class="col-4" id="occurrence_taxonRank_plot" style="width:500px"></div>
+<div class="col-4" id="occurrence_order_plot" style="width:500px"></div>
+<div class="col-4" id="occurrence_family_plot" style="width:500px"></div>
+<div class="col-4" id="occurrence_genus_plot" style="width:500px"></div>
+</div>
+
+
+
+
+<script>
+
+function myBarplot(myplot, orient, type, title, yArray, xArray) {
+  let data
+  if (type == "pie") {
+    data = [{labels:xArray, values:yArray, type:type, orientation:orient, marker:{color:"rgba(0,0,255,0.6)"}}];
+  } else {
+    data = [{x:xArray, y:yArray, type:type, orientation:orient, marker:{color:"rgba(0,0,255,0.6)"}}];
+  }
+  const layout = {title:title};
+  return Plotly.newPlot(myplot, data, layout);
+}
+
+myBarplot("event_year_plot", "v", "bar", "Year", {{ event_year["count"] }}, {{ event_year["label"] | safe }})
+myBarplot("event_month_plot", "v", "bar", "Month", {{ event_month["count"] }}, {{ event_month["label"] | safe }})
+myBarplot("occurrence_year_plot", "v", "bar", "Year", {{ occurrence_year["count"] }}, {{ occurrence_year["label"] | safe }})
+myBarplot("occurrence_month_plot", "v", "bar", "Month", {{ occurrence_month["count"] }}, {{ occurrence_month["label"] | safe }})
+myBarplot("occurrence_method_plot", "v", "bar", "Method", {{ occurrence_method["count"] }}, {{ occurrence_method["label"] | safe }})
+myBarplot("occurrence_order_plot", "v", "pie", "Order", {{ occurrence_order["count"] }}, {{ occurrence_order["label"] | safe }})
+myBarplot("occurrence_family_plot", "v", "pie", "Family", {{ occurrence_family["count"] }}, {{ occurrence_family["label"] | safe }})
+myBarplot("occurrence_genus_plot", "v", "pie", "Genus", {{ occurrence_genus["count"] }}, {{ occurrence_genus["label"] | safe }})
+myBarplot("occurrence_taxonRank_plot", "v", "bar", "Taxon rank", {{ occurrence_taxonRank["count"] }}, {{ occurrence_taxonRank["label"] | safe }})
+myBarplot("identification_year_plot", "v", "bar", "Identifications by year", {{ identification_year["count"] }}, {{ identification_year["label"] | safe }})
+
+</script>
+
 {% endblock %}

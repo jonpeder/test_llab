@@ -1,8 +1,8 @@
 # load packages
-from .functions import newEventID
+from .functions import newEventID, bar_plot_dict
 from flask import Blueprint, current_app, redirect, url_for, request, render_template, flash
 from flask_login import login_required, current_user
-from .models import User, Collectors, Collecting_events, Country_codes, Print_events, Event_images, Catalog_number_counter
+from .models import User, Collectors, Collecting_events, Country_codes, Print_events, Event_images, Catalog_number_counter, Occurrences, Identification_events, Taxa
 from . import db
 import os
 from os import path
@@ -10,6 +10,7 @@ from os.path import exists
 import qrcode
 import sqlalchemy
 import uuid
+import pandas as pd
 #import pdfkit
 #import subprocess
 
@@ -280,3 +281,82 @@ def labels():
 @login_required
 def test_labels():
     return render_template("label_test_output.html", user=current_user)
+
+@cevents.route('/', methods=["POST", "GET"])
+@login_required
+def home():
+    ##
+    # Collecting_events
+    ##
+    events = Collecting_events.query.all()
+    # Create dataframe
+    eventID = []
+    samplingProtocol = []
+    eventDate_1 = []
+    databased = []
+    for row in events:
+        eventID.append(row.eventID)
+        samplingProtocol.append(row.samplingProtocol)
+        eventDate_1.append(row.eventDate_1)
+        databased.append(row.databased)
+    events = {"EventID":eventID, "samplingProtocol":samplingProtocol, "date":eventDate_1, "databased":databased}
+    events_df = pd.DataFrame(events)
+     # Yearly
+    event_year = bar_plot_dict(events_df, "year", 0)
+    # Monthly
+    event_month = bar_plot_dict(events_df, "month", 0)
+    ##
+    # Occurrences
+    ##
+    occurrences = Occurrences.query\
+            .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID)\
+            .join(Taxa, Identification_events.scientificName==Taxa.scientificName)\
+            .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
+            .with_entities(Occurrences.databased, Collecting_events.eventDate_1, Taxa.order, Taxa.family, Taxa.genus, Taxa.taxonRank, Collecting_events.samplingProtocol)\
+            .all()
+    # Create occurrence dataframe
+    family = []
+    order = []
+    genus = []
+    taxonRank = []
+    samplingProtocol = []
+    eventDate_1 = []
+    databased = []
+    for row in occurrences:
+        family.append(row.family)
+        order.append(row.order)
+        genus.append(row.genus)
+        taxonRank.append(row.taxonRank)
+        samplingProtocol.append(row.samplingProtocol)
+        eventDate_1.append(row.eventDate_1)
+        databased.append(row.databased)
+    occurrences_dict = {"family":family, "order":order, "genus":genus, "taxonRank":taxonRank,"samplingProtocol":samplingProtocol, "date":eventDate_1, "databased":databased}
+    occurrences_df = pd.DataFrame(occurrences_dict)
+    # Yearly
+    occurrence_year = bar_plot_dict(occurrences_df, "year", 0)
+    # Monthly
+    occurrence_month = bar_plot_dict(occurrences_df, "month", 0)
+    # Method
+    occurrence_method = bar_plot_dict(occurrences_df, "samplingProtocol", 0)
+    # Order
+    occurrence_order = bar_plot_dict(occurrences_df, "order", 1)
+    # Family
+    occurrence_family = bar_plot_dict(occurrences_df, "family", 2)
+    # Genus
+    occurrence_genus = bar_plot_dict(occurrences_df, "genus", 0.5)
+    # Rank
+    occurrence_taxonRank = bar_plot_dict(occurrences_df, "taxonRank", 2)
+    ##
+    # Identifications
+    ##
+    identification = Identification_events.query.all()
+    # Create dataframe
+    dateIdentified = []
+    for row in identification:
+        dateIdentified.append(row.dateIdentified)
+    identification = {"date":dateIdentified}
+    identification_df = pd.DataFrame(identification)
+    # Yearly
+    identification_year = bar_plot_dict(identification_df, "year", 0)
+
+    return render_template("home.html", user=current_user, event_year=event_year, event_month=event_month, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank, identification_year=identification_year)

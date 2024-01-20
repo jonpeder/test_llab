@@ -1,4 +1,5 @@
 # load packages
+from .functions import bar_plot_dict
 from flask import Blueprint, request, redirect, url_for, render_template, flash
 from flask_login import login_required, current_user
 import sqlite3
@@ -10,6 +11,7 @@ import uuid
 import time
 import requests
 import numpy as np
+import pandas as pd
 
 # connect to __init__ file
 specimens = Blueprint('specimens', __name__)
@@ -175,7 +177,7 @@ def specimen_get():
 @login_required
 def specimen_list():
     title = "Speciemen table"
-    order = ['species', 'spnov', 'species-group', 'genus', 'tribe', 'subfamily', 'family', 'superfamily', 'infraorder', 'order', 'class', 'other']
+    ranks = ['species', 'spnov', 'species-group', 'genus', 'tribe', 'subfamily', 'family', 'superfamily', 'infraorder', 'order', 'class', 'other']
     occurrence_ids=""
     # Get data from specimen_get
     if request.form.get('specimen_find') == 'specimen_find':
@@ -227,27 +229,70 @@ def specimen_list():
         eventID = request.form.get("eventID")
         event = Collecting_events.query.filter_by(eventID=eventID).first()
         occurrence_ids = [i.occurrenceID for i in event.occurrences]
-    # Make database query
+    # Make database queries
     occurrences = Occurrences.query.filter(Occurrences.occurrenceID.in_(occurrence_ids))\
             .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID)\
             .join(Taxa, Identification_events.scientificName==Taxa.scientificName)\
             .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
             .join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode)\
-            .with_entities(Occurrences.occurrenceID, Country_codes.country, Collecting_events.eventID, 
+            .with_entities(Occurrences.occurrenceID, Country_codes.country, Collecting_events.eventID,
             Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, 
             Collecting_events.habitat, Collecting_events.substrateName, Collecting_events.substratePlantPart, 
             Collecting_events.substrateType, Collecting_events.eventDate_1, Collecting_events.eventDate_2, 
-            Collecting_events.samplingProtocol, Collecting_events.recordedBy, Taxa.scientificName, Taxa.family, 
+            Collecting_events.samplingProtocol, Collecting_events.recordedBy, Taxa.scientificName, Taxa.genus, Taxa.family, 
             Taxa.order, Taxa.taxonRank, Taxa.scientificNameAuthorship, Identification_events.identifiedBy, 
             Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex)\
             .order_by(Taxa.scientificName, Collecting_events.eventID)\
             .all()
+    ##
+    # Leaflet
+    ##
+    # Take out unique event_ids and get coordinates
+    event_ids = []
+    for occurrence in occurrences:
+        if occurrence.eventID not in event_ids:
+            event_ids.append(occurrence.eventID)
+    print(event_ids)
+    events = Collecting_events.query.filter(Collecting_events.eventID.in_(event_ids)).all()
+    ##
+    # Statistics 
+    ##
+    # Create occurrence dataframe
+    family = []
+    order = []
+    genus = []
+    taxonRank = []
+    samplingProtocol = []
+    eventDate_1 = []
+    for row in occurrences:
+        family.append(row.family)
+        order.append(row.order)
+        genus.append(row.genus)
+        taxonRank.append(row.taxonRank)
+        samplingProtocol.append(row.samplingProtocol)
+        eventDate_1.append(row.eventDate_1)
+    occurrences_dict = {"family":family, "order":order, "genus":genus, "taxonRank":taxonRank,"samplingProtocol":samplingProtocol, "date":eventDate_1}
+    occurrences_df = pd.DataFrame(occurrences_dict)
+    # Yearly
+    occurrence_year = bar_plot_dict(occurrences_df, "year", 0)
+    # Monthly
+    occurrence_month = bar_plot_dict(occurrences_df, "month", 0)
+    # Method
+    occurrence_method = bar_plot_dict(occurrences_df, "samplingProtocol", 0)
+    # Order
+    occurrence_order = bar_plot_dict(occurrences_df, "order", 1)
+    # Family
+    occurrence_family = bar_plot_dict(occurrences_df, "family", 2)
+    # Genus
+    occurrence_genus = bar_plot_dict(occurrences_df, "genus", 0.5)
+    # Rank
+    occurrence_taxonRank = bar_plot_dict(occurrences_df, "taxonRank", 2)
     # Report if any of the specified occurrenceIDs are not present in database.
     for occurrence in occurrence_ids:
         if occurrence not in [i.occurrenceID for i in occurrences]:
             flash(f'{occurrence} not in database', category="error")
     # Return template
-    return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences, order=order)
+    return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences, events=events, ranks=ranks, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank)
 
 # Query database for specimen-data and render a specimen-table 
 @specimens.route('/specimen_view/<string:occurrence_id>/', methods=['GET'])

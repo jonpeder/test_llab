@@ -5,6 +5,34 @@
 
 {% if occurrences %}
 
+<!-- Leaflet -->
+<div id="map" style="height: 300px;"></div>
+
+<!-- leaflet script -->
+<script type="text/javascript">
+    // The first parameters are the coordinates of the center of the map, the second parameter is the zoom level
+    var map = L.map('map', {fullscreenControl: true}).setView([65,5], 3);
+    // Add leaflet map as a new layer
+    var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+    }).addTo(map);
+    // It even opens up a popup when you click it!
+    {% for event in events %}
+    var marker{{ loop.index }} = L.marker([{{ event.decimalLatitude }}, {{ event.decimalLongitude }}]).addTo(map);
+    marker{{ loop.index }}.bindPopup('<form action="/event_show" method="post"><input type="text" name="eventID" id="eventID" value="{{ event.eventID }}" hidden><button type="submit" name="action1" value="VALUE1">{{ event.eventID }}</button></form>');
+    {% endfor %}
+</script>
+
+<!-- Statistics -->
+<div class="row flex-nowrap overflow-auto" style="height: 300px;">
+    <div class="col-4" id="occurrence_year_plot" style="width:400px"></div>
+    <div class="col-4" id="occurrence_month_plot" style="width:400px"></div>
+    <div class="col-4" id="occurrence_method_plot" style="width:400px"></div>
+    <div class="col-4" id="occurrence_taxonRank_plot" style="width:400px"></div>
+    <div class="col-4" id="occurrence_order_plot" style="width:500px"></div>
+    <div class="col-4" id="occurrence_family_plot" style="width:500px"></div>
+    <div class="col-4" id="occurrence_genus_plot" style="width:500px"></div>
+</div>
 
 {% for occurrence in occurrences %}
 {% if loop.last %}
@@ -32,7 +60,7 @@
         <th>Event-ID</th>
     </tr>
 
-    {% for rank in order %}
+    {% for rank in ranks %}
     {% for occurrence in occurrences %}
     {% if occurrence.taxonRank == rank %}
     
@@ -87,6 +115,31 @@
     {% endfor %}
 </table>
 </div>
+
+
+<script>
+
+    function myBarplot(myplot, orient, type, title, yArray, xArray) {
+      let data
+      if (type == "pie") {
+        data = [{labels:xArray, values:yArray, type:type, orientation:orient, marker:{color:"rgba(0,0,255,0.6)"}}];
+      } else {
+        data = [{x:xArray, y:yArray, type:type, orientation:orient, marker:{color:"rgba(0,0,255,0.6)"}}];
+      }
+      const layout = {title:title};
+      return Plotly.newPlot(myplot, data, layout, {displayModeBar: false});
+    }
+    
+    myBarplot("occurrence_year_plot", "v", "bar", "Year", {{ occurrence_year["count"] }}, {{ occurrence_year["label"] | safe }})
+    myBarplot("occurrence_month_plot", "v", "bar", "Month", {{ occurrence_month["count"] }}, {{ occurrence_month["label"] | safe }})
+    myBarplot("occurrence_method_plot", "v", "bar", "Method", {{ occurrence_method["count"] }}, {{ occurrence_method["label"] | safe }})
+    myBarplot("occurrence_order_plot", "v", "pie", "Order", {{ occurrence_order["count"] }}, {{ occurrence_order["label"] | safe }})
+    myBarplot("occurrence_family_plot", "v", "pie", "Family", {{ occurrence_family["count"] }}, {{ occurrence_family["label"] | safe }})
+    myBarplot("occurrence_genus_plot", "v", "pie", "Genus", {{ occurrence_genus["count"] }}, {{ occurrence_genus["label"] | safe }})
+    myBarplot("occurrence_taxonRank_plot", "v", "bar", "Taxon rank", {{ occurrence_taxonRank["count"] }}, {{ occurrence_taxonRank["label"] | safe }})
+    
+</script>
+
 {% else %}
 <br>
 <h6>No specimens found</h6>

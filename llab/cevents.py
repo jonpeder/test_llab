@@ -2,7 +2,7 @@
 from .functions import newEventID, bar_plot_dict
 from flask import Blueprint, current_app, redirect, url_for, request, render_template, flash
 from flask_login import login_required, current_user
-from .models import User, Collectors, Collecting_events, Country_codes, Print_events, Event_images, Catalog_number_counter, Occurrences, Identification_events, Taxa
+from .models import User, Collectors, Collecting_events, Country_codes, Print_events, Event_images, Catalog_number_counter, Occurrences, Identification_events, Taxa, Eunis_habitats
 from . import db
 import os
 from os import path
@@ -27,7 +27,7 @@ latlon = ["Latitude", "Longitude", "Radius"]
 date = ["Date_1", "Date_2"]
 substrate_types = ["gall", "mine", "colony"]
 substrate_parts = ["flower", "stem", "leaf", "shoot", "twig", "root",
-                  "fruit", "seed", "cone", "female_catkin", "male_catkin", "fruitbody"]
+                  "fruit", "seed", "cone", "female_catkin", "male_catkin", "fruitbody", "waste/dung/heap"]
 met = ["Sweep-net","Reared","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","Color-pan","Yellow-pan","White-pan"]
 
 
@@ -40,6 +40,11 @@ def event_new():
     # Finn innsamlingsmetode, innsamlere og land
     leg = Collectors.query.all()
     ctries = Country_codes.query.all()
+    habitats = Eunis_habitats.query.all()
+    habitat_level2 = []
+    for habitat in habitats:
+        if habitat.level2 not in habitat_level2:
+            habitat_level2.append(habitat.level2)
     # If a for is posted, update database before generating the new page
     if request.method == 'POST':
         # Get input from form
@@ -63,6 +68,7 @@ def event_new():
         substrate_name = request.form.get("Substrate_name")
         substrate_type = request.form.get("Substrate_type")
         substrate_part = request.form.get("Substrate_part")
+        eunis_code = request.form.get("eunis")
         # Button 2: Populate database with input from form
         if request.form.get('action2') == 'VALUE2':
             # Flash message if input eventID already exists
@@ -78,7 +84,7 @@ def event_new():
                     eventDate_2 = None #"0000-00-00"
                 # new Collecting_events object
                 new_event = Collecting_events(eventID=eventID, countryCode=countryCode, stateProvince=stateProvince, county=county, strand_id=strand_id, municipality=municipality, locality_1=locality_1, locality_2=locality_2, habitat=habitat, decimalLatitude=decimalLatitude, decimalLongitude=decimalLongitude,
-                                              coordinateUncertaintyInMeters=coordinateUncertaintyInMeters, samplingProtocol=samplingProtocol, eventDate_1=eventDate_1, eventDate_2=eventDate_2, recordedBy=" | ".join(recordedBy), eventRemarks=eventRemarks, createdByUserID=current_user.id, substrateName=substrate_name, substrateType=substrate_type, substratePlantPart=substrate_part)
+                                              coordinateUncertaintyInMeters=coordinateUncertaintyInMeters, samplingProtocol=samplingProtocol, eventDate_1=eventDate_1, eventDate_2=eventDate_2, recordedBy=" | ".join(recordedBy), eventRemarks=eventRemarks, createdByUserID=current_user.id, substrateName=substrate_name, substrateType=substrate_type, substratePlantPart=substrate_part, eunisCode=eunis_code)
                 # Add new objects to database
                 db.session.add(new_event)
                 # Commit
@@ -92,7 +98,7 @@ def event_new():
         IDs.append(i.eventID)
     new_ID = newEventID(IDs, current_user.initials)
     # Return html-page
-    return render_template("event_new.html", title=title, loc=loc, latlon=latlon, substrate_types=substrate_types, substrate_parts=substrate_parts, date=date, new_ID=new_ID, met=met, leg=leg, ctries=ctries, user=current_user)
+    return render_template("event_new.html", title=title, loc=loc, latlon=latlon, substrate_types=substrate_types, substrate_parts=substrate_parts, date=date, new_ID=new_ID, met=met, leg=leg, ctries=ctries, user=current_user, habitats=habitats, habitat_level2=habitat_level2)
 
 
 @cevents.route('/event_show', methods=['GET', 'POST'])
@@ -101,6 +107,13 @@ def event_show():
     title = "Collecting events"
     events = Collecting_events.query.filter_by(
         createdByUserID=current_user.id).order_by(Collecting_events.eventID.desc())
+    # Query Eunis databse table
+    habitats = Eunis_habitats.query.all()
+    habitat_level2 = []
+    for habitat in habitats:
+        if habitat.level2 not in habitat_level2:
+            habitat_level2.append(habitat.level2)
+    # POST
     if request.method == 'POST':
         eventID = request.form.get("eventID")
         event = Collecting_events.query.filter_by(eventID=eventID).first()
@@ -110,10 +123,10 @@ def event_show():
             if request.form.get('action2') == 'VALUE2':
                 title = "Edit event"
                 leg = Collectors.query.all()
-                return render_template("event_edit.html", title=title, user=current_user, files=files, event=event, leg=leg, met=met, substrate_parts=substrate_parts, substrate_types=substrate_types)
+                return render_template("event_edit.html", title=title, user=current_user, files=files, event=event, leg=leg, met=met, substrate_parts=substrate_parts, substrate_types=substrate_types, habitats=habitats, habitat_level2=habitat_level2)
             # Button 1: Show event
             else:
-                return render_template("event_show.html", title=title, user=current_user, events=events, files=files, event=event)
+                return render_template("event_show.html", title=title, user=current_user, events=events, files=files, event=event, habitats=habitats)
         else:
             return render_template("event_show.html", title=title, user=current_user, events=events, event=event)
     else:
@@ -150,6 +163,7 @@ def event_edit():
             substrateName = request.form.get("substrateName")
             substratePlantPart = request.form.get("substratePlantPart")
             substrateType = request.form.get("substrateType")
+            eunis_code = request.form.get("eunis")
             # Event images
             images = Event_images.query.filter_by(eventID=eventID).all()
             for image in images:
@@ -193,6 +207,7 @@ def event_edit():
             event.substrateName = substrateName
             event.substratePlantPart = substratePlantPart
             event.substrateType = substrateType
+            event.eunisCode = eunis_code
             db.session.commit()
             flash(
                 f'Collecting event with event-ID {eventID} updated!', category="success")
@@ -285,34 +300,57 @@ def test_labels():
 @cevents.route('/', methods=["POST", "GET"])
 @login_required
 def home():
+    # Eunis habitats
+    eunis = Eunis_habitats.query.all()
+    eunis_dict = {}
+    for i in eunis:
+        eunis_dict[i.eunisCode] = i.habitatName
     ##
     # Collecting_events
     ##
-    events = Collecting_events.query.all()
+    events = Collecting_events.query\
+        .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode, isouter=True)\
+        .with_entities(Collecting_events.eventID, Collecting_events.decimalLatitude, Collecting_events.decimalLongitude, Collecting_events.samplingProtocol, Collecting_events.eventDate_1, Eunis_habitats.level1, Eunis_habitats.level2)\
+        .all()
     # Create dataframe
     eventID = []
     samplingProtocol = []
     eventDate_1 = []
-    databased = []
+    habitat1 = []
+    habitat2 = []
     for row in events:
         eventID.append(row.eventID)
         samplingProtocol.append(row.samplingProtocol)
         eventDate_1.append(row.eventDate_1)
-        databased.append(row.databased)
-    events_dict = {"EventID":eventID, "samplingProtocol":samplingProtocol, "date":eventDate_1, "databased":databased}
+        if row.level1:
+            habitat1.append(eunis_dict[row.level1])
+        else:
+            habitat1.append("")
+        if row.level2:
+            habitat2.append(eunis_dict[row.level2])
+        else:
+            habitat2.append("")
+    events_dict = {"EventID":eventID, "samplingProtocol":samplingProtocol, "date":eventDate_1, "habitat1":habitat1, "habitat2":habitat2}
     events_df = pd.DataFrame(events_dict)
-     # Yearly
+    # Yearly
     event_year = bar_plot_dict(events_df, "year", 0)
     # Monthly
     event_month = bar_plot_dict(events_df, "month", 0)
+    # Methods
+    event_method = bar_plot_dict(events_df, "samplingProtocol", 0)
+    # Habitat level 1
+    event_habitat1 = bar_plot_dict(events_df, "habitat1", 0)
+    # Habitat level 2
+    event_habitat2 = bar_plot_dict(events_df, "habitat2", 1)
     ##
     # Occurrences
     ##
     occurrences = Occurrences.query\
-            .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID)\
-            .join(Taxa, Identification_events.scientificName==Taxa.scientificName)\
-            .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
-            .with_entities(Occurrences.databased, Collecting_events.eventDate_1, Taxa.order, Taxa.family, Taxa.genus, Taxa.taxonRank, Collecting_events.samplingProtocol)\
+            .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID, isouter=True)\
+            .join(Taxa, Identification_events.scientificName==Taxa.scientificName, isouter=True)\
+            .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID, isouter=True)\
+            .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode, isouter=True)\
+            .with_entities(Occurrences.databased, Collecting_events.eventDate_1, Taxa.order, Taxa.family, Taxa.genus, Taxa.taxonRank, Collecting_events.samplingProtocol, Eunis_habitats.level1, Eunis_habitats.level2)\
             .all()
     # Create occurrence dataframe
     family = []
@@ -321,7 +359,8 @@ def home():
     taxonRank = []
     samplingProtocol = []
     eventDate_1 = []
-    databased = []
+    habitat1 = []
+    habitat2 = []
     for row in occurrences:
         family.append(row.family)
         order.append(row.order)
@@ -329,8 +368,15 @@ def home():
         taxonRank.append(row.taxonRank)
         samplingProtocol.append(row.samplingProtocol)
         eventDate_1.append(row.eventDate_1)
-        databased.append(row.databased)
-    occurrences_dict = {"family":family, "order":order, "genus":genus, "taxonRank":taxonRank,"samplingProtocol":samplingProtocol, "date":eventDate_1, "databased":databased}
+        if row.level1:
+            habitat1.append(eunis_dict[row.level1])
+        else:
+            habitat1.append("")
+        if row.level2:
+            habitat2.append(eunis_dict[row.level2])
+        else:
+            habitat2.append("")
+    occurrences_dict = {"family":family, "order":order, "genus":genus, "taxonRank":taxonRank,"samplingProtocol":samplingProtocol, "date":eventDate_1, "habitat1":habitat1, "habitat2":habitat2}
     occurrences_df = pd.DataFrame(occurrences_dict)
     # Yearly
     occurrence_year = bar_plot_dict(occurrences_df, "year", 0)
@@ -346,6 +392,10 @@ def home():
     occurrence_genus = bar_plot_dict(occurrences_df, "genus", 0.5)
     # Rank
     occurrence_taxonRank = bar_plot_dict(occurrences_df, "taxonRank", 2)
+    # Habitat level 1
+    occurrence_habitat1 = bar_plot_dict(occurrences_df, "habitat1", 0)
+    # Habitat level 2
+    occurrence_habitat2 = bar_plot_dict(occurrences_df, "habitat2", 1)
     ##
     # Identifications
     ##
@@ -359,4 +409,4 @@ def home():
     # Yearly
     identification_year = bar_plot_dict(identification_df, "year", 0)
 
-    return render_template("home.html", user=current_user, events = events, event_year=event_year, event_month=event_month, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank, identification_year=identification_year)
+    return render_template("home.html", user=current_user, events = events, eunis = eunis_dict, event_year=event_year, event_month=event_month, event_method=event_method, event_habitat1=event_habitat1, event_habitat2=event_habitat2, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_habitat1=occurrence_habitat1, occurrence_habitat2=occurrence_habitat2, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank, identification_year=identification_year)

@@ -3,7 +3,7 @@ from .functions import bar_plot_dict
 from flask import Blueprint, request, redirect, url_for, render_template, flash
 from flask_login import login_required, current_user
 import sqlite3
-from .models import User, Collectors, Occurrences, Taxa, Identification_events, Collecting_events, Country_codes
+from .models import User, Collectors, Occurrences, Taxa, Identification_events, Collecting_events, Country_codes, Eunis_habitats
 from . import db
 import re
 import datetime
@@ -231,17 +231,18 @@ def specimen_list():
         occurrence_ids = [i.occurrenceID for i in event.occurrences]
     # Make database queries
     occurrences = Occurrences.query.filter(Occurrences.occurrenceID.in_(occurrence_ids))\
-            .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID)\
-            .join(Taxa, Identification_events.scientificName==Taxa.scientificName)\
-            .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
-            .join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode)\
+            .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID, isouter=True)\
+            .join(Taxa, Identification_events.scientificName==Taxa.scientificName, isouter=True)\
+            .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID, isouter=True)\
+            .join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode, isouter=True)\
+            .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode, isouter=True)\
             .with_entities(Occurrences.occurrenceID, Country_codes.country, Collecting_events.eventID,
             Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, 
             Collecting_events.habitat, Collecting_events.substrateName, Collecting_events.substratePlantPart, 
             Collecting_events.substrateType, Collecting_events.eventDate_1, Collecting_events.eventDate_2, 
             Collecting_events.samplingProtocol, Collecting_events.recordedBy, Taxa.scientificName, Taxa.genus, Taxa.family, 
             Taxa.order, Taxa.taxonRank, Taxa.scientificNameAuthorship, Identification_events.identifiedBy, 
-            Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex)\
+            Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex, Eunis_habitats.level1, Eunis_habitats.level2)\
             .order_by(Taxa.scientificName, Collecting_events.eventID)\
             .all()
     ##
@@ -252,11 +253,15 @@ def specimen_list():
     for occurrence in occurrences:
         if occurrence.eventID not in event_ids:
             event_ids.append(occurrence.eventID)
-    print(event_ids)
     events = Collecting_events.query.filter(Collecting_events.eventID.in_(event_ids)).all()
     ##
     # Statistics 
     ##
+    # Eunis habitats
+    eunis = Eunis_habitats.query.all()
+    eunis_dict = {}
+    for i in eunis:
+        eunis_dict[i.eunisCode] = i.habitatName
     # Create occurrence dataframe
     family = []
     order = []
@@ -264,6 +269,8 @@ def specimen_list():
     taxonRank = []
     samplingProtocol = []
     eventDate_1 = []
+    habitat1 = []
+    habitat2 = []
     for row in occurrences:
         family.append(row.family)
         order.append(row.order)
@@ -271,8 +278,18 @@ def specimen_list():
         taxonRank.append(row.taxonRank)
         samplingProtocol.append(row.samplingProtocol)
         eventDate_1.append(row.eventDate_1)
-    occurrences_dict = {"family":family, "order":order, "genus":genus, "taxonRank":taxonRank,"samplingProtocol":samplingProtocol, "date":eventDate_1}
+        if row.level1:
+            print(eunis_dict[row.level1])
+            habitat1.append(eunis_dict[row.level1])
+        else:
+            habitat1.append("")
+        if row.level2:
+            habitat2.append(eunis_dict[row.level2])
+        else:
+            habitat2.append("")
+    occurrences_dict = {"family":family, "order":order, "genus":genus, "taxonRank":taxonRank,"samplingProtocol":samplingProtocol, "date":eventDate_1, "habitat1":habitat1, "habitat2":habitat2}
     occurrences_df = pd.DataFrame(occurrences_dict)
+    #print(occurrences_dict[])
     # Yearly
     occurrence_year = bar_plot_dict(occurrences_df, "year", 0)
     # Monthly
@@ -287,12 +304,16 @@ def specimen_list():
     occurrence_genus = bar_plot_dict(occurrences_df, "genus", 0.5)
     # Rank
     occurrence_taxonRank = bar_plot_dict(occurrences_df, "taxonRank", 2)
+    # Habitat level 1
+    occurrence_habitat1 = bar_plot_dict(occurrences_df, "habitat1", 0)
+    # Habitat level 2
+    occurrence_habitat2 = bar_plot_dict(occurrences_df, "habitat2", 1)
     # Report if any of the specified occurrenceIDs are not present in database.
     for occurrence in occurrence_ids:
         if occurrence not in [i.occurrenceID for i in occurrences]:
             flash(f'{occurrence} not in database', category="error")
     # Return template
-    return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences, events=events, ranks=ranks, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank)
+    return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences, events=events, ranks=ranks, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_habitat1=occurrence_habitat1, occurrence_habitat2=occurrence_habitat2, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank)
 
 # Query database for specimen-data and render a specimen-table 
 @specimens.route('/specimen_view/<string:occurrence_id>/', methods=['GET'])

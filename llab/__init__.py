@@ -44,7 +44,7 @@ def create_app():
     app.register_blueprint(landmarks, url_prefix='/')
 
 
-    from .models import User #, Catalog_number_counter, Print_events, Print_det, Event_images, Occurrence_images, Identification_events
+    from .models import User, Catalog_number_counter, Print_events, Print_det, Event_images, Occurrence_images, Identification_events, Eunis_habitats
 
     with app.app_context():
         db.create_all()

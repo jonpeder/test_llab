@@ -5,8 +5,6 @@
     <!-- Display event data -->
 
     {% if event %}
-
-
     <dl class="row">
         <dt class="col-sm-3">Collecting-event ID</dt>
         <dd class="col-sm-9"><input type="text" class="form-control" id="eventID" aria-describedby="eventID"
@@ -25,8 +23,26 @@
         <dd class="col-sm-9"><input type="text" class="form-control" id="municipality" aria-describedby="municipality"
                 value="{{event.municipality}}" name="municipality"></dd>
         <dt class="col-sm-3">Habitat</dt>
-        <dd class="col-sm-9"><input type="text" class="form-control" id="habitat" aria-describedby="habitat"
+        <dd class="col-sm-9"><input type="text" class="form-control" id="habitat" aria-describedby="habitat" 
                 value="{{event.habitat}}" name="habitat"></dd>
+        <dt class="col-sm-3">Eunis habitat</dt>
+        <dd class="col-sm-9">
+                <select class="form-control selectpicker" id="eunis" name="eunis" data-live-search="true">
+                        {% for level2 in habitat_level2 %}
+                        <optgroup label="{{ level2 }}">
+                                {% for habitat in habitats %}
+                                {% if habitat.level2 == level2 %}
+                                {% if habitat.eunisCode == event.eunisCode %}
+                                <option selected value="{{ habitat.eunisCode }}">{{ habitat.habitatName }} ({{ habitat.eunisCode }})</option>
+                                {% else %}
+                                <option value="{{ habitat.eunisCode }}">{{ habitat.habitatName }} ({{ habitat.eunisCode }})</option>
+                                {% endif %}
+                                {% endif %}
+                                {% endfor %}
+                        </optgroup>
+                        {% endfor %}
+                </select>
+        </dd>
         <dt class="col-sm-3">Locality 1</dt>
         <dd class="col-sm-9"><input type="text" class="form-control" id="locality_1" aria-describedby="locality_1"
                 value="{{event.locality_1}}" name="locality_1"></dd>
@@ -38,7 +54,7 @@
             <select class="form-select" aria-label="samplingProtocol" name="samplingProtocol" >
                 {% for method in met %}
                 {% if method == event.samplingProtocol %}
-                <option selected={{ method }}>{{ method }}</option>
+                <option selected value={{ method }}>{{ method }}</option>
                 {% else %}
                 <option value={{ method }}>{{ method }}</option>
                 {% endif %}
@@ -61,6 +77,7 @@
             </select>
         </dd>
     </dl>
+
     <h5>Coordinates</h5>
     <dl class="row">
         <dt class="col-sm-3">Latitude</dt>
@@ -74,6 +91,8 @@
                 aria-describedby="coordinateUncertaintyInMeters" value="{{event.coordinateUncertaintyInMeters}}"
                 name="coordinateUncertaintyInMeters"></dd>
     </dl>
+    
+    <br>
     <h5>Substrate</h5>
     <dl class="row">
         <dt class="col-sm-3">Name</dt>

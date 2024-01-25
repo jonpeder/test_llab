@@ -65,6 +65,7 @@ class Collecting_events(db.Model):
     substrateType = db.Column(db.String(50))
     substratePlantPart = db.Column(db.String(50))
     occurrences = db.relationship('Occurrences')
+    eunisCode = db.Column(db.String(5))
 
 class Collectors (db.Model):
     recordedBy = db.Column(db.String(100), primary_key=True)
@@ -180,6 +181,12 @@ class Landmarks(db.Model):
     createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
 
+class Eunis_habitats(db.Model):
+    eunisCode = db.Column(db.String(5), primary_key=True)
+    level2 = db.Column(db.String(5))
+    level1 = db.Column(db.String(5))
+    redlistCode = db.Column(db.String(10))
+    habitatName = db.Column(db.String(200))
 
 # Pteromalidae database
 class pteromalidae_events(db.Model):

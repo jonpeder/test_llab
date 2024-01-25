@@ -56,6 +56,24 @@
             position</button>
     </div>
 
+    <!-- Eunis habitat -->
+    Eunis habitat
+    <div class="mb-1">
+        <select class="form-control selectpicker" id="eunis" name="eunis" data-live-search="true">
+            <option selected value="></option>
+            {% for level2 in habitat_level2 %}
+            <optgroup label="{{ level2 }}">
+                {% for habitat in habitats %}
+                    {% if habitat.level2 == level2 %}
+                    <option value="{{ habitat.eunisCode }}">{{ habitat.habitatName }} ({{ habitat.eunisCode }})</option>
+                    {% endif %}
+                {% endfor %}
+                </optgroup>
+            {% endfor %}
+        </select>
+    </div>
+    <br>
+
     <!-- Substrate -->
     <a class="btn btn-warning mb-3" data-bs-toggle="collapse" href="#substrateCollapse" role="button" aria-expanded="false"
         aria-controls="substrateCollapse">Specify substrate</a>

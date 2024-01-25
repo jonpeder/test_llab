@@ -9,13 +9,11 @@
             {% for i in events %}
             {% if i.eventID == event.eventID %}
             <option selected value="{{ i.eventID }}">{{ i.eventID }} {% if i.municipality %}- {{ i.municipality }}{% endif %} {%
-                if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if
-                i.locality_2 %}- {{ i.locality_2 }}{% endif %}
+                if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if i.locality_2 %}- {{ i.locality_2 }}{% endif %}
             </option>
             {% else %}
             <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.municipality %}- {{ i.municipality }}{% endif %} {%
-                if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if
-                i.locality_2 %}- {{ i.locality_2 }}{% endif %}
+                if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if i.locality_2 %}- {{ i.locality_2 }}{% endif %}
             </option>
             {% endif %}
             {% endfor %}
@@ -63,6 +61,13 @@
     {{ event.eventDate_1 | format_dates(event.eventDate_2) | striptags | tablerow("Date") | safe }}
     <!-- Habitat -->
     {{ event.habitat | tablerow("Habitat") | safe }}
+    <!-- EUNIS Habitat -->
+    {% for habitat in habitats %} 
+    {% if habitat.eunisCode == event.eunisCode %}
+    {% set eunis = habitat.habitatName+" ("+event.eunisCode+")" %}
+    {{ eunis | tablerow("EUNIS-habitat") | safe }}
+    {% endif %}
+    {% endfor %}
     <!-- Substrate -->
     {{ event.substrateName | format_substrate(event.substratePlantPart, event.substrateType) | tablerow("Substrate") | safe }}
     <!-- Recorded by -->
@@ -110,7 +115,7 @@
 
 <form action="/specimen_list" method=post>
 
-    <!-- Button 3-->
+<!-- Button 3-->
 <div class="mb-3">
     <input type="text" name="eventID" id="eventID" value="{{ event.eventID }}" hidden>
     <button type="submit" class="btn btn-secondary btn-sm" name="collecting_event_id" value="collecting_event_id">View specimens</button>

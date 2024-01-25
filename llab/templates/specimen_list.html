@@ -29,9 +29,11 @@
     <div class="col-4" id="occurrence_month_plot" style="width:400px"></div>
     <div class="col-4" id="occurrence_method_plot" style="width:400px"></div>
     <div class="col-4" id="occurrence_taxonRank_plot" style="width:400px"></div>
-    <div class="col-4" id="occurrence_order_plot" style="width:500px"></div>
-    <div class="col-4" id="occurrence_family_plot" style="width:500px"></div>
-    <div class="col-4" id="occurrence_genus_plot" style="width:500px"></div>
+    <div class="col-4" id="occurrence_habitat1_plot" style="width: 400px;"></div>
+    <div class="col-4" id="occurrence_habitat2_plot" style="width: 600px;"></div>
+    <div class="col-4" id="occurrence_order_plot" style="width:400px"></div>
+    <div class="col-4" id="occurrence_family_plot" style="width:400px"></div>
+    <div class="col-4" id="occurrence_genus_plot" style="width:400px"></div>
 </div>
 
 {% for occurrence in occurrences %}
@@ -122,7 +124,7 @@
     function myBarplot(myplot, orient, type, title, yArray, xArray) {
       let data
       if (type == "pie") {
-        data = [{labels:xArray, values:yArray, type:type, orientation:orient, marker:{color:"rgba(0,0,255,0.6)"}}];
+        data = [{labels:xArray, values:yArray, type:type, orientation:orient, marker:{color:"rgba(0,0,255,0.6)"}, textinfo: 'none'}];
       } else {
         data = [{x:xArray, y:yArray, type:type, orientation:orient, marker:{color:"rgba(0,0,255,0.6)"}}];
       }
@@ -133,6 +135,8 @@
     myBarplot("occurrence_year_plot", "v", "bar", "Year", {{ occurrence_year["count"] }}, {{ occurrence_year["label"] | safe }})
     myBarplot("occurrence_month_plot", "v", "bar", "Month", {{ occurrence_month["count"] }}, {{ occurrence_month["label"] | safe }})
     myBarplot("occurrence_method_plot", "v", "bar", "Method", {{ occurrence_method["count"] }}, {{ occurrence_method["label"] | safe }})
+    myBarplot("occurrence_habitat1_plot", "v", "bar", "Habitat (level 1)", {{ occurrence_habitat1["count"] }}, {{ occurrence_habitat1["label"] | safe }})
+    myBarplot("occurrence_habitat2_plot", "v", "pie", "Habitat (level-2)", {{ occurrence_habitat2["count"] }}, {{ occurrence_habitat2["label"] | safe }})
     myBarplot("occurrence_order_plot", "v", "pie", "Order", {{ occurrence_order["count"] }}, {{ occurrence_order["label"] | safe }})
     myBarplot("occurrence_family_plot", "v", "pie", "Family", {{ occurrence_family["count"] }}, {{ occurrence_family["label"] | safe }})
     myBarplot("occurrence_genus_plot", "v", "pie", "Genus", {{ occurrence_genus["count"] }}, {{ occurrence_genus["label"] | safe }})

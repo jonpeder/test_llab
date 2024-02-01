@@ -198,6 +198,7 @@ def add_illustrations():
 @login_required
 def read_qr():
     title = "Read qr-codes"
+    output_string = ""
     # Reference variables
     qr_codes = ""
     img_count = 0
@@ -223,8 +224,10 @@ def read_qr():
                 # use BarcodeReader function to get decoded qr-code-data and image with displayed decoded qr-codes
                 qr, img = BarcodeReader(frame)
                 qr_codes=set(qr).union(qr_codes)
-                cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], f'qr_codes_decoded_{img_count}.jpg'), img)
-        # Count qr-codes
+                cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], f'qr_codes_decoded_{img_count}.jpg'), img, [cv2.IMWRITE_JPEG_QUALITY, 20])
+        # Convert to list and decode objects from bytes to string
         qr_codes = list(qr_codes)
-                 
-    return render_template("read_qr.html", title=title, user=current_user, qr_codes=qr_codes, img_count=img_count)
+        qr_codes = [x.decode('utf-8') for x in qr_codes]
+        # output_string
+        output_string = "/n".join(qr_codes)
+    return render_template("read_qr.html", title=title, user=current_user, qr_codes=qr_codes, img_count=img_count, output_string=output_string)

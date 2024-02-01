@@ -22,6 +22,8 @@ specimens = Blueprint('specimens', __name__)
 def specimen_det():
     title = "New determinations"
     entomologists = Collectors.query.all()
+    # If decoded_QR_codes is not specified
+    decoded_QR_codes = ""
     # Count
     occ_count=0
     occ_update_count=0
@@ -152,7 +154,16 @@ def specimen_det():
         else:
             flash("A determination should be inserted!", category="error")
     # Return html-page
-    return render_template("specimen_det.html", title=title, user=current_user, entomologists=entomologists)
+    return render_template("specimen_det.html", title=title, user=current_user, entomologists=entomologists, decoded_QR_codes=decoded_QR_codes)
+
+# Add determinations to database. Add specimens to database if not already present.
+@specimens.route('/send_decoded_QR_codes/<string:decoded_QR_codes>/', methods=["POST", "GET"])
+@login_required
+def send_decoded_QR_codes(decoded_QR_codes):
+    title = "New determinations"
+    entomologists = Collectors.query.all()
+    # Return html-page
+    return render_template("specimen_det.html", title=title, user=current_user, entomologists=entomologists, decoded_QR_codes=decoded_QR_codes)
 
 
 # Send decoded qr-codes from specimen-labels to get specimen table

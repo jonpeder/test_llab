@@ -10,26 +10,6 @@
 <style>
 
 /*
-body {
-  background: rgb(204,204,204); 
-}
-.page {
-  background: white;
-  width: 21cm;
-  height: 29.7cm;
-  display: block;
-  margin: 0 auto;
-  margin-bottom: 0.5cm;
-  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-}
-@media print {
-  body, .page {
-    margin: 0;
-    box-shadow: 0;
-  }
-}
-*/
-
 .label {
    font-family: Verdana;
    font-weight: normal;
@@ -55,6 +35,35 @@ body {
 .label span {
    height:100%;
 }
+*/
+
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 1px;
+  padding: 0px;
+  background-color: #ffffff;
+}
+
+.label {
+    width:140px;
+    height:42px;
+    font-size: 6px;
+    line-height: 120%;
+    margin-bottom:1px;
+    font-family: Verdana;
+    font-weight: normal;
+    font-style: normal;
+    white-space:nowrap;
+    background-color: rgb(255, 255, 255);
+}
+
+.label img {
+   float:left;
+   height:100%;
+   margin-right:2px;
+}
 
 </style>
 </head>
@@ -63,10 +72,8 @@ body {
 <body class="A4">
 <section class="sheet padding-10mm">
 
-<!-- Alternative CSS
-<body>
-<var class="page">
--->
+<!-- Grid -->
+<var class="grid-container">
 
 <!-- For each scientific name -->
 {% for det in dets %}
@@ -79,7 +86,7 @@ body {
     <img src="static/uploads/{{user.id}}_detqrlabel_{{det.id}}_{{n}}.png">
     <span>
       <!-- Line 1: Scientific name -->
-      <p style="margin: 2px; font-size: 155%;">
+      <p style="margin: 3px; font-size: 145%;">
       {{ data.scientificName | scn_italic(data.taxonRank, data.scientificNameAuthorship) | safe }}{% if det.identificationQualifier %} <small><b>{{ det.identificationQualifier }}.</b></small>{% endif %}
       </p>
       <!-- Line 2: Author -->
@@ -91,7 +98,7 @@ body {
       {% endif %}
       </p>
       <!-- Line 3: family/rank and sex -->
-      <p style="font-size: 110%; font-weight: bold;">
+      <p style="font-size: 120%; font-weight: bold;">
           {% if data.taxonRank == "species" or data.taxonRank == "genus" or data.taxonRank == "spnov" or data.taxonRank == "species-group" %}
           {{ data.family }}
           {% else %}
@@ -111,9 +118,8 @@ body {
 {% endfor %}
 {% endfor %}
 
-<!--
+
 </var>
--->
 
 </section>
 

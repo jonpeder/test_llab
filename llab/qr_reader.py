@@ -49,7 +49,7 @@ def BarcodeReader(image):
         print("Barcode Not Detected!")
     else:
         # Print the barcode data
-        print(set(test1_data).union(test2_data))
+        #print(set(test1_data).union(test2_data))
         
         # Convert image from grayscale to color
         img=cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)

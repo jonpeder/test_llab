@@ -346,7 +346,7 @@ def det_labels():
                             for n in range(det.print_n):
                                 filename = f'{current_user.id}_detqrlabel_{det.id}_{n}.png'
                                 qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
-                                qr.add_data(f'det.{det.scientificName}:{det.identificationQualifier}:{det.sex}:{uuid.uuid4()}')
+                                qr.add_data(f'det.{data.taxonInt}:{det.identificationQualifier}:{det.sex}:{uuid.uuid4()}')
                                 qr.make(fit = True)
                                 img = qr.make_image(fill_color = 'black', back_color = 'white')
                                 img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))

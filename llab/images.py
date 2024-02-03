@@ -9,6 +9,8 @@ import glob
 import cv2
 import numpy as np
 import base64
+import time
+import re
 from werkzeug.utils import secure_filename
 
 # connect to __init__ file
@@ -210,7 +212,7 @@ def read_qr():
     # POST
     if request.method == 'POST':
         # For each file in post request
-        qr_codes = {}
+        qr_codes = []
         for file in request.files.getlist("files"):
             img_count+=1
             # If the user does not select a file
@@ -219,15 +221,32 @@ def read_qr():
                 return redirect(request.url)
             else:
                 response = file.read()
+                print("TEST1")
                 # read the image in numpy array using cv2
                 frame = cv2.imdecode(np.fromstring(response, np.uint8), cv2.IMREAD_GRAYSCALE)
+                print("TEST2")
                 # use BarcodeReader function to get decoded qr-code-data and image with displayed decoded qr-codes
                 qr, img = BarcodeReader(frame)
-                qr_codes=set(qr).union(qr_codes)
-                cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], f'qr_codes_decoded_{img_count}.jpg'), img, [cv2.IMWRITE_JPEG_QUALITY, 20])
-        # Convert to list and decode objects from bytes to string
-        qr_codes = list(qr_codes)
-        qr_codes = [x.decode('utf-8') for x in qr_codes]
+                print("TEST3")
+                # Convert to list and decode objects from bytes to string
+                for i in qr:
+                    print(i)
+                qr = [x.decode('utf-8') for x in qr]
+                print("TEST4")
+                # If determination label is decoded, move determination to begining of list
+                for qr_code in qr:
+                    if re.search("det\.", qr_code):
+                        qr.remove(qr_code)
+                        qr.insert(0, qr_code)
+                        break
+                # Combine qr-codes 
+                #qr_codes=set(qr).union(qr_codes)
+                qr_codes=qr_codes + qr
+                print("TEST5")
+                # Save image
+                cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], f'qr_codes_decoded_{img_count}.jpg'), img, [cv2.IMWRITE_JPEG_QUALITY, 10])
+                time.sleep(1)
+                print("TEST6")
         # output_string
-        output_string = "/n".join(qr_codes)
+        output_string = "&#13;&#10;".join(qr_codes)
     return render_template("read_qr.html", title=title, user=current_user, qr_codes=qr_codes, img_count=img_count, output_string=output_string)

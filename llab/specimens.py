@@ -45,6 +45,7 @@ def specimen_det():
         associatedReferences = request.form.get("associatedReferences")
         verbatimLabel = request.form.get("verbatimLabel")
         # Check that a det label have been scanned, that  ".det" is present in string
+        print(qr_data)
         if re.search("det\.", qr_data):
             # For each taxon
             for det in qr_data.split("det."):
@@ -52,10 +53,8 @@ def specimen_det():
                 if det:
                     # get det-data
                     det_data = det.splitlines()[0]
-                    print(det_data)
-                    # get scientific name
-                    scientificName = det_data.split(":")[0]
-                    print(scientificName)
+                    # get scientific name-ID
+                    taxonInt = det_data.split(":")[0]
                     # Get identification-qualifier and sex
                     if det_data.split(":")[1]:
                         identificationQualifier = det_data.split(":")[1]
@@ -68,7 +67,10 @@ def specimen_det():
                     # Get unit-ID
                     unit_id = det_data.split(":")[3]
                     # Check that the taxon exists in Taxa-table
-                    if Taxa.query.filter_by(scientificName=scientificName).first():
+                    taxon = Taxa.query.filter_by(taxonInt=taxonInt).first()
+                    if taxon:
+                        # get scientific name
+                        scientificName = taxon.scientificName
                         # Check that a specimen have been scanned after the taxon
                         if len(det.splitlines()) > 1:
                             # For each specimen identified to the current taxon, add record to database (populate Occurrences)
@@ -140,12 +142,6 @@ def specimen_det():
                                     db.session.commit()
                                 else:
                                     flash(f"Occurrence-ID {specimen} does not exist and does not include a valid event-ID. Occurrence-record was not created.", category="error")
-                            if occ_count > 0:
-                                flash(f'Occurrences added: {occ_count}')
-                            if occ_update_count > 0:
-                                flash(f'Occurrences updated: {occ_update_count}')
-                            if id_count > 0:
-                                flash(f'Identifications added: {id_count}')
                         else:
                             flash(f'No specimen scanned after {scientificName}', category="error")
                     else:
@@ -153,6 +149,12 @@ def specimen_det():
                             f'{scientificName} does not exist in database', category="error")
         else:
             flash("A determination should be inserted!", category="error")
+        if occ_count > 0:
+            flash(f'Occurrences added: {occ_count}')
+        if occ_update_count > 0:
+            flash(f'Occurrences updated: {occ_update_count}')
+        if id_count > 0:
+            flash(f'Identifications added: {id_count}')
     # Return html-page
     return render_template("specimen_det.html", title=title, user=current_user, entomologists=entomologists, decoded_QR_codes=decoded_QR_codes)
 
@@ -161,6 +163,7 @@ def specimen_det():
 @login_required
 def send_decoded_QR_codes(decoded_QR_codes):
     title = "New determinations"
+    decoded_QR_codes=decoded_QR_codes
     entomologists = Collectors.query.all()
     # Return html-page
     return render_template("specimen_det.html", title=title, user=current_user, entomologists=entomologists, decoded_QR_codes=decoded_QR_codes)

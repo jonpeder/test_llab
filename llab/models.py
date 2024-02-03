@@ -101,6 +101,7 @@ class Occurrences (db.Model):
     createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Taxa (db.Model):
+    taxonInt = db.Column(db.Integer, primary_key=True)
     scientificName = db.Column(db.String(100), primary_key=True)
     taxonRank = db.Column(db.String(50))
     scientificNameAuthorship = db.Column(db.String(50))

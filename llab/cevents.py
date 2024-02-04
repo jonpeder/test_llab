@@ -1,5 +1,5 @@
 # load packages
-from .functions import newEventID, bar_plot_dict
+from .functions import newEventID, bar_plot_dict, new_catalog_number
 from flask import Blueprint, current_app, redirect, url_for, request, render_template, flash
 from flask_login import login_required, current_user
 from .models import User, Collectors, Collecting_events, Country_codes, Print_events, Event_images, Catalog_number_counter, Occurrences, Identification_events, Taxa, Eunis_habitats
@@ -9,10 +9,7 @@ from os import path
 from os.path import exists
 import qrcode
 import sqlalchemy
-import uuid
 import pandas as pd
-#import pdfkit
-#import subprocess
 
 # connect to __init__ file
 cevents = Blueprint('cevents', __name__)
@@ -269,11 +266,7 @@ def labels():
                         if event.eventID==data.eventID:
                             for n in range(event.print_n):
                                 # Add record to catalg_number_counter
-                                new_number = Catalog_number_counter()
-                                db.session.add(new_number)
-                                db.session.commit()
-                                db.session.refresh(new_number)
-                                catalog_number = current_user.initials + "-" + "{:0>6}".format(new_number.id)
+                                catalog_number = new_catalog_number(current_user.initials)
                                 # Add catalog-numbers to dictionary
                                 catalog_numbers[f'{current_user.id}_{event.id}_{n}'] = catalog_number
                                 # Create qr-code image files

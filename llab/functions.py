@@ -1,3 +1,5 @@
+from .models import Catalog_number_counter
+from . import db
 # Read strandr.tmp csv file to python dictionary
 import csv
 # Importing libraries for QrReader
@@ -8,6 +10,14 @@ import datetime as dt
 from pyzbar.pyzbar import decode
 from pyzbar.pyzbar import ZBarSymbol
 
+# Add record to catalg_number_counter
+def new_catalog_number (initials):
+    new_number = Catalog_number_counter()
+    db.session.add(new_number)
+    db.session.commit()
+    db.session.refresh(new_number)
+    catalog_number = initials + "-" + "{:0>6}".format(new_number.id)
+    return(catalog_number)
 
 # Arrange data from db-query in dict for presentation in bar-plot
 def bar_plot_dict(dataframe, gr, percentage):

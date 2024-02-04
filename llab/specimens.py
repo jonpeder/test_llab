@@ -45,7 +45,6 @@ def specimen_det():
         associatedReferences = request.form.get("associatedReferences")
         verbatimLabel = request.form.get("verbatimLabel")
         # Check that a det label have been scanned, that  ".det" is present in string
-        print(qr_data)
         if re.search("det\.", qr_data):
             # For each taxon
             for det in qr_data.split("det."):
@@ -75,7 +74,13 @@ def specimen_det():
                         if len(det.splitlines()) > 1:
                             # For each specimen identified to the current taxon, add record to database (populate Occurrences)
                             for specimen in det.splitlines()[1:]:
+                                # Remove NHMO shit
                                 specimen = specimen.replace("http://purl.org/nhmuio/id/", "") # Remove NHMO shit
+                                # For handeling the qr-code-data delimited by semicolon ';'. This piece can be removed after a while when all specimens with such labels are in the database. 
+                                specimen2 = specimen
+                                if re.search("\;", specimen2):
+                                    specimen2_event = specimen2.split(";")[0]
+                                    specimen2 = "TMU:"+specimen2_event+":"
                                 # Function for creating a new identification-event-record
                                 def new_id():
                                     new_identification=Identification_events(
@@ -112,7 +117,7 @@ def specimen_det():
                                     occ_update_count+=1
                                     db.session.commit()
                                 # If occurrenceID not exist and if eventID exist create a new occurrence-record:
-                                elif Collecting_events.query.filter_by(eventID=specimen.split(":")[1]).first():
+                                elif Collecting_events.query.filter_by(eventID=specimen2.split(":")[1]).first():
                                     # First create the Identification-record
                                     new_identification = new_id()
                                     db.session.add(new_identification)
@@ -123,10 +128,10 @@ def specimen_det():
                                     # Then the Occurrence-record
                                     new_occurrence=Occurrences(
                                         occurrenceID = specimen,
-                                        catalogNumber = specimen.split(":")[2],
-                                        eventID = specimen.split(":")[1],
+                                        catalogNumber = specimen2.split(":")[2],
+                                        eventID = specimen2.split(":")[1],
                                         identificationID = new_identification.identificationID,
-                                        ownerInstitutionCode = specimen.split(":")[0],
+                                        ownerInstitutionCode = specimen2.split(":")[0],
                                         individualCount = individualCount,
                                         preparations = preparations,
                                         occurrenceRemarks = occurrenceRemarks,
@@ -186,7 +191,7 @@ def specimen_get():
                            "genus"]+len(scientificName)*["scientificName"])
     return render_template("specimen_get.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks)
 
-# Query database for specimen-data and render a specimen-table 
+# Query database for specimen-data and return a specimen-table 
 @specimens.route('/specimen_list', methods=["POST", "GET"])
 @login_required
 def specimen_list():
@@ -293,7 +298,6 @@ def specimen_list():
         samplingProtocol.append(row.samplingProtocol)
         eventDate_1.append(row.eventDate_1)
         if row.level1:
-            print(eunis_dict[row.level1])
             habitat1.append(eunis_dict[row.level1])
         else:
             habitat1.append("")
@@ -303,7 +307,6 @@ def specimen_list():
             habitat2.append("")
     occurrences_dict = {"family":family, "order":order, "genus":genus, "taxonRank":taxonRank,"samplingProtocol":samplingProtocol, "date":eventDate_1, "habitat1":habitat1, "habitat2":habitat2}
     occurrences_df = pd.DataFrame(occurrences_dict)
-    #print(occurrences_dict[])
     # Yearly
     occurrence_year = bar_plot_dict(occurrences_df, "year", 0)
     # Monthly

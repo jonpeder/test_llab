@@ -3,6 +3,22 @@
 
 {% if occurrence %}
 
+<!-- Leaflet -->
+<div id="map" style="height: 250px;"></div>
+<script type="text/javascript">
+    // The first parameters are the coordinates of the center of the map, the second parameter is the zoom level
+    var map = L.map('map', {fullscreenControl: true}).setView([{{ occurrence.decimalLatitude }}, {{ occurrence.decimalLongitude }}], 11);
+    // Add leaflet map as a new layer
+    var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+    }).addTo(map);
+    // It even opens up a popup when you click it!
+    var occ_marker = L.marker([{{ occurrence.decimalLatitude }}, {{ occurrence.decimalLongitude }}]).addTo(map)
+    occ_marker.bindPopup('<form action="/event_show" method="post"><input type="text" name="eventID" id="eventID" value="{{ occurrence.eventID }}" hidden><button type="submit" name="action1" value="VALUE1">{{ occurrence.eventID }}</button></form>');
+</script>
+<br />
+
+<!-- Specimen data-table -->
 {% for identification in identifications %}
 {% if identification.identificationID == occurrence.identificationID %}
 <div class="table-responsive">

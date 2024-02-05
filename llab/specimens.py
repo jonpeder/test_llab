@@ -325,12 +325,47 @@ def specimen_list():
     occurrence_habitat1 = bar_plot_dict(occurrences_df, "habitat1", 0)
     # Habitat level 2
     occurrence_habitat2 = bar_plot_dict(occurrences_df, "habitat2", 1)
+    ##
+    # Taxa
+    ##
+    scientificName = []
+    taxonRank = []
+    date = []
+    for i in occurrences:
+        if i.scientificName not in scientificName:
+            scientificName.append(i.scientificName)
+            taxonRank.append(i.taxonRank)
+            date.append(i.dateIdentified)
+    taxa_dict = {"scientificName":scientificName, "taxonRank":taxonRank, "date":date}
+    taxa_df = pd.DataFrame(taxa_dict)
+    # Yearly
+    taxa_year = bar_plot_dict(taxa_df, "year", 0)
+    # Rank
+    taxa_taxonRank = bar_plot_dict(taxa_df, "taxonRank", 1)
+    # Taxa per method
+    met_count = []
+    met = ["Sweep-net","Reared","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","Color-pan","Yellow-pan","White-pan"]
+    for method in met:
+        taxa = []
+        for occurrence in occurrences:
+            if occurrence.samplingProtocol == method:
+                if occurrence.scientificName not in taxa:
+                    taxa.append(occurrence.scientificName)
+        met_count.append(len(taxa))
+    groups_df = pd.DataFrame({"count":met_count}, index=met)
+    groups_df = groups_df.sort_values(by=['count'])
+    groups_df = groups_df[groups_df['count']>0]
+    met_taxon_count = {"label":list(groups_df.index), "count":list(groups_df["count"])}
+    # Count taxa, events and occurrences
+    taxa_len = len(taxa_df)
+    occ_len = len(occurrences)
+    event_len = len(events)
     # Report if any of the specified occurrenceIDs are not present in database.
     for occurrence in occurrence_ids:
         if occurrence not in [i.occurrenceID for i in occurrences]:
             flash(f'{occurrence} not in database', category="error")
     # Return template
-    return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences, events=events, ranks=ranks, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_habitat1=occurrence_habitat1, occurrence_habitat2=occurrence_habitat2, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank)
+    return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences, events=events, ranks=ranks, occ_len=occ_len, event_len=event_len, taxa_len=taxa_len, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_habitat1=occurrence_habitat1, occurrence_habitat2=occurrence_habitat2, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank, met_taxon_count=met_taxon_count, taxa_year=taxa_year, taxa_taxonRank=taxa_taxonRank)
 
 # Query database for specimen-data and render a specimen-table 
 @specimens.route('/specimen_view/<string:occurrence_id>/', methods=['GET'])
@@ -361,6 +396,7 @@ def specimen_view(occurrence_id):
         .all()
     return render_template("specimen_view.html", title=title, user=current_user, occurrence=occurrence, identifications=identifications)
 
+'''
 # Get specimen data from GBIF
 @specimens.route('/specimen_gbif', methods=['GET', 'POST'])
 @login_required
@@ -440,3 +476,4 @@ def specimen_gbif():
                     db.session.commit()
             time.sleep(1)
     return render_template("specimen_gbif.html", title=title, user=current_user)
+'''

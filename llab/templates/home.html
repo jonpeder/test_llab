@@ -21,37 +21,46 @@
 
 <br />
 
-<h4 style="text-align: center">Events</h4>
+<!-- Graphs -->
+<!-- Events -->
+<h4 style="text-align: center">Events ({{event_len}})</h4>
 <div class="row flex-nowrap overflow-auto">
 <div class="col-4" id="event_year_plot" style="width: 500px;"></div>
 <div class="col-4" id="event_month_plot" style="width: 500px;"></div>
 <div class="col-4" id="event_method_plot" style="width: 500px;"></div>
 <div class="col-4" id="event_habitat1_plot" style="width: 500px;"></div>
-<div class="col-4" id="event_habitat2_plot" style="width: 800px;"></div>
+<div class="col-4" id="event_habitat2_plot" style="width: 500px;"></div>
 </div>
 
-<h4 style="text-align: center">Occurrences</h4>
+<!-- Specimens -->
+<h4 style="text-align: center">Specimens ({{occ_len}})</h4>
 <div class="row flex-nowrap overflow-auto">
 <div class="col-4" id="occurrence_year_plot" style="width:500px"></div>
 <div class="col-4" id="occurrence_month_plot" style="width:500px"></div>
 <div class="col-4" id="occurrence_method_plot" style="width:500px"></div>
-<div class="col-4" id="occurrence_habitat1_plot" style="width: 500px;"></div>
-<div class="col-4" id="occurrence_habitat2_plot" style="width: 800px;"></div>
-</div>
-
-<h4 style="text-align: center">Groups</h4>
-<div class="row flex-nowrap overflow-auto">
 <div class="col-4" id="occurrence_taxonRank_plot" style="width:500px"></div>
 <div class="col-4" id="occurrence_order_plot" style="width:500px"></div>
 <div class="col-4" id="occurrence_family_plot" style="width:500px"></div>
 <div class="col-4" id="occurrence_genus_plot" style="width:500px"></div>
+<div class="col-4" id="occurrence_habitat1_plot" style="width: 500px;"></div>
+<div class="col-4" id="occurrence_habitat2_plot" style="width: 500px;"></div>
+</div>
+
+<!-- Taxa -->
+<h4 style="text-align: center">Taxa ({{taxa_len}})</h4>
+<div class="row flex-nowrap overflow-auto">
+<div class="col-4" id="taxa_year_plot" style="width:500px"></div>
+<div class="col-4" id="met_taxon_count_plot" style="width:500px"></div>
+<div class="col-4" id="taxa_taxonRank_plot" style="width:500px"></div>
+<div class="col-4" id="taxa_order_plot" style="width:500px"></div>
+<div class="col-4" id="taxa_family_plot" style="width:500px"></div>
 </div>
 
 
 
 
+<!-- Plotly script -->
 <script>
-
 function myBarplot(myplot, orient, type, title, yArray, xArray) {
   let data
   if (type == "pie") {
@@ -60,7 +69,7 @@ function myBarplot(myplot, orient, type, title, yArray, xArray) {
   } else {
     data = [{x:xArray, y:yArray, type:type, orientation:orient, marker:{color:"rgba(0,0,255,0.6)"}}];
   }
-  const layout = {title:title};
+  const layout = {title:title, showlegend: false};
   return Plotly.newPlot(myplot, data, layout, {displayModeBar: false});
 }
 
@@ -74,11 +83,15 @@ myBarplot("occurrence_month_plot", "v", "bar", "Month", {{ occurrence_month["cou
 myBarplot("occurrence_method_plot", "v", "bar", "Method", {{ occurrence_method["count"] }}, {{ occurrence_method["label"] | safe }})
 myBarplot("occurrence_habitat1_plot", "v", "bar", "Habitat (level 1)", {{ occurrence_habitat1["count"] }}, {{ occurrence_habitat1["label"] | safe }})
 myBarplot("occurrence_habitat2_plot", "v", "pie", "Habitat (level-2)", {{ occurrence_habitat2["count"] }}, {{ occurrence_habitat2["label"] | safe }})
-myBarplot("occurrence_order_plot", "v", "pie", "Order", {{ occurrence_order["count"] }}, {{ occurrence_order["label"] | safe }})
+myBarplot("occurrence_order_plot", "v", "bar", "Order", {{ occurrence_order["count"] }}, {{ occurrence_order["label"] | safe }})
 myBarplot("occurrence_family_plot", "v", "pie", "Family", {{ occurrence_family["count"] }}, {{ occurrence_family["label"] | safe }})
 myBarplot("occurrence_genus_plot", "v", "pie", "Genus", {{ occurrence_genus["count"] }}, {{ occurrence_genus["label"] | safe }})
-myBarplot("occurrence_taxonRank_plot", "v", "bar", "Taxon rank", {{ occurrence_taxonRank["count"] }}, {{ occurrence_taxonRank["label"] | safe }})
-
+myBarplot("occurrence_taxonRank_plot", "v", "bar", "Identification level", {{ occurrence_taxonRank["count"] }}, {{ occurrence_taxonRank["label"] | safe }})
+myBarplot("taxa_year_plot", "v", "bar", "Year", {{ taxa_year["count"] }}, {{ taxa_year["label"] | safe }})
+myBarplot("taxa_order_plot", "v", "bar", "Order", {{ taxa_order["count"] }}, {{ taxa_order["label"] | safe }})
+myBarplot("taxa_family_plot", "v", "pie", "Family", {{ taxa_family["count"] }}, {{ taxa_family["label"] | safe }})
+myBarplot("taxa_taxonRank_plot", "v", "bar", "Identification level", {{ taxa_taxonRank["count"] }}, {{ taxa_taxonRank["label"] | safe }})
+myBarplot("met_taxon_count_plot", "v", "bar", "Method", {{ met_taxon_count["count"] }}, {{ met_taxon_count["label"] | safe }})
 </script>
 
 {% endblock %}

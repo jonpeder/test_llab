@@ -290,6 +290,8 @@ def labels():
 def test_labels():
     return render_template("label_test_output.html", user=current_user)
 
+
+# This page needs cashing. You can also add cashing to dataset-pages.
 @cevents.route('/', methods=["POST", "GET"])
 @login_required
 def home():
@@ -305,6 +307,8 @@ def home():
         .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode, isouter=True)\
         .with_entities(Collecting_events.eventID, Collecting_events.decimalLatitude, Collecting_events.decimalLongitude, Collecting_events.samplingProtocol, Collecting_events.eventDate_1, Eunis_habitats.level1, Eunis_habitats.level2)\
         .all()
+    # Count events
+    event_len = len(events)
     # Create dataframe
     eventID = []
     samplingProtocol = []
@@ -343,8 +347,9 @@ def home():
             .join(Taxa, Identification_events.scientificName==Taxa.scientificName, isouter=True)\
             .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID, isouter=True)\
             .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode, isouter=True)\
-            .with_entities(Occurrences.databased, Collecting_events.eventDate_1, Taxa.order, Taxa.family, Taxa.genus, Taxa.taxonRank, Collecting_events.samplingProtocol, Eunis_habitats.level1, Eunis_habitats.level2)\
+            .with_entities(Occurrences.databased, Collecting_events.eventDate_1, Taxa.scientificName, Taxa.order, Taxa.family, Taxa.genus, Taxa.taxonRank, Identification_events.dateIdentified, Collecting_events.samplingProtocol, Eunis_habitats.level1, Eunis_habitats.level2)\
             .all()
+    occ_len = len(occurrences)
     # Create occurrence dataframe
     family = []
     order = []
@@ -390,16 +395,52 @@ def home():
     # Habitat level 2
     occurrence_habitat2 = bar_plot_dict(occurrences_df, "habitat2", 1)
     ##
-    # Identifications
+    # Taxa
     ##
-    identification = Identification_events.query.all()
-    # Create dataframe
-    dateIdentified = []
-    for row in identification:
-        dateIdentified.append(row.dateIdentified)
-    identification = {"date":dateIdentified}
-    identification_df = pd.DataFrame(identification)
+    scientificName = []
+    family = []
+    order = []
+    taxonRank = []
+    date = []
+    for i in occurrences:
+        if i.scientificName not in scientificName:
+            scientificName.append(i.scientificName)
+            taxonRank.append(i.taxonRank)
+            order.append(i.order)
+            family.append(i.family)
+            date.append(i.dateIdentified)
+    taxa_dict = {"scientificName":scientificName, "order":order, "family":family, "taxonRank":taxonRank, "date":date}
+    taxa_df = pd.DataFrame(taxa_dict)
     # Yearly
-    identification_year = bar_plot_dict(identification_df, "year", 0)
-
-    return render_template("home.html", user=current_user, events = events, eunis = eunis_dict, event_year=event_year, event_month=event_month, event_method=event_method, event_habitat1=event_habitat1, event_habitat2=event_habitat2, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_habitat1=occurrence_habitat1, occurrence_habitat2=occurrence_habitat2, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank, identification_year=identification_year)
+    taxa_year = bar_plot_dict(taxa_df, "year", 0)
+    # Order
+    taxa_order = bar_plot_dict(taxa_df, "order", 1)
+    # Family
+    taxa_family = bar_plot_dict(taxa_df, "family", 0.5)
+    # Rank
+    taxa_taxonRank = bar_plot_dict(taxa_df, "taxonRank", 1)
+    # Count taxa
+    taxa_len = len(taxa_df)
+    # Taxa per method
+    met_count = []
+    for method in met:
+        taxa = []
+        for occurrence in occurrences:
+            if occurrence.samplingProtocol == method:
+                if occurrence.scientificName not in taxa:
+                    taxa.append(occurrence.scientificName)
+        met_count.append(len(taxa))
+    groups_df = pd.DataFrame({"count":met_count}, index=met)
+    groups_df = groups_df.sort_values(by=['count'])
+    groups_df = groups_df[groups_df['count']>0]
+    met_taxon_count = {"label":list(groups_df.index), "count":list(groups_df["count"])}
+    # Taxa per habitat
+    # Create dataframe
+    #dateIdentified = []
+    #for row in identification:
+    #    dateIdentified.append(row.dateIdentified)
+    #identification = {"date":dateIdentified}
+    #identification_df = pd.DataFrame(identification)
+    # Yearly
+    #identification_year = bar_plot_dict(identification_df, "year", 0)
+    return render_template("home.html", user=current_user, events = events, event_len=event_len, occ_len=occ_len, taxa_len=taxa_len, eunis = eunis_dict, event_year=event_year, event_month=event_month, event_method=event_method, event_habitat1=event_habitat1, event_habitat2=event_habitat2, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_habitat1=occurrence_habitat1, occurrence_habitat2=occurrence_habitat2, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank, taxa_year=taxa_year, taxa_order=taxa_order, taxa_family=taxa_family, taxa_taxonRank=taxa_taxonRank, met_taxon_count=met_taxon_count)

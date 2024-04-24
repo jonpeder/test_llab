@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="/dataset_new" method=post>
+                <!---->
+                <div class="mb-3">
+                    <label for="dataset_name">Dataset name</label>
+                    <input type="text" class="form-control" id="dataset_name" name="dataset_name" placeholder="Enter dataset name">
+                </div>
+                <div class="mb-3">
+                    <label for="dataset_description">Dataset description</label>
+                    <textarea type="text" class="form-control" id="dataset_description" name="dataset_description" placeholder="Enter dataset description"></textarea>
+                </div>
+                <div class="mb-3">          
+                    <label for="datasetManager">Dataset Manager</label>
+                    <input type="text" class="form-control" id="datasetManager" name="datasetManager" placeholder="Enter dataset manager" value="{{ user.entomologist_name }}">
+                </div>
+                <div class="mb-3">
+                    <label for="rightsHolder">Rights Holder</label>
+                    <input type="text" class="form-control" id="rightsHolder" name="rightsHolder" placeholder="Enter rights holder" value="{{ user.institutionCode }}">
+                </div>
+                <div class="mb-3">
+                    <label for="license">License</label>
+                    <select class="form-control" id="license" name="license">
+                        <option value="CC0">CC0</option>
+                        <option value="CC-BY">CC-BY</option>
+                        <option value="CC-BY-SA">CC-BY-SA</option>
+                        <option value="CC-BY-NC">CC-BY-NC</option>
+                        <option value="CC-BY-NC-SA">CC-BY-NC-SA</option>
+                        <option value="CC-BY-NC-ND">CC-BY-NC-ND</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

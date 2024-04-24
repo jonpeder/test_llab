@@ -1,9 +1,9 @@
 # load packages
 from .functions import bar_plot_dict
-from flask import Blueprint, request, redirect, url_for, render_template, flash
+from flask import Blueprint, request, redirect, url_for, render_template, flash, request, jsonify
 from flask_login import login_required, current_user
 import sqlite3
-from .models import User, Collectors, Occurrences, Taxa, Identification_events, Collecting_events, Country_codes, Eunis_habitats
+from .models import User, Collectors, Occurrences, Taxa, Identification_events, Collecting_events, Country_codes, Eunis_habitats, Datasets, Units
 from . import db
 import re
 import datetime
@@ -63,8 +63,12 @@ def specimen_det():
                         sex = det_data.split(":")[2]
                     else:
                         sex = sex_tmp
-                    # Get unit-ID
-                    unit_id = det_data.split(":")[3]
+                    # Get unit-ID. Add to database if not already present
+                    unit_id = det_data
+                    if not Units.query.filter_by(unitID=unit_id).first():
+                        new_unit = Units(unitID=unit_id, createdByUserID=current_user.id)
+                        db.session.add(new_unit)
+                        db.session.commit()
                     # Check that the taxon exists in Taxa-table
                     taxon = Taxa.query.filter_by(taxonInt=taxonInt).first()
                     if taxon:
@@ -174,199 +178,6 @@ def send_decoded_QR_codes(decoded_QR_codes):
     return render_template("specimen_det.html", title=title, user=current_user, entomologists=entomologists, decoded_QR_codes=decoded_QR_codes)
 
 
-# Send decoded qr-codes from specimen-labels to get specimen table
-@specimens.route('/specimen_get')
-@login_required
-def specimen_get():
-    title = "Get specimen data"
-    # Prepare list of taxa for dropdown-select-search bar
-    taxa = Taxa.query.all()  # Database query for taxa
-    cl = tuple(np.unique([i.cl for i in taxa if i.cl]))
-    order = tuple(np.unique([i.order for i in taxa if i.order]))
-    family = tuple(np.unique([i.family for i in taxa if i.family]))
-    genus = tuple(np.unique([i.genus for i in taxa if i.genus]))
-    scientificName = tuple(np.unique([i.scientificName for i in taxa]))
-    dropdown_names = cl+order+family+genus+scientificName
-    dropdown_ranks = tuple(len(cl)*["class"]+len(order)*["order"]+len(family)*["family"]+len(genus)*[
-                           "genus"]+len(scientificName)*["scientificName"])
-    return render_template("specimen_get.html", title=title, user=current_user, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks)
-
-# Query database for specimen-data and return a specimen-table 
-@specimens.route('/specimen_list', methods=["POST", "GET"])
-@login_required
-def specimen_list():
-    title = "Speciemen table"
-    ranks = ['species', 'spnov', 'species-group', 'genus', 'tribe', 'subfamily', 'family', 'superfamily', 'infraorder', 'order', 'class', 'other']
-    occurrence_ids=""
-    # Get data from specimen_get
-    if request.form.get('specimen_find') == 'specimen_find':
-        #
-        # 1. Event-label QR-code data
-        qr_data = request.form.get("occurrence_ids")
-        occurrence_ids_1 = qr_data.splitlines()
-        occurrence_ids_1 = [i.replace("http://purl.org/nhmuio/id/", "") for i in occurrence_ids_1]
-        #
-        # 2. Select taxa
-        taxa = request.form.getlist("taxon_name")
-        # Loop over selected taxa and get scientific names of (children) species
-        scientific_names = list()
-        for i in taxa:
-            taxon = i.split(";")
-            # Query occurrences of given taxon
-            if (taxon[1] == "scientificName"):
-                scientific_names_tmp = [taxon[0]]
-            else:
-                if (taxon[1] == "class"):
-                    taxa_db = Taxa.query.filter_by(cl=taxon[0])
-                if (taxon[1] == "order"):
-                    taxa_db = Taxa.query.filter_by(order=taxon[0])
-                if (taxon[1] == "family"):
-                    taxa_db = Taxa.query.filter_by(family=taxon[0])
-                if (taxon[1] == "genus"):
-                    taxa_db = Taxa.query.filter_by(genus=taxon[0])
-                scientific_names_tmp = [i.scientificName for i in taxa_db if i.scientificName]
-            scientific_names = scientific_names+list(scientific_names_tmp)
-        scientific_names = np.unique(scientific_names)
-        # Get occurrences for selected taxa
-        #occurrences_db = Occurrences.query.filter(Occurrences.scientificName.in_(scientific_names)).all()
-        occurrences_db = Occurrences.query\
-            .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID)\
-            .with_entities(Occurrences.occurrenceID, Identification_events.scientificName)\
-            .filter(Identification_events.scientificName.in_(scientific_names))\
-            .all()
-        occurrence_ids_2 = [i.occurrenceID for i in occurrences_db if i.occurrenceID]
-        ## 3. Unit qr-codes
-        unit_ids = request.form.get("unit_ids")
-        unit_ids = unit_ids.splitlines()
-        unit_ids = [i.split(";")[3] for i in unit_ids]
-        occurrences_db = Occurrences.query.filter(Occurrences.unit_id.in_(unit_ids))
-        occurrence_ids_3 = [i.occurrenceID for i in occurrences_db]
-        ## Concateneate occurrence-ID lists from the differnt sources
-        occurrence_ids = np.unique(occurrence_ids_1 + occurrence_ids_2 + occurrence_ids_3)
-    # If requested, get event-id from show_event.html
-    if request.form.get("collecting_event_id") == "collecting_event_id":
-        eventID = request.form.get("eventID")
-        event = Collecting_events.query.filter_by(eventID=eventID).first()
-        occurrence_ids = [i.occurrenceID for i in event.occurrences]
-    # Make database queries
-    occurrences = Occurrences.query.filter(Occurrences.occurrenceID.in_(occurrence_ids))\
-            .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID, isouter=True)\
-            .join(Taxa, Identification_events.scientificName==Taxa.scientificName, isouter=True)\
-            .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID, isouter=True)\
-            .join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode, isouter=True)\
-            .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode, isouter=True)\
-            .with_entities(Occurrences.occurrenceID, Country_codes.country, Collecting_events.eventID,
-            Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, 
-            Collecting_events.habitat, Collecting_events.substrateName, Collecting_events.substratePlantPart, 
-            Collecting_events.substrateType, Collecting_events.eventDate_1, Collecting_events.eventDate_2, 
-            Collecting_events.samplingProtocol, Collecting_events.recordedBy, Taxa.scientificName, Taxa.genus, Taxa.family, 
-            Taxa.order, Taxa.taxonRank, Taxa.scientificNameAuthorship, Identification_events.identifiedBy, 
-            Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex, Eunis_habitats.level1, Eunis_habitats.level2)\
-            .order_by(Taxa.scientificName, Collecting_events.eventID)\
-            .all()
-    ##
-    # Leaflet
-    ##
-    # Take out unique event_ids and get coordinates
-    event_ids = []
-    for occurrence in occurrences:
-        if occurrence.eventID not in event_ids:
-            event_ids.append(occurrence.eventID)
-    events = Collecting_events.query.filter(Collecting_events.eventID.in_(event_ids)).all()
-    ##
-    # Statistics 
-    ##
-    # Eunis habitats
-    eunis = Eunis_habitats.query.all()
-    eunis_dict = {}
-    for i in eunis:
-        eunis_dict[i.eunisCode] = i.habitatName
-    # Create occurrence dataframe
-    family = []
-    order = []
-    genus = []
-    taxonRank = []
-    samplingProtocol = []
-    eventDate_1 = []
-    habitat1 = []
-    habitat2 = []
-    for row in occurrences:
-        family.append(row.family)
-        order.append(row.order)
-        genus.append(row.genus)
-        taxonRank.append(row.taxonRank)
-        samplingProtocol.append(row.samplingProtocol)
-        eventDate_1.append(row.eventDate_1)
-        if row.level1:
-            habitat1.append(eunis_dict[row.level1])
-        else:
-            habitat1.append("")
-        if row.level2:
-            habitat2.append(eunis_dict[row.level2])
-        else:
-            habitat2.append("")
-    occurrences_dict = {"family":family, "order":order, "genus":genus, "taxonRank":taxonRank,"samplingProtocol":samplingProtocol, "date":eventDate_1, "habitat1":habitat1, "habitat2":habitat2}
-    occurrences_df = pd.DataFrame(occurrences_dict)
-    # Yearly
-    occurrence_year = bar_plot_dict(occurrences_df, "year", 0)
-    # Monthly
-    occurrence_month = bar_plot_dict(occurrences_df, "month", 0)
-    # Method
-    occurrence_method = bar_plot_dict(occurrences_df, "samplingProtocol", 0)
-    # Order
-    occurrence_order = bar_plot_dict(occurrences_df, "order", 1)
-    # Family
-    occurrence_family = bar_plot_dict(occurrences_df, "family", 2)
-    # Genus
-    occurrence_genus = bar_plot_dict(occurrences_df, "genus", 0.5)
-    # Rank
-    occurrence_taxonRank = bar_plot_dict(occurrences_df, "taxonRank", 2)
-    # Habitat level 1
-    occurrence_habitat1 = bar_plot_dict(occurrences_df, "habitat1", 0)
-    # Habitat level 2
-    occurrence_habitat2 = bar_plot_dict(occurrences_df, "habitat2", 1)
-    ##
-    # Taxa
-    ##
-    scientificName = []
-    taxonRank = []
-    date = []
-    for i in occurrences:
-        if i.scientificName not in scientificName:
-            scientificName.append(i.scientificName)
-            taxonRank.append(i.taxonRank)
-            date.append(i.dateIdentified)
-    taxa_dict = {"scientificName":scientificName, "taxonRank":taxonRank, "date":date}
-    taxa_df = pd.DataFrame(taxa_dict)
-    # Yearly
-    taxa_year = bar_plot_dict(taxa_df, "year", 0)
-    # Rank
-    taxa_taxonRank = bar_plot_dict(taxa_df, "taxonRank", 1)
-    # Taxa per method
-    met_count = []
-    met = ["Sweep-net","Reared","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","Color-pan","Yellow-pan","White-pan"]
-    for method in met:
-        taxa = []
-        for occurrence in occurrences:
-            if occurrence.samplingProtocol == method:
-                if occurrence.scientificName not in taxa:
-                    taxa.append(occurrence.scientificName)
-        met_count.append(len(taxa))
-    groups_df = pd.DataFrame({"count":met_count}, index=met)
-    groups_df = groups_df.sort_values(by=['count'])
-    groups_df = groups_df[groups_df['count']>0]
-    met_taxon_count = {"label":list(groups_df.index), "count":list(groups_df["count"])}
-    # Count taxa, events and occurrences
-    taxa_len = len(taxa_df)
-    occ_len = len(occurrences)
-    event_len = len(events)
-    # Report if any of the specified occurrenceIDs are not present in database.
-    for occurrence in occurrence_ids:
-        if occurrence not in [i.occurrenceID for i in occurrences]:
-            flash(f'{occurrence} not in database', category="error")
-    # Return template
-    return render_template("specimen_list.html", title=title, user=current_user, occurrences=occurrences, events=events, ranks=ranks, occ_len=occ_len, event_len=event_len, taxa_len=taxa_len, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_habitat1=occurrence_habitat1, occurrence_habitat2=occurrence_habitat2, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank, met_taxon_count=met_taxon_count, taxa_year=taxa_year, taxa_taxonRank=taxa_taxonRank)
-
 # Query database for specimen-data and render a specimen-table 
 @specimens.route('/specimen_view/<string:occurrence_id>/', methods=['GET'])
 @login_required
@@ -395,85 +206,3 @@ def specimen_view(occurrence_id):
         .order_by(Identification_events.dateIdentified.desc())\
         .all()
     return render_template("specimen_view.html", title=title, user=current_user, occurrence=occurrence, identifications=identifications)
-
-'''
-# Get specimen data from GBIF
-@specimens.route('/specimen_gbif', methods=['GET', 'POST'])
-@login_required
-def specimen_gbif():
-    title = "Add specimen from GBIF"
-    # Function to return value from dictionary or empty value if the value does not exist
-    def if_exists(name, dict_name):
-        if name in dict_name:
-            return dict_name[name]
-        else:
-            return ""
-    # Post request
-    if request.method == 'POST':
-        occurrence_ids = request.form.get("occurrence_ids")
-        occurrence_ids = occurrence_ids.splitlines()
-        # Loop through list of occurrence IDs
-        for occurrence_id in occurrence_ids:
-            # Prepare URL
-            url = f'https://api.gbif.org/v1/occurrence/search?q={occurrence_id}'
-            # Make API call
-            response = requests.get(url)
-            # Get records in results
-            all = response.json()["results"]
-            # Loop over each record and try to match occurrence_id
-            first = ""
-            for i in all:
-                if "materialSampleID" in i:
-                    if i["materialSampleID"] == occurrence_id:
-                        first = i
-                        occurrence_id = occurrence_id.replace("http://purl.org/nhmuio/id/", "")
-            if first:
-                # Add Collecting event to database
-                if "eventID" in first:
-                    event_id = first["eventID"]
-                else:
-                    event_id = f'NHMO_{if_exists("decimalLatitude", first)}{if_exists("decimalLongitude", first)}{if_exists("eventDate", first)[0:10]}{if_exists("habitat", first)}'
-                # New event
-                if not Collecting_events.query.filter_by(eventID=event_id).first():
-                    new_event = Collecting_events(eventID=event_id, countryCode=if_exists("countryCode", first), 
-                        stateProvince=if_exists("stateProvince", first), county=if_exists("county", first), 
-                        municipality=if_exists("municipality", first), locality_1=if_exists("locality", first), 
-                        habitat=if_exists("habitat", first), decimalLatitude=if_exists("decimalLatitude", first), 
-                        decimalLongitude=if_exists("decimalLongitude", first), coordinateUncertaintyInMeters=if_exists("coordinateUncertaintyInMeters", first), 
-                        samplingProtocol=if_exists("samplingProtocol", first), eventDate_1=if_exists("eventDate", first)[0:10], recordedBy=if_exists("recordedBy", first).replace(",", "|"), 
-                        eventRemarks=if_exists("eventRemarks", first), createdByUserID=current_user.id)
-                    # Add new objects to database
-                    db.session.add(new_event)
-                    # Commit
-                    db.session.commit()
-                # Add new identification record
-                if not Occurrences.query.filter_by(occurrenceID=occurrence_id).first():
-                    new_identification=Identification_events(
-                                        occurrenceID=occurrence_id,
-                                        scientificName="Pteromalidae",
-                                        identifiedBy="Jon Peder Lindemann",
-                                        lifeStage="adult",
-                                        createdByUserID=current_user.id)
-                    # Add new objects to database
-                    db.session.add(new_identification)
-                    # Commit
-                    db.session.commit()
-                    # Get event-ID
-                    db.session.refresh(new_identification)
-                    # new occurrence
-                    new_occurrence=Occurrences(
-                        occurrenceID = occurrence_id,
-                        catalogNumber = if_exists("catalogNumber", first),
-                        eventID = event_id,
-                        identificationID = new_identification.identificationID,
-                        ownerInstitutionCode = "NHMO",
-                        individualCount = if_exists("individualCount", first),
-                        preparations = if_exists("preparations", first),
-                        occurrenceRemarks = if_exists("occurrenceRemarks", first),
-                        createdByUserID = current_user.id
-                    )
-                    db.session.add(new_occurrence)
-                    db.session.commit()
-            time.sleep(1)
-    return render_template("specimen_gbif.html", title=title, user=current_user)
-'''

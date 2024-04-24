@@ -100,6 +100,17 @@ class Occurrences (db.Model):
     verbatimLabel = db.Column(db.String(250))
     createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+class Drawers (db.Model):
+    drawerName = db.Column(db.String(25), primary_key=True)
+    databased = db.Column(db.DateTime(timezone=True), default=func.now())
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class Units (db.Model):
+    unitID = db.Column(db.String(80), primary_key=True)
+    drawerName = db.Column(db.String(25), db.ForeignKey('drawers.drawerName'))
+    databased = db.Column(db.DateTime(timezone=True), default=func.now())
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 class Taxa (db.Model):
     taxonInt = db.Column(db.Integer, primary_key=True)
     scientificName = db.Column(db.String(100), primary_key=True)
@@ -141,6 +152,9 @@ class Identification_events (db.Model):
 class Catalog_number_counter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
+class Unit_id_counter(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
 class Illustrations (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(200))
@@ -161,6 +175,16 @@ class Illustrations (db.Model):
     typeID = db.Column(db.String(255))
     scaleBar = db.Column(db.String(50))
     typeName = db.Column(db.String(100))
+    databased = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Datasets(db.Model):
+    datasetName = db.Column(db.String(100), primary_key=True)
+    datasetDescription = db.Column(db.String)
+    specimenIDs = db.Column(db.String)
+    datasetManager = db.Column(db.String)
+    rightsHolder = db.Column(db.String)
+    license = db.Column(db.String)
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
 
 class Landmark_datasets(db.Model):

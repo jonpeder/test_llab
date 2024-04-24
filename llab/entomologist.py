@@ -5,11 +5,6 @@ from . import db
 
 entomologist = Blueprint('entomologist', __name__)
 
-@entomologist.route('/')
-@login_required
-def home():
-    return render_template("home.html", user=current_user)
-
 @entomologist.route('/add_entomologist', methods=["POST", "GET"])
 @login_required
 def add_entomologist():

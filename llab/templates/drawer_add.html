@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="/drawer_edit" method=post>
+    <br />
+    <h5 align="left">Add drawer</h5>
+    <br />
+    <!-- Add new drawer -->
+    Add a drawer to collection
+    <div class="mb-3">
+        <input type="text" class="form-control" id="drawer-new-name" name="drawer-new-name" placeholder="Mycetophilidae"
+            value="Box"></input>
+        <small id="drawer_nameHelp" class="form-text text-muted">Insert drawer name here</small>
+    </div>
+
+    <!-- Add drawer bytton -->
+    <div class="mb-3">
+        <button type="submit" class="btn btn-success" name="add_drawer" value="add_drawer">Add drawer</button>
+    </div>
+
+    <!-- Update Drawer Units -->
+    <br />
+    <h5 align="left">Update drawer</h5>
+    <br />
+    <!-- Drawer label QR-code -->
+    Drawer Name
+    <div class="mb-3">
+        <select class="form-control selectpicker" id="drawer-name" name="drawer-name">
+            <option value=""></option>
+            {% for drawer in existing_drawer_names %}
+            <option value="{{ drawer }}">{{ drawer }}</option>
+            {% endfor %}
+        </select>
+        <small id="drawer_nameHelp" class="form-text text-muted">Select drawer to be updated</small>
+    </div>
+
+    <!-- Taxon label QR-code data -->
+    Add units to drawer
+    <div class="mb-3">
+        <textarea type="text" class="form-control" id="unit_ids" name="unit_ids"
+            placeholder="Insert Unit-IDs here!" ></textarea>
+        <small id="qr-dataHelp" class="form-text text-muted">Decoded QR-codes from taxon-labels separated by
+            line-breaks</small>
+    </div>
+
+    <!-- Submit-buttons in line -->
+    <div class="d-inline mb-3">
+        <button type="submit" class="btn btn-success" name="update_drawer" value="update_drawer">Update
+            drawer</button>
+        <button type="submit" class="btn btn-danger" name="delete_drawer" value="delete_drawer">Delete
+            drawer</button>
+    </div>
+
+</form>
+
+{% endblock %}

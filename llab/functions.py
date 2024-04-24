@@ -1,4 +1,4 @@
-from .models import Catalog_number_counter
+from .models import Catalog_number_counter, Unit_id_counter
 from . import db
 # Read strandr.tmp csv file to python dictionary
 import csv
@@ -18,6 +18,13 @@ def new_catalog_number (initials):
     db.session.refresh(new_number)
     catalog_number = initials + "-" + "{:0>6}".format(new_number.id)
     return(catalog_number)
+
+def new_unit_id ():
+    new_number = Unit_id_counter()
+    db.session.add(new_number)
+    db.session.commit()
+    db.session.refresh(new_number)
+    return(new_number.id)
 
 # Arrange data from db-query in dict for presentation in bar-plot
 def bar_plot_dict(dataframe, gr, percentage):
@@ -96,6 +103,30 @@ def newEventID(eventID_list, prefix):
             return f'{prefix}_A{tmp2[0]+1:04d}'
         except:
             return f'{prefix}_A0001'
+        
+# Function: suggest new drawerID
+def newDrawerName(existing_names_list, new_drawer_name):
+    while True:
+        try:
+            maching_existing_names = [i for i in existing_names_list if new_drawer_name.split("_")[0] == i.split("_")[0]]
+            if len(maching_existing_names) == 0:
+                return f'{new_drawer_name}'
+            elif len(maching_existing_names) == 1:
+                if "_" in new_drawer_name:
+                    return f'{new_drawer_name.split("_")[0]}_{int(new_drawer_name.split("_")[1])+1}'
+                elif f'{new_drawer_name}' == maching_existing_names[0]:
+                    return f'{new_drawer_name}_1'
+                else:
+                    return f'{new_drawer_name}'
+            else:
+                integer_list = []
+                for i in maching_existing_names:
+                    if "_" in i:
+                        integer_list.append(int(i.split("_")[1]))
+                integer_list.sort(reverse=True)
+                return f'{new_drawer_name.split("_")[0]}_{integer_list[0]+1}'
+        except:
+            return f'{new_drawer_name}'     
 
 
 # Make one method to decode thcone barcode

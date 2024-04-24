@@ -1,3 +1,4 @@
+from .functions import new_unit_id
 from flask import Blueprint, current_app, flash, request, render_template, redirect, url_for
 from flask_login import login_required, current_user
 from .models import Taxa, Occurrence_images, Occurrences, Identification_events, Print_det, Illustrations
@@ -6,7 +7,6 @@ import numpy as np
 from werkzeug.utils import secure_filename
 import os
 import qrcode
-import uuid
 
 # connect to __init__ file
 taxa = Blueprint('taxa', __name__)
@@ -346,7 +346,7 @@ def det_labels():
                             for n in range(det.print_n):
                                 filename = f'{current_user.id}_detqrlabel_{det.id}_{n}.png'
                                 qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
-                                qr.add_data(f'det.{data.taxonInt}:{det.identificationQualifier}:{det.sex}:{uuid.uuid4()}')
+                                qr.add_data(f'det.{data.taxonInt}:{det.identificationQualifier}:{det.sex}:{new_unit_id()}')
                                 qr.make(fit = True)
                                 img = qr.make_image(fill_color = 'black', back_color = 'white')
                                 img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))

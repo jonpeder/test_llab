@@ -1,4 +1,11 @@
-
+html {
+   height: 100%;
+   margin: 0;
+ }
+ body {
+   min-height: 100%;
+ }
+ 
 .img_container {
    display: flex;
    flex-wrap: wrap;

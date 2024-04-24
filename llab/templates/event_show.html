@@ -113,14 +113,19 @@
 <br />
 {% endfor %}
 
-<form action="/specimen_list" method=post>
+<form action="/" method=post>
 
 <!-- Button 3-->
-<div class="mb-3">
+<div class="mb-3" style="padding-bottom: 20px;">
     <input type="text" name="eventID" id="eventID" value="{{ event.eventID }}" hidden>
     <button type="submit" class="btn btn-secondary btn-sm" name="collecting_event_id" value="collecting_event_id">View specimens</button>
 </div>
 </form>
+
+<!-- trailing area -->
+<p></p>
+<p></p>
+<p> </p>
 
 {% endif %}
 

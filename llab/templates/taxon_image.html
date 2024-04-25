@@ -79,25 +79,6 @@
     {% endfor %}
     {% endfor %}
 
-    <script type="text/javascript" src="{{ url_for('static', filename='multiselect-dropdown.js')}}"></script>
-    <!-- 
-    <script type="text/javascript">
-        function image_window(input) {
-            var w = window.open(input, '_blank');
-            //w.document.write('<title>My PDF File Title</title>');
-            setTimeout(() => w.document.title = 'This is a test',0);
-        }
-
-        function imagePopup(myImage, myTitle, myCaption, mySource) {
-            var myWindow = window.open("", myTitle, "_blank", "toolbar=no,scrollbars=no,resizable=yes");
-            myWindow.document.write("<head><title>" + myTitle + "</title></head>");
-            myWindow.document.write("<big><b>Figure Caption:</big></b>" + myCaption + "<p>");
-            myWindow.document.write("<big><b>Figure Source:</big></b>" + mySource + "<p>");
-            myWindow.document.write("<img src=" + myImage + ">");
-        return myWindow;
-        };
-    </script>
-    -->
 
 </form>
 {% endblock %}

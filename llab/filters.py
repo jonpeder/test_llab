@@ -108,6 +108,20 @@ def scn_italic(name, rank, author):
         name = f'<i>{name.replace("group", "").strip()}</i> group'    
     return name
 
+@filters.app_template_filter('scn_italic2')
+def scn_italic2(name, rank, author):
+    # Remove autohor from name and remove trailing white-spaces
+    if author:
+        name = name.replace(author, "").strip()
+    # If species or genus level use italic
+    if rank=="species" or rank=="genus" or rank=="spnov":
+        name=f'<i>{name}</i>'
+    if rank == "species_group":
+        name = f'<i>{name.replace("group", "").strip()}</i> group'
+    if author:
+        name = f'{name} {author}'
+    return name
+
 # if_present
 @filters.app_template_filter('if_present')
 def if_present(variable):

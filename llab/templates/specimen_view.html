@@ -26,12 +26,12 @@
     style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;">
     <!-- Identification table  -->
     <tr class="border-bottom border-dark align-bottom">
-        <th>Object:</th>
+        <th>Specimen:</th>
         <th></th>
     </tr>
     <!-- Occurrence ID -->
     <tr>
-        <td>Occurrence ID</td>
+        <td>Specimen ID</td>
         <td>{{ occurrence.occurrenceID }}</td>
     </tr>
     <!-- Catalogue number -->
@@ -57,9 +57,7 @@
     <!-- Taxon name -->
     <tr>
         <td>Taxon name</td>
-        <td>{{ identification.scientificName | scn_italic (identification.taxonRank,
-            identification.scientificNameAuthorship) |
-            safe }} {{identification.scientificNameAuthorship}}</td>
+        <td>{{ identification.scientificName | scn_italic2 (identification.taxonRank,identification.scientificNameAuthorship) | safe }}</td>
     </tr>
     <!-- Identification qualifyer -->
     {{ identification.identificationQualifier | tablerow("Identification qualifyer") | safe }}
@@ -92,7 +90,7 @@
     <!-- Taxon rank -->
     {{ identification.taxonRank | tablerow("Taxon rank") | safe }}
     <!-- Scientific name -->
-    {{ identification.scientificName | tablerow("Scientific name") | safe }}
+    {{ identification.scientificName | scn_italic2 (identification.taxonRank,identification.scientificNameAuthorship) | tablerow("Scientific name") | safe }}
     <!-- Family -->
     {{ identification.family | tablerow("Family") | safe }}
     <!-- Order -->

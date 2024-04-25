@@ -3,12 +3,12 @@ from flask_login import login_required, current_user
 from .models import Collectors
 from . import db
 
-entomologist = Blueprint('entomologist', __name__)
+researcher = Blueprint('researcher', __name__)
 
-@entomologist.route('/add_entomologist', methods=["POST", "GET"])
+@researcher.route('/add_researcher', methods=["POST", "GET"])
 @login_required
-def add_entomologist():
-    title = "Add entomologist"
+def add_researcher():
+    title = "Add researcher"
     if request.method == 'POST':
         # Get input from form
         recordedBy = request.form.get("fullname")
@@ -18,12 +18,12 @@ def add_entomologist():
             recordedBy=recordedBy).first()
         recordedByID_test = Collectors.query.filter_by(
             recordedByID=recordedByID).first()
-        # Check input is correct. If success add entomologist to database. If error send error message
+        # Check input is correct. If success add researcher to database. If error send error message
         if recordedBy_test:
-            flash('Entomologists name aready exists', category='error')
+            flash('Researchers name aready exists', category='error')
         elif len(recordedBy) < 6:
             flash(
-                'Entomologist name is to short. Should include more than five characters.', category='error')
+                'Researcher name is to short. Should include more than five characters.', category='error')
         elif len(recordedByID) < 1:
             # New Print_events object
             new_collector = Collectors(
@@ -33,14 +33,14 @@ def add_entomologist():
             # Commit
             db.session.commit()
             flash(
-                f'{recordedBy} was added to the list of entomologists, but without a researcher ID', category='success')
+                f'{recordedBy} was added to the list of researchers, but without a researcher ID', category='success')
         elif len(recordedByID) < 6:
             flash(
-                'Entomologist ID is to short. Should include more than five characters.', category='error')
+                'Researcher ID is to short. Should include more than five characters.', category='error')
         elif recordedByID == 'https://orcid.org/0000-0000-0000-0000':
-            flash('The entomologist ID field has to be edited.', category='error')
+            flash('The researcher ID field has to be edited.', category='error')
         elif recordedByID_test:
-            flash('Entomologists ID aready exists', category='error')
+            flash('Researchers ID aready exists', category='error')
         else:
             # New Print_events object
             new_collector = Collectors(
@@ -49,7 +49,7 @@ def add_entomologist():
             db.session.add(new_collector)
             # Commit
             db.session.commit()
-            flash(f'{recordedBy} was added to the list of entomologists',
+            flash(f'{recordedBy} was added to the list of researchers',
                   category='success')
     # Return HTML page
-    return render_template("add_entomologist.html", title=title, user=current_user)
+    return render_template("researcher_add.html", title=title, user=current_user)

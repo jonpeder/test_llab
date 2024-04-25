@@ -26,7 +26,7 @@ def create_app():
 
     from .auth import auth
     from .cevents import cevents
-    from .entomologist import entomologist
+    from .researcher import researcher
     from .images import images
     from .taxa import taxa
     from .filters import filters
@@ -39,7 +39,7 @@ def create_app():
 
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(cevents, url_prefix='/')
-    app.register_blueprint(entomologist, url_prefix='/')
+    app.register_blueprint(researcher, url_prefix='/')
     app.register_blueprint(images, url_prefix='/')
     app.register_blueprint(taxa, url_prefix='/')
     app.register_blueprint(filters, url_prefix='/')

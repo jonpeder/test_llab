@@ -266,7 +266,7 @@ def labels():
                         if event.eventID==data.eventID:
                             for n in range(event.print_n):
                                 # Add record to catalg_number_counter
-                                catalog_number = new_catalog_number(current_user.initials)
+                                catalog_number = new_catalog_number()
                                 # Add catalog-numbers to dictionary
                                 catalog_numbers[f'{current_user.id}_{event.id}_{n}'] = catalog_number
                                 # Create qr-code image files

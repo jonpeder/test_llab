@@ -11,12 +11,12 @@ from pyzbar.pyzbar import decode
 from pyzbar.pyzbar import ZBarSymbol
 
 # Add record to catalg_number_counter
-def new_catalog_number (initials):
+def new_catalog_number ():
     new_number = Catalog_number_counter()
     db.session.add(new_number)
     db.session.commit()
     db.session.refresh(new_number)
-    catalog_number = initials + "-" + "{:0>6}".format(new_number.id)
+    catalog_number = "{:0>6}".format(new_number.id)
     return(catalog_number)
 
 def new_unit_id ():
@@ -100,9 +100,9 @@ def newEventID(eventID_list, prefix):
             for i in tmp:
                 tmp2.append(int(i[5:15]))
             tmp2.sort(reverse=True)
-            return f'{prefix}_A{tmp2[0]+1:04d}'
+            return f'{prefix}{tmp2[0]+1:04d}'
         except:
-            return f'{prefix}_A0001'
+            return f'{prefix}0001'
         
 # Function: suggest new drawerID
 def newDrawerName(existing_names_list, new_drawer_name):

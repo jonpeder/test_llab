@@ -101,3 +101,7 @@ update units set identificationQualifier = SUBSTRING_INDEX(SUBSTRING_INDEX(unitI
 update units set sex = SUBSTRING_INDEX(SUBSTRING_INDEX(unitID,":",3),".",-1);
 
 
+-- Find all collecting events with that are not associated with any occurrence
+SELECT REPLACE(eventID, "JPL_A", "JPL") FROM collecting_events WHERE eventID NOT IN (SELECT eventID FROM occurrences);
+-- Replace eventID in collecting_events that are not associated with any occurrence
+update collecting_events set eventID = REPLACE(eventID, "JPL_A", "JPL") WHERE eventID NOT IN (SELECT eventID FROM occurrences);

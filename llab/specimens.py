@@ -44,10 +44,10 @@ def specimen_det():
         associatedTaxa = request.form.get("associatedTaxa")
         associatedReferences = request.form.get("associatedReferences")
         verbatimLabel = request.form.get("verbatimLabel")
-        # Check that a det label have been scanned, that  ".det" is present in string
-        if re.search("det\.", qr_data):
+        # Check that a det label have been scanned, that  "TAX:" is present in string
+        if re.search("TAX\:", qr_data):
             # For each taxon
-            for det in qr_data.split("det."):
+            for det in qr_data.split("TAX:"):
                 # Check that the variable is not empty
                 if det:
                     # get det-data

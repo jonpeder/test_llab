@@ -78,7 +78,7 @@ def add_taxon():
                 flash(f'{scientificName} added!', category="success")
 
     # Return html-page
-    return render_template("add_taxon.html", title=title, user=current_user, ranks=ranks)
+    return render_template("taxon_add.html", title=title, user=current_user, ranks=ranks)
 
 
 # Function to edit/delete taxon
@@ -96,7 +96,7 @@ def edit_taxon():
             scientificName = request.form.get("scientificName")
             # Get taxon_data from from database
             taxon = Taxa.query.filter_by(scientificName=scientificName).first()
-            return render_template("edit_taxon.html", title=title, user=current_user, ranks=ranks, taxa=taxa, taxon=taxon)
+            return render_template("taxon_edit.html", title=title, user=current_user, ranks=ranks, taxa=taxa, taxon=taxon)
         # Button 2: Update
         elif request.form.get('action2') == 'VALUE2':
             # Get input from form
@@ -190,7 +190,7 @@ def edit_taxon():
             return redirect(url_for('taxa.edit_taxon'))
 
     else:
-        return render_template("edit_taxon.html", title=title, user=current_user, ranks=ranks, taxa=taxa)
+        return render_template("taxon_edit.html", title=title, user=current_user, ranks=ranks, taxa=taxa)
 
 
 # Function to view images of selected taxa
@@ -346,14 +346,14 @@ def det_labels():
                             for n in range(det.print_n):
                                 filename = f'{current_user.id}_detqrlabel_{det.id}_{n}.png'
                                 qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
-                                qr.add_data(f'det.{data.taxonInt}:{det.identificationQualifier}:{det.sex}:{new_unit_id()}')
+                                qr.add_data(f'TAX:{data.taxonInt}:{det.identificationQualifier}:{det.sex}:{new_unit_id()}')
                                 qr.make(fit = True)
                                 img = qr.make_image(fill_color = 'black', back_color = 'white')
                                 img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 # Return labels
-                return render_template("det_labels_output.html", title=title, dets=dets, user=current_user, det_data=det_data)
+                return render_template("taxon_labels_output.html", title=title, dets=dets, user=current_user, det_data=det_data)
 
     # Søk etter Taxa
     taxa = Taxa.query.all()
     # Return
-    return render_template("det_labels.html", title=title, taxa=taxa, user=current_user)
+    return render_template("taxon_labels.html", title=title, taxa=taxa, user=current_user)

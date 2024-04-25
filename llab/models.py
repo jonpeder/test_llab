@@ -108,8 +108,13 @@ class Drawers (db.Model):
 class Units (db.Model):
     unitID = db.Column(db.String(80), primary_key=True)
     drawerName = db.Column(db.String(25), db.ForeignKey('drawers.drawerName'))
+    taxonInt = db.Column(db.Integer)
+    identificationQualifier = db.Column(db.String(10))
+    sex = db.Column(db.String(6))
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
+    updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 
 class Taxa (db.Model):
     taxonInt = db.Column(db.Integer, primary_key=True)

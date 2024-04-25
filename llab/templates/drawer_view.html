@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- A form to select drawers to view drawer content-->
+<form action="/drawer_view" method=post>
+    <!-- Drawer label QR-code -->
+    Drawer Name
+    <div class="mb-3">
+        <select class="form-control selectpicker" id="drawer-name" name="drawer-name">
+            <option value=""></option>
+            {% for drawer in existing_drawer_names %}
+            <option value="{{ drawer }}">{{ drawer }}</option>
+            {% endfor %}
+        </select>
+        <small id="drawer_nameHelp" class="form-text text-muted">Select drawer to view content</small>
+    </div>
+
+    <!-- Submit-buttons in line -->
+    <div class="d-inline mb-3">
+        <button type="submit" class="btn btn-success" name="view_drawer" value="view_drawer">View drawer</button>
+    </div>
+
+    <!-- if drawer is selected -->
+    {% if drawer_name %}
+    <!-- display drawer content -->
+    <p></p>
+    <p></p>
+    <div class="card">
+        <div class="card-header">
+    <h5 align="left">{{ drawer_name }}-drawer:</h5>
+    </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="card">
+        <div class="card-header">
+          <a class="btn" data-bs-toggle="collapse" href="#collapseMetrics">
+            Drawer metrics
+          </a>
+        </div>
+        <!-- Dataset collapsible -->
+        <div id="collapseMetrics">
+          <div class="card-body"> 
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td>Units</td>
+                <td>{{units | length}}</td>
+            </tr>
+            <tr>
+                <td>Specimens</td>
+                <td>{{specimens | length}}</td>
+            </tr>
+            <tr>
+                <td>Taxa</td>
+                <td>{{taxa | length}}</td>
+            </tr>
+            {% if species_n != 1 %}
+            <tr>
+                <td>Species</td>
+                <td>{{species_n}}</td>
+            </tr>
+            {% endif %}
+            {% if genus_n != 1 %}
+            <tr>
+                <td>Genera</td>
+                <td>{{genus_n}}</td>
+            </tr>
+            {% endif %}
+            {% if family_n != 1 %}
+            <tr>
+                <td>Families</td>
+                <td>{{family_n}}</td>
+            </tr>
+            {% endif %}
+            {% if order_n != 1 %}
+            <tr>
+                <td>Orders</td>
+                <td>{{order_n}}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <td>Highest taxon level</td>
+                <td>{{drawer_taxon}}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+
+
+    <!-- Drawer units collapsible -->
+    <div class="card">
+        <div class="card-header">
+          <a class="btn" data-bs-toggle="collapse" href="#collapseUnits">
+            Drawer units
+          </a>
+        </div>
+        <!-- Dataset collapsible -->
+        <div id="collapseUnits" class="collapse">
+          <div class="card-body">
+            <div class="table-responsive">
+    <table class="table table-striped table-hover" id="myDataTable" style="white-space: nowrap;">
+        <thead>
+            <tr>
+                <th scope="col">Unit ID</th>
+                <th scope="col">Specimen count</th>
+                <th scope="col">Taxon rank</th>
+                <th scope="col">Sex</th>
+                <th scope="col">Scientific name</th>
+                <th scope="col">Author</th>
+                <th scope="col">Identification qualifier</th>
+                <th scope="col">Family</th>
+                <th scope="col">Order</th>
+                <th scope="col">Added to drawer date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for unit in units %}
+            
+            <!-- Count specimens in each unit -->
+            {% set specimen_count = namespace(value=0) %}
+            {% for specimen in specimens %}
+            {% if unit.unitID == specimen.unit_id %}
+            {% set specimen_count.value = specimen_count.value + 1 %}
+            {% endif %}
+            {% endfor %}
+            <!-- Get scientific name from taxonInt -->
+            {% set scientificName = namespace(value="") %}
+            {% set rank = namespace(value="") %}
+            {% set author = namespace(value="") %}
+            {% set family = namespace(value="") %}
+            {% set order = namespace(value="") %}
+            {% for taxon in taxa %}
+            {% if taxon.taxonInt == unit.taxonInt %}
+            {% set scientificName.value = taxon.scientificName %}
+            {% set rank.value = taxon.taxonRank %}
+            {% set author.value = taxon.scientificNameAuthorship %}
+            {% set family.value = taxon.family %}
+            {% set order.value = taxon.order %}
+            {% endif %}
+            {% endfor %}
+
+            <tr>
+                <td>{{ unit.unitID }}</td>
+                <td>{{ specimen_count.value }}</td>
+                <td>{{ rank.value }}</td>
+                <td>{{ unit.sex }}</td>
+                <td>{{ scientificName.value | scn_italic(rank.value, author.value) | safe }}</td>
+                <td>{{ author.value }}</td>
+                <td>{{ unit.identificationQualifier }}</td>
+                <td>{{ family.value }}</td>
+                <td>{{ order.value }}</td>
+                <td>{{ unit.updated | string_to_datetime | date_format }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+</div>
+    {% endif %}
+
+</form>
+
+<script>
+    $(document).ready(function() {
+        $('#myDataTable').DataTable();
+    });
+</script>
+
+
+{% endblock %}

@@ -20,8 +20,12 @@ create table drawers (
 create table units (
     unitID varchar(80) primary key,
     drawerName varchar(25),
-    databased datetime default current_timestamp,
     createdByUserID int,
+    taxonInt int,
+    identificationQualifier varchar(10),
+    sex varchar(6),
+    databased datetime default current_timestamp,
+    updated timestamp,
     foreign key (createdByUserID) references user(id),
     foreign key (drawerName) references drawers(drawerName)
 );
@@ -86,3 +90,14 @@ WHERE unit_id IS NOT NULL;
 
 update units
 set unitID = CONCAT('det.', unitID)
+
+-- Fill inn taxonInt column in units-table from unitID
+update units set taxonInt = SUBSTRING_INDEX(SUBSTRING_INDEX(unitID,":",1),".",-1);
+
+-- Fill inn identificationQualifier column in units-table from unitID
+update units set identificationQualifier = SUBSTRING_INDEX(SUBSTRING_INDEX(unitID,":",2),".",-1);
+
+-- Fill inn sex column in units-table from unitID
+update units set sex = SUBSTRING_INDEX(SUBSTRING_INDEX(unitID,":",3),".",-1);
+
+

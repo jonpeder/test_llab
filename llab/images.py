@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, flash, request, redirect, url_for, ren
 from flask_login import login_required, current_user
 from .models import User, Collecting_events, Event_images, Occurrences, Occurrence_images, Illustrations, Taxa
 from . import db
-from .functions import BarcodeReader
+from .functions import BarcodeReader, compress_image
 import os
 import shutil
 import glob
@@ -40,7 +40,7 @@ imagetype = ["photo", "drawing"]
 @login_required
 def event_image():
     title = "Collecting event images"
-    dir_path = "/var/www/llab/llab/static/images/events"
+    dir_path = "/var/www/llab/llab/static/images"
     # Get image names starting with user initials
     files = [os.path.basename(x) for x in glob.glob(f"{dir_path}/{current_user.initials}*")]
     if request.method == 'POST':
@@ -60,9 +60,13 @@ def event_image():
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     filename2 = f'{eventID}_{filename}'
+                    # Save full size image
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2)) # Save file to upload folder
-                    shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/{filename2}") # Move file to image-folder
-                    os.remove(f"{app.config['UPLOAD_FOLDER']}/{filename2}") # Remove file from upload-folder
+                    shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/events/{filename2}") # Move file to image-folder
+                    # Save a compressed version of the image
+                    compress_image(os.path.join(app.config['UPLOAD_FOLDER'], filename2), f"{dir_path}/compressed/{filename2}", 20)
+                    # Remove file from upload-folder
+                    os.remove(f"{app.config['UPLOAD_FOLDER']}/{filename2}") 
                     # New Print_events object
                     new_event_image = Event_images(
                         filename=filename2, imageCategory=imageCategory, comment=comment, eventID=eventID, createdByUserID=current_user.id)
@@ -81,7 +85,7 @@ def event_image():
 @login_required
 def specimen_image():
     title = "Specimen images"
-    dir_path = "/var/www/llab/llab/static/images/specimens"
+    dir_path = "/var/www/llab/llab/static/images"
     # Get image names starting with user initials
     if request.method == 'POST':
         # Request form input
@@ -104,9 +108,10 @@ def specimen_image():
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     filename2 = f'{occurrence}_{filename}'
-                    #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2)) # Save file to upload folder
-                    #shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/{filename2}") # Move file to image-folder
-                    #os.remove(f"{app.config['UPLOAD_FOLDER']}/{filename2}") # Remove file from upload-folder
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2)) # Save file to upload folder
+                    shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/specimens/{filename2}") # Move file to image-folder
+                    compress_image(os.path.join(app.config['UPLOAD_FOLDER'], filename2), f"{dir_path}/compressed/{filename2}", 20) # Save a compressed version of the image
+                    os.remove(f"{app.config['UPLOAD_FOLDER']}/{filename2}") # Remove file from upload-folder
                     # New Print_events object
                     new_specimen_image = Occurrence_images(
                         filename=filename2, imageCategory=imageCategory, comment=comment, occurrenceID=occurrence, createdByUserID=current_user.id)
@@ -123,7 +128,7 @@ def specimen_image():
 @login_required
 def add_illustrations():
     title = "Add illustrations"
-    dir_path = "/var/www/llab/llab/static/images/illustrations"
+    dir_path = "/var/www/llab/llab/static/images"
     last_values = None
     # Get taxon data
     taxa = Taxa.query.all()
@@ -165,7 +170,8 @@ def add_illustrations():
                     filename = secure_filename(file.filename)
                     filename2 = f'{scientificName.split(" ")[0]}_{scientificName.split(" ")[1]}_{sex}_{category}_{filename}'
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2)) # Save file to upload folder
-                    shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/{filename2}") # Move file to image-folder
+                    shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/illustrations/{filename2}") # Move file to image-folder
+                    compress_image(os.path.join(app.config['UPLOAD_FOLDER'], filename2), f"{dir_path}/compressed/{filename2}", 20) # Save a compressed version of the image
                     os.remove(f"{app.config['UPLOAD_FOLDER']}/{filename2}") # Remove file from upload-folder
                     # New Print_events object
                     new_illustration = Illustrations(
@@ -221,32 +227,32 @@ def read_qr():
                 return redirect(request.url)
             else:
                 response = file.read()
-                print("TEST1")
                 # read the image in numpy array using cv2
                 frame = cv2.imdecode(np.fromstring(response, np.uint8), cv2.IMREAD_GRAYSCALE)
-                print("TEST2")
                 # use BarcodeReader function to get decoded qr-code-data and image with displayed decoded qr-codes
-                qr, img = BarcodeReader(frame)
-                print("TEST3")
-                # Convert to list and decode objects from bytes to string
-                for i in qr:
-                    print(i)
-                qr = [x.decode('utf-8') for x in qr]
-                print("TEST4")
-                # If determination label is decoded, move determination to begining of list
-                for qr_code in qr:
-                    if re.search("det\.", qr_code):
-                        qr.remove(qr_code)
-                        qr.insert(0, qr_code)
+                while True:
+                    try:
+                        qr, img = BarcodeReader(frame)
                         break
-                # Combine qr-codes 
-                #qr_codes=set(qr).union(qr_codes)
-                qr_codes=qr_codes + qr
-                print("TEST5")
-                # Save image
-                cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], f'qr_codes_decoded_{img_count}.jpg'), img, [cv2.IMWRITE_JPEG_QUALITY, 10])
+                    except ValueError:
+                        flash('No QR-codes detected', category="error")
+                        qr = ""
+                        break
+                if qr:
+                    # Convert to list and decode objects from bytes to string
+                    for i in qr:
+                        print(i)
+                    qr = [x.decode('utf-8') for x in qr]
+                    # If determination label is decoded, move determination to begining of list
+                    for qr_code in qr:
+                        if re.search("TAX", qr_code):
+                            qr.remove(qr_code)
+                            qr.insert(0, qr_code)
+                            break
+                    qr_codes=qr_codes + qr
+                    # Save image
+                    cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], f'qr_codes_decoded_{img_count}.jpg'), img, [cv2.IMWRITE_JPEG_QUALITY, 10])
                 time.sleep(1)
-                print("TEST6")
         # output_string
         output_string = "&#13;&#10;".join(qr_codes)
     return render_template("read_qr.html", title=title, user=current_user, qr_codes=qr_codes, img_count=img_count, output_string=output_string)

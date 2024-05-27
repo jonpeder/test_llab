@@ -2,7 +2,7 @@
 from .functions import newEventID, new_catalog_number
 from flask import Blueprint, current_app, redirect, url_for, request, render_template, flash
 from flask_login import login_required, current_user
-from .models import User, Collectors, Collecting_events, Country_codes, Print_events, Event_images, Catalog_number_counter, Occurrences, Identification_events, Taxa, Eunis_habitats
+from .models import User, Collectors, Collecting_events, Country_codes, Print_events, Event_images, Catalog_number_counter, Occurrences, Identification_events, Taxa, Eunis_habitats, Unit_id_counter
 from . import db
 import os
 from os import path
@@ -102,6 +102,7 @@ def event_new():
 @login_required
 def event_show():
     title = "Collecting events"
+    ctries = Country_codes.query.all()
     events = Collecting_events.query.filter_by(
         createdByUserID=current_user.id).order_by(Collecting_events.eventID.desc())
     # Query Eunis databse table
@@ -120,7 +121,7 @@ def event_show():
             if request.form.get('action2') == 'VALUE2':
                 title = "Edit event"
                 leg = Collectors.query.all()
-                return render_template("event_edit.html", title=title, user=current_user, files=files, event=event, leg=leg, met=met, substrate_parts=substrate_parts, substrate_types=substrate_types, habitats=habitats, habitat_level2=habitat_level2)
+                return render_template("event_edit.html", title=title, user=current_user, ctries=ctries, files=files, event=event, leg=leg, met=met, substrate_parts=substrate_parts, substrate_types=substrate_types, habitats=habitats, habitat_level2=habitat_level2)
             # Button 1: Show event
             else:
                 return render_template("event_show.html", title=title, user=current_user, events=events, files=files, event=event, habitats=habitats)

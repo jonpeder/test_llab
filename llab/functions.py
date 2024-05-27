@@ -95,10 +95,11 @@ def headers(conn, sql):
 def newEventID(eventID_list, prefix):
     while True:
         try:
-            tmp = [i for i in eventID_list if f'{prefix}_A' == i[0:5]]
+            tmp = [i for i in eventID_list if prefix == i[0:3]]
+            tmp = [i for i in tmp if f'{prefix}_A' != i[0:5]]
             tmp2 = []
             for i in tmp:
-                tmp2.append(int(i[5:15]))
+                tmp2.append(int(i[3:15]))
             tmp2.sort(reverse=True)
             return f'{prefix}{tmp2[0]+1:04d}'
         except:
@@ -215,3 +216,17 @@ if __name__ == "__main__":
     image="Img.jpg"
     BarcodeReader(image)
 """
+
+# Compress image function
+def compress_image(input_image_path, output_image_path, quality):
+    """
+    Compresses an image and saves it to the specified output path.
+
+    Parameters:
+    input_image_path (str): Path to the input image.
+    output_image_path (str): Path to save the compressed image.
+    quality (int): Quality of the compressed image (0 to 100).
+    """
+    img = cv2.imread(input_image_path)
+    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
+    cv2.imwrite(output_image_path, img, encode_param)

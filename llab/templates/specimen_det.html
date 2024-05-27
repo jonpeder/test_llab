@@ -3,6 +3,11 @@
 
 <form action="/specimen_det" method=post>
 
+    <!-- Scan QR-codes button -->
+    <div class="mb-3">
+        <a class="btn btn-sm btn-secondary" href="/read_qr" role="button">Scan QR-codes</a>
+    </div>
+
     <!-- QR-code data -->
     QR-code data
     <div class="mb-3">
@@ -24,13 +29,6 @@
             {% endif %}
             {% endfor %}
         </select>
-    </div>
-
-    <!-- Owner institution code -->
-    Owner institution code
-    <div class="mb-3">
-        <input type="text" class="form-control" id="ownerInstitutionCode" name="ownerInstitutionCode"
-            value="{{user.institutionCode}}" required>
     </div>
 
     <!-- lifestage -->
@@ -76,7 +74,7 @@
             </select>
         </div>
         <!-- identificationQualifier -->
-        Identifiaction qualifyer
+        Identifiaction qualifier
         <div class="mb-3">
             <select class="form-select" name="identificationQualifier" id="identificationQualifier">
                 <option selected value=""></option>

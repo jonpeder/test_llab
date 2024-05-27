@@ -20,7 +20,7 @@ specimens = Blueprint('specimens', __name__)
 @specimens.route('/specimen_det', methods=["POST", "GET"])
 @login_required
 def specimen_det():
-    title = "New determinations"
+    title = "Add identifications"
     entomologists = Collectors.query.all()
     # If decoded_QR_codes is not specified
     decoded_QR_codes = ""
@@ -64,9 +64,9 @@ def specimen_det():
                     else:
                         sex = sex_tmp
                     # Get unit-ID. Add to database if not already present
-                    unit_id = det_data
+                    unit_id = f"TAX:{det_data}"
                     if not Units.query.filter_by(unitID=unit_id).first():
-                        new_unit = Units(unitID=unit_id, createdByUserID=current_user.id)
+                        new_unit = Units(unitID=unit_id, createdByUserID=current_user.id, taxonInt=taxonInt, identificationQualifier=identificationQualifier, sex=sex)
                         db.session.add(new_unit)
                         db.session.commit()
                     # Check that the taxon exists in Taxa-table

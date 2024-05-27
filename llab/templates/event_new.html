@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<form action="/new_event" method="POST">
+<form action="/event_new" method="POST">
 
     <!-- Event ID -->
     <div class="mb-3">
@@ -27,7 +27,6 @@
     <div class="mb-3">
         <input type="button" class="btn btn-secondary" value="Use position" onclick="getLocation()" />
     </div>
-
 
     <!-- Locality -->
     Locality
@@ -60,7 +59,7 @@
     Eunis habitat
     <div class="mb-1">
         <select class="form-control selectpicker" id="eunis" name="eunis" data-live-search="true" >
-            <option selected value="></option>
+            <option selected value=""></option>
             {% for level2 in habitat_level2 %}
             <optgroup label="{{ level2 }}">
                 {% for habitat in habitats %}

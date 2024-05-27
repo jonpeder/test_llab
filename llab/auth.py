@@ -22,7 +22,7 @@ def login():
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)  # login user
                 # Return homepage
-                return redirect(url_for('entomologist.home'))
+                return redirect(url_for('filter.home'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:

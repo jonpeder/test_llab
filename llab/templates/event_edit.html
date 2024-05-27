@@ -11,8 +11,17 @@
                 value="{{event.eventID}}" name="eventID" readonly></dd>
         <p></p>
         <dt class="col-sm-3">Country</dt>
-        <dd class="col-sm-9"><input type="text" class="form-control" id="Country" aria-describedby="Country"
-                value="{{event.countryCode}}" name="countryCode"></dd>
+        <dd class="col-sm-9">
+                <select class="form-control selectpicker" id="countryCode" name="countryCode" data-live-search="true">
+                    {% for country in ctries %}
+                    {% if country.countryCode == event.countryCode %}
+                    <option selected value="{{ country.countryCode }}">{{ country.country }}</option>
+                    {% else %}
+                    <option value="{{ country.countryCode }}">{{ country.country }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+        </dd>
         <dt class="col-sm-3">State/Province</dt>
         <dd class="col-sm-9"><input type="text" class="form-control" id="stateProvince" aria-describedby="stateProvince"
                 value="{{event.stateProvince}}" name="stateProvince"></dd>
@@ -81,16 +90,21 @@
     <h5>Coordinates</h5>
     <dl class="row">
         <dt class="col-sm-3">Latitude</dt>
-        <dd class="col-sm-9"><input type="text" class="form-control" id="decimalLatitude"
+        <dd class="col-sm-9"><input type="text" class="form-control" id="Latitude"
                 aria-describedby="decimalLatitude" value="{{event.decimalLatitude}}" name="decimalLatitude"></dd>
         <dt class="col-sm-3">Longitude</dt>
-        <dd class="col-sm-9"><input type="text" class="form-control" id="decimalLongitude"
+        <dd class="col-sm-9"><input type="text" class="form-control" id="Longitude"
                 aria-describedby="decimalLongitude" value="{{event.decimalLongitude}}" name="decimalLongitude"></dd>
         <dt class="col-sm-3">Radius</dt>
         <dd class="col-sm-9"><input type="text" class="form-control" id="coordinateUncertaintyInMeters"
                 aria-describedby="coordinateUncertaintyInMeters" value="{{event.coordinateUncertaintyInMeters}}"
                 name="coordinateUncertaintyInMeters"></dd>
     </dl>
+
+    <!-- Button: Get position -->
+    <div class="mb-3">
+        <input type="button" class="btn btn-secondary" value="Use position" onclick="getLocation()" />
+    </div>
     
     <br>
     <h5>Substrate</h5>

@@ -1,0 +1,486 @@
+CollectingEventID,CountryCode,State/Province,County,Municipality,Locality,Habitat,DecimalDeg,Radius,SamplingProtocol,date,recordedBy,databased
+ADB-RM-COL-082,NO,,Hedmark,Engerdal,Åsen,Base-rich fen,"61.88586100,11.78283300",50,Window-trap,18 Aug 2016,Rikmyrsprosjektet,2021-05-18 19:40:56
+JPL_A006,NO,,Agder,Bygland,"Heddeviki, Kvivodden",Dry roadside,"58.93869550,7.71388110",100,Sweep-net,19 Jun 2020,Lindemann & Lind,2021-03-03 04:01:20
+JPL_A017,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tromsø,"Tromsøya, Johanhaugen",Bog,"69.68842410,18.97391660",10,Reared,17-19 Jul 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A018,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Sør-Varanger,"Gjøkbekken, Gjøkåsen",Bog,"69.15257750,29.19374500",10,Reared,26-30 Jul 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0235,NO,,Østfold,Hvaler,"Kirkeøy, Rødshue",Rocky sea-shore,"59.02870800,10.99307500",50,Sweep-net,15 May 2022,Jon Peder Lindemann,2022-06-15 20:20:50
+JPL_A0236,NO,,Østfold,Hvaler,"Kirkeøy, Botneveten",Sandy meadow,"59.06128400,11.04128100",10,Sweep-net,16 May 2022,Jon Peder Lindemann,2022-06-15 20:40:07
+JPL_A0237,NO,,Østfold,Hvaler,"Kirkeøy, Løkka",Oak-pine forest,"59.06258600,11.04154600",10,Sweep-net,16 May 2022,Jon Peder Lindemann,2022-06-15 20:46:59
+JPL_A0238,NO,,Østfold,Hvaler,"Kirkeøy, Storesand",Sandy beach,"59.02495900,11.01800500",20,Sweep-net,17 May 2022,Jon Peder Lindemann,2022-06-15 20:52:42
+JPL_A0239,NO,,Østfold,Hvaler,"Kirkeøy, Ørekroken",Sandy beach,"59.03311200,11.00901700",50,White-pan,16 Jun 2018,Jon Peder Lindemann,2022-06-15 21:10:01
+JPL_A0240,NO,,Aust-Agder,Grimstad,"Landvik, Møretrømoen",Sand-mine,"58.34453300,8.46741300",25,Yellow-pan,10-14 Jun 2014,Jon Peder Lindemann,2022-06-15 21:16:44
+JPL_A0241,NO,,Aust-Agder,Grimstad,"Roresanden, Sandkleiva",Sand-mine,"58.34735400,8.53413300",50,Sweep-net,21 Jul 2016,Jon Peder Lindemann,2022-06-15 21:22:57
+JPL_A0242,NO,,Akershus,Frogn,"Seiersten, Seiersten skanse",Deciduous forest,"59.67370400,10.63932000",50,Sweep-net,27 May 2017,Jon Peder Lindemann,2022-06-15 21:29:32
+JPL_A0243,NO,,Nordland,Grane,"Børgefjell, Storelvhøgda",Alpine meadow,"65.15255900,13.49340500",10,Sweep-net,12 Jul 2016,Jon Peder Lindemann,2022-06-15 21:36:43
+JPL_A0244,NO,,oslo,Oslo,"Østensjø, Bakkehavn",Deciduous forest,"59.87624300,10.83251000",50,Light-trap,27 Aug 2021,Jon Peder Lindemann,2022-06-15 21:43:11
+JPL_A0245,NO,,Møre og Romsdal,Surnadal,"Nordmarka, Orrenlibekken",bog,"63.01141800,8.65729400",50,Sweep-net,22 Aug 2021,Jon Peder Lindemann,2022-06-15 21:48:18
+JPL_A0246,NO,,oslo,Oslo,"Bøler, Bølerlia 12",Urban area,"59.87923900,10.84605700",5,Sweep-net,19 Jun 2018,Jon Peder Lindemann,2022-06-15 22:18:20
+JPL_A0247,NO,,Finnmark,Vadsø,"Ekkerøy, Store Ekkerøya",Alpine heath/tundra,"70.07407400,30.11850700",200,Sweep-net,13 Aug 2017,Jarl Birkeland,2022-06-16 23:21:27
+JPL_A0248,NO,,oslo,Oslo,"Hovedøya, Mot Daggerskjær",Rocky sea-shore,"59.88904600,10.73628210",25,Sweep-net,18 Jun 2022,Jon Peder Lindemann,2022-06-18 12:24:34
+JPL_A0250,NO,,Vestfold,Larvik,Geiterøya,Deciduous forest,"58.99746800,9.77561600",20,Sweep-net,09 Jul 2022,Jon Peder Lindemann,2022-07-14 22:20:09
+JPL_A027,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tromsø,"Tønsvik, Klubbholmen",Juncus gerardii meadow,"69.74188600,19.15915400",100,Sweep-net,01 Aug 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A028,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tromsø,"Tønsvik, Klubbholmen",Beach meadow,"69.74198300,19.15458400",100,Sweep-net,01 Aug 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A029,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tromsø,"Tromsdalen, Salen",Alpine heath,"69.59351100,19.09529900",100,Sweep-net,31 Jul 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A030,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tromsø,"Tromsøya, Hansmark",Beach meadow,"69.64451000,18.89757400",10,Sweep-net,03 Aug 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0320,NO,,Oslo,Oslo,"Holmlia, Hvervenbukta",Park,"59.83458800,10.77374600",100,Sweep-net,21 Apr 2018,Lind & Lindemann,2023-10-19 20:01:25
+JPL_A0321,NO,,Agder,Grimstad,"Levermyr, Furuli terrasse",Garden,"58.34652100,8.59356300",25,White-pan,19 Jul 2016,Jon Peder Lindemann,2023-10-19 20:16:09
+JPL_A0322,NO,,Agder,Grimstad,"Levermyr, Furuli terrasse",Garden,"58.34652000,8.59356300",25,Yellow-pan,19 Jul 2016,Jon Peder Lindemann,2023-10-19 20:36:17
+JPL_A0323,NO,,Agder,Grimstad,"Roresanden, Sandkleiva",Sand-mine,"58.34730200,8.53312100",25,Yellow-pan,24 Jul 2016,Jon Peder Lindemann,2023-10-19 20:40:41
+JPL_A0326,NO,,Agder,Grimstad,"Rønnes, Tollholtheia",Pine forest,"58.34096900,8.60994800",35,Malaise-trap,15 Apr-03 Aug 2015,Jon Peder Lindemann,2023-10-19 21:35:40
+JPL_A0327,NO,,Agder,Grimstad,"Marivoll, Rosseviga",Oak-pine forest,"58.33478900,8.62490600",50,White-pan,21 Jul 2016,Jon Peder Lindemann,2023-10-19 21:44:23
+JPL_A033,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tranøy,"Jøvik, Skipbåtsneset",Rocky sea-shore,"69.13955000,17.35725400",100,Sweep-net,09 Aug 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0331,NO,,Nordland,Grane,"Laksfors, Leirbekkøra",River-shore,"65.63083100,13.27004900",35,Yellow-pan,14 Jul 2016,Jon Peder Lindemann,2023-10-19 22:15:41
+JPL_A0334,SE,,Öland,Mörbylånga,"Torslunda, Tävelsrum",Sandy roadside,"56.63664700,16.57074800",50,Yellow-pan,17-19 Jul 2015,Jon Peder Lindemann,2024-01-07 14:26:40
+JPL_A0336,NO,,Agder,Grimstad,"Roresanden, Sandkleiva",Sand-mine,"58.34730200,8.53312100",50,White-pan,14 Apr 2017,Lind & Lindemann,2024-01-07 15:56:17
+JPL_A0337,NO,,Agder,Grimstad,"Dømmesmoen, Rosholtveien",Sand-mine,"58.35517000,8.56709000",50,Sweep-net,29 May 2012,Jon Peder Lindemann,2024-01-07 16:03:36
+JPL_A0339,NO,,Agder,Grimstad,"Rorevannet, Deidalen",Pine forest,"58.36853800,8.57188100",50,Sweep-net,07 May 2012,Jon Peder Lindemann,2024-01-07 16:17:00
+JPL_A034,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tranøy,"Ånderdalen, Floan",Bog,"69.21065450,17.33587440",100,Sweep-net,10 Aug 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0341,NO,,Agder,Grimstad,"Roresanden, Sandkleiva",Sand-mine,"58.34590980,8.53544400",50,Sweep-net,21 Jul 2016,Helene Lind,2024-01-07 16:25:28
+JPL_A0344,NO,,Agder,Grimstad,"Hesnes, Moysandveien",Sandy beach,"58.35442929,8.64817773",20,Sweep-net,14 Jul 2015,Jon Peder Lindemann,2024-01-07 16:39:28
+JPL_A0345,NO,,Buskerud,Ringerike,"Bysundveien, Prestmoen",Sand-mine,"60.13194600,10.22606300",25,Sweep-net,20 Jul 2014,Jon Peder Lindemann,2024-01-07 16:41:29
+JPL_A0346,NO,,Agder,Grimstad,"Roresanden, Sandkleiva",Sand-mine,"58.34682100,8.53324600",50,Sweep-net,24 Jul 2016,Jon Peder Lindemann,2024-01-07 16:46:05
+JPL_A0347,SE,,Öland,Mörbylånga,"Torslunda, Station Linné",Garden,"56.61922000,16.49805000",50,Sweep-net,10 Aug 2015,Jon Peder Lindemann,2024-01-07 16:50:11
+JPL_A0348,NO,,Nordland,Grane,"Bakken, Moan",Sand-mine,"65.58814000,13.40370100",25,Yellow-pan,12-14 Jul 2016,Jon Peder Lindemann,2024-01-07 17:06:05
+JPL_A035,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tranøy,"Ånderdalen, Åndervatnet",Pine forest,"69.22463770,17.32346130",100,Sweep-net,10 Aug 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0350,NO,,Agder,Grimstad,"Roresanden, Sandkleiva",Sand-mine,"58.34730200,8.53312100",25,White-pan,21 Jul 2016,Jon Peder Lindemann,2024-01-07 17:15:47
+JPL_A0352,NO,,Agder,Grimstad,"Roresanden, Sandkleiva",Sand-mine,"58.34730200,8.53312100",25,Yellow-pan,21 Jul 2016,Jon Peder Lindemann,2024-01-07 17:34:06
+JPL_A0353,NO,,Agder,Grimstad,"Roresanden, Sandkleiva",Sand-mine,"58.34734200,8.53330900",25,White-pan,24 Jul 2016,Jon Peder Lindemann,2024-01-07 17:42:43
+JPL_A036,NO,,Agder,Grimstad,"Roresanden, Sandkleiva",Sand-mine,"58.34708940,8.53321390",25,Sweep-net,14 Apr 2017,Lindemann & Lind,2021-03-03 04:01:20
+JPL_A0366,SE,,Öland,Mörbylånga,"Resmo, Möckelmossen",Alvar,"56.53171415,16.52013365",50,Sweep-net,16 Aug 2015,Jon Peder Lindemann,2024-01-11 11:55:29
+JPL_A0367,SE,,Öland,Mörbylånga,"Gårdby, Gårdby sandhed",Sandy roadside,"56.62207800,16.64724800",25,Sweep-net,15 Aug 2023,Jon Peder Lindemann,2024-01-11 12:00:57
+JPL_A0369,NO,,Agder,Grimstad,"Dømmesmoen, Rosholtveien",Sand-mine,"58.35517000,8.56709000",25,Yellow-pan,24-26 Jun 2012,Jon Peder Lindemann,2024-01-11 12:13:06
+JPL_A037,NO,,,Aremark,"Lundsneset, Budalsvika",Mixed forest,"59.05148800,11.73552300",100,Color-pan,12-13 Aug 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0370,NO,,Akershus,Nittedal,"Movann, Slåttemyra",Hay bog,"60.04577900,10.82864300",20,Sweep-net,02 Jun 2016,Jon Peder Lindemann,2024-01-11 12:21:09
+JPL_A0379,NO,,Østfold,Indre Østfold,"Askim, Granberg",Roadside,"59.54560000,11.23920000",100,Sweep-net,21 Jul 2012,Jon Peder Lindemann,2024-01-11 13:26:42
+JPL_A038,NO,,,Sør-Varanger,"Passvikdalen, Sukkeråsen",Pine forest,"69.35931150,29.42117460",50,Color-pan,25 Jul 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0384,NO,,Oslo,Oslo,Hovedøya,Park,"59.89770000,10.73275000",10,Sweep-net,28 Apr 2018,Jon Peder Lindemann,2024-01-11 13:48:10
+JPL_A0387,NO,,Agder,Grimstad,"Rønnes, Ulenes",Roadside,"58.34136838,8.61310134",50,Sweep-net,20 Jun 2012,Jon Peder Lindemann,2024-01-11 14:30:39
+JPL_A039,NO,,,Aremark,"Lundsneset, S. Blekketjern",Pine forest,"59.05693640,11.73085730",100,Color-pan,11-13 Aug 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0390,NO,,Vestland,Voss,"Bømoen, Bømovegen",Roadside,"60.63688500,6.50033400",10,Sweep-net,03 Aug 2019,Helene Lind,2024-01-12 09:03:38
+JPL_A0391,NO,,Telemark,Porsgrunn,Oksøya,Dry meadow,"59.06446300,9.72678300",20,Sweep-net,10 Aug 2016,Helene Lind,2024-01-12 09:51:28
+JPL_A0392,NO,,Vestland,Kvinnherad,"Varaldsøy, Åkresvågen",Meadow,"60.10092200,6.02317000",30,Sweep-net,10 Aug 2016,Helene Lind,2024-01-12 09:55:14
+JPL_A0395,NO,,Telemark,Kragerø,"Jomfruland, Haganestranda",Beach meadow,"58.86518900,9.59076600",50,Sweep-net,15 Jul 2017,Helene Lind,2024-01-12 10:10:24
+JPL_A0396,NO,,Vestland,Luster,"Fortunsdalen, Ormeli",Meadow,"61.55566500,7.76962920",50,Sweep-net,24 Jun 2017,Helene Lind,2024-01-12 10:21:35
+JPL_A0397,NO,,Oslo,Oslo,Hovedøya,Dry calcareous grassland,"59.89770000,10.73275000",50,Sweep-net,28 Apr 2018,Helene Lind,2024-01-12 10:34:47
+JPL_A0399,NO,,Buskerud,Ringerike,"Busund, Busundveien",Sand-mine,"60.12958000,10.24128000",10,Sweep-net,07 Apr 2017,Helene Lind,2024-01-12 11:18:01
+JPL_A040,US,California,LA,Valyermo,Bobs gap,Juniper-joshua tree woodland,"34.45157400,-117.81176900",50,Sweep-net,10 Jun 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0400,NO,,Buskerud,Ringerike,"Lahøugen, Norderhovsveien",Sand-mine,"60.12250000,10.24033000",10,Sweep-net,07 Apr 2017,Helene Lind,2024-01-12 11:23:32
+JPL_A0401,NO,,Vestfold,Horten,"Mellomøya, Løvøysund",Dry meadow,"59.44534930,10.45754250",10,White-pan,18 Jun 2017,Helene Lind,2024-01-12 11:43:53
+JPL_A0402,NO,,Vestfold,Horten,"Mellomøya, Løvøysund",Dry meadow,"59.44534930,10.45754250",10,Yellow-pan,18 Jun 2017,Helene Lind,2024-01-12 11:45:32
+JPL_A0403,NO,,Vestfold,Horten,"Mellomøya, Løvøysund",Dry meadow,"59.44543200,10.45736970",50,Sweep-net,17 Jun 2017,Helene Lind,2024-01-12 11:49:36
+JPL_A0404,NO,,Vestfold,Horten,Mellomøya,Dry meadow,"59.44208520,10.46029420",25,Sweep-net,17 Jun 2017,Helene Lind,2024-01-12 11:52:48
+JPL_A0405,NO,,Vestfold,Horten,Mellomøya,Deciduous forest,"59.44361200,10.45765300",10,Sweep-net,17 Jun 2017,Helene Lind,2024-01-12 11:57:22
+JPL_A0407,NO,,Oslo,Oslo,"Ekeberg, Kongsveien",Sandy pine forest,"59.89893100,10.76594500",20,Sweep-net,29 Apr 2018,Lind & Lindemann,2024-01-12 12:03:41
+JPL_A0408,NO,,Østfold,Hvaler,"Søndre Sandøy, Nedgården",Ruderal area,"59.01556000,11.06502000",20,Sweep-net,16 Jun 2016,Helene Lind,2024-01-12 12:08:30
+JPL_A0409,NO,,Østfold,Hvaler,"Kirkøy, Ørekroken",Sandy beach,"59.03382000,11.01229000",50,Sweep-net,16 Jun 2018,Helene Lind,2024-01-12 12:13:26
+JPL_A041,US,California,LA,Wrightwood,Big Pines,Pine forest,"34.38790500,-117.71369100",20,Color-pan,12 Jun 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0410,NO,,Telemark,Seljord,"Eddingsås, Hauganvegen",Dry roadside,"59.57593680,8.57376310",10,Sweep-net,30 Jun 2017,Helene Lind,2024-01-12 12:16:51
+JPL_A042,US,California,LA,Wrightwood,Big Pines,Creek,"34.38915200,-117.71474800",20,Color-pan,05 Jun 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0425,NO,,Agder,Tvedestrand,"Dypvåg, Størdal",Roadside,"58.63010000,9.04375000",10,Sweep-net,19 Jun 2021,Helene Lind,2024-01-12 18:10:12
+JPL_A043,NO,,,Luster,"Fortundalen, Flåteigen",Hay meadow,"61.55533440,7.76984070",25,Sweep-net,24 Jun 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A0430,NO,,Østfold,Hvaler,"Kirkøy, Ørekroken",Sandy meadow,"59.03300070,11.00721620",10,Sweep-net,22 Jul 2023,Jon Peder Lindemann,2024-01-12 18:55:51
+JPL_A044,NO,,,Alta,"Gargia, Gargia fjellstue",Alnus forest,"69.80525480,23.48956640",50,Color-pan,29 Jul 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A045,NO,,,Alta,"Gargia, Gargia fjellstue",Meadow,"69.80288490,23.49379920",50,Color-pan,29 Jul 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A046,NO,,,Grane,"Gluggvasselva, Stormobekken",River-shore,"65.59546340,13.40005340",50,Sweep-net,29 May 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A047,NO,,,Ski,"Krokhol, Årlielva",Spruce forest,"59.79725900,10.91866400",100,Sweep-net,23 Jun 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A048,NO,,,Grane,"Auster Vefsna n.r., Stilleelva E",River-shore,"65.54329520,13.75231640",15,Reared,01-10 Aug 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A049,NO,,,Luster,"Dalsdalen, Kvåle",Meadow,"61.44687100,7.46486000",50,Sweep-net,23 Jun 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A050,NO,,,Hvaler,"Kirkøy, Ørekroken",Creek,"59.03396610,11.00944480",100,Sweep-net,16 Jun 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A051,NO,,,Hvaler,"Kirkøy, Ørekroken",Sandy pine forest,"59.03306040,11.00927700",100,Yellow-pan,16 Jun 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A052,NO,,oslo,Oslo,"Skullerud, Skullerudmyra",bog,"59.86255100,10.86048000",100,Color-pan,22 Jun 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A053,NO,,,Hvaler,"Kirkøy, Ørekroken",Sandy pine forest,"59.03376160,11.01203630",30,Sweep-net,16 Jun 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A056,NO,,,Grimstad,"Østerhus, Morvigpynten",Oak-pine forest,"58.30462900,8.55567200",50,Color-pan,08 Jul 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A057,NO,,oslo,Oslo,"Skullerud, Skullerudmyra",bog,"59.86255100,10.86048000",100,Color-pan,26-29 May 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A058,NO,,,Grane,"Laksforsmoen, Geitklauvmyra",Spruce forest,"65.60256080,13.28606360",200,Sweep-net,30 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A060,NO,,,Målselv,"Fosslia, Lystringshaugan",Sand-mine,"69.03634180,18.66461160",100,Color-pan,12 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A061,NO,,,Grane,"Holmvassdalen, Bjørntjønna W",Riparian Alnus forest,"65.32993880,13.31867510",50,Malaise-trap,01 Aug-04 Oct 2018,Kjærandsen <i>et al.</i>,2021-03-03 04:01:20
+JPL_A062,NO,,oslo,Oslo,"Skullerud, Korpåsen",Pine forest,"59.86156810,10.85482840",50,Sweep-net,22 Jun 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A063,NO,,,Sør-Varanger,"Passvikdalen, Sukkeråsen",Sandy pine forest,"69.35719870,29.42258010",50,Color-pan,25 Jul 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A065,NO,,,Saltdal,"Vik, Tørråga",Spruce forest,"67.10681330,15.34489550",5,Reared,29 May-09 Jun 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A066,NO,,,Saltdal,"Junkerdalsura, Above Sagbenkhøla",Spruce forest,"66.81913390,15.42826880",20,Reared,30 May-13 Jun 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A067,NO,,,Grane,"Storiplingdalen, Tømmerosen",Sand-mine,"65.30198090,13.55580210",10,Sweep-net,02 Aug 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A068,NO,,,Grane,"Holmvassdalen, Bjørntjønna S",Spruce forest,"65.32486667,13.31888889",10,Sweep-net,01 Aug 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A069,NO,,,Hvaler,"Søndre Sandøy, Nedgården",Ruderal area,"59.01535440,11.06496300",50,Sweep-net,16 Jun 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A070,NO,,,Dovre,"E Angard E, Solsidevegen",Alnus forest,"61.97220000,9.26940000",100,Sweep-net,26 Nov 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A071,NO,,,Målselv,"Frihetsli, Anaskåla",Old pine forest,"68.77390000,19.72740000",1500,Sweep-net,04 Jul 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A072,NO,,,Arendal,"Alvekilen 1, Innerst i kilen",Deciduous forest,"58.46440000,8.87080000",100,Sweep-net,04 Aug 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A073,NO,,,Bø,Bakkåker,,"59.44360000,9.02140000",10,Malaise-trap,01 Jun-04 Jul 2016,Torbjørn Høitomt,2021-03-03 04:01:20
+JPL_A074,NO,,,Lunner,"Grindvoll, Vestern-Vestby",Dry slope,"60.30360000,10.46950000",10,Malaise-trap,28 Jul-07 Aug 1994,Ole Jørgen Lønnve,2021-03-03 04:01:20
+JPL_A075,NO,,,Lærdal,Husum,Pasture,"61.04690000,7.79030000",10,Light-trap,01 Aug 2016,Berggren & Golf,2021-03-03 04:01:20
+JPL_A076,NO,,,Bardu,"Dalberg W, Altevannsveien",Alpine Betula forest,"68.71050000,18.66080000",150,Sweep-net,02 Jul 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A077,NO,,,Seljord,Heggenes,Dry slope,"59.44030000,8.77860000",30,Malaise-trap,04 Sep-10 Oct 2015,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A078,NO,,,Luster,"Solvorn, Løteigane",Deciduous forest,"61.30310000,7.24110000",50,Light-trap,08 Aug-02 Sep 2016,Berggren & Byrkjeland,2021-03-03 04:01:20
+JPL_A079,NO,,,Bamble,Åbyelva NR,Beach meadow,"58.98890000,9.65340000",130,Sweep-net,23 Aug 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A080,NO,,,Stor-Elvdal,"Trya, Trybekken",Canyon,"61.55610000,10.97520000",250,Sweep-net,26 Jul 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A081,NO,,,Tromsø,"Lillehaug SE, Smávvagieddi",Creek,"69.39280000,19.49710000",250,Sweep-net,13 Jul 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A082,NO,,,Larvik,Karto,beach meadow,"59.02410000,10.20500000",20,Malaise-trap,26 May-18 Jun 2012,Stefan Olberg,2021-03-03 04:01:20
+JPL_A083,NO,,,Larvik,Karto,Alnus mire forest,"59.02480000,10.20540000",10,Malaise-trap,01-22 Aug 2010,Stefan Olberg,2021-03-03 04:01:20
+JPL_A084,NO,,,Aurskog-Høland,Mikkelrud,Hay meadow,"59.97610000,11.66850000",50,Color-pan,13 Jun-14 Jul 2017,Olsen & Olberg,2021-03-03 04:01:20
+JPL_A085,NO,,,Evje og Hornnes,Rosseland,Cultural landscape,"58.57130000,7.83480000",10,Light-trap,20 Sep-30 Oct 2016,Kai Berggren,2021-03-03 04:01:20
+JPL_A086,NO,,,Bø,Bakkåker,,"59.44360000,9.02140000",10,Malaise-trap,04-31 May 2016,Torbjørn Høitomt,2021-03-03 04:01:20
+JPL_A087,NO,,,Bardu,"Stensgård, Østerdalsveien",roadside,"68.79310000,18.55530000",150,Sweep-net,02 Jul 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A088,NO,,,Dovre,Eysteinkyrkja,roadside,"62.22210000,9.56390000",750,Sweep-net,29 Nov 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A089,NO,,,Luster,Slettebakkane,deciduous forest,"61.55000000,7.74550000",300,Sweep-net,24 Jul 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A090,NO,,,Hof,Rønnebergdammen,bog,"59.51290000,10.10250000",75,Hand-picked,08 Aug 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A091,NO,,,Dovre,Nørdre Grotåe N,Creek,"62.01150000,9.18050000",300,Sweep-net,28 Jun 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A092,NO,,,Arendal,Færvikkilen,Alnus beach forest,"58.45280000,8.81530000",150,Sweep-net,05 Aug 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A093,NO,,,Lærdal,Moldabakkane,Pasture,"61.06130000,7.52550000",100,Light-trap,01 Aug 2015,Berggren & Golf,2021-03-03 04:01:20
+JPL_A094,NO,,,Øystre Slidre,Veslkvelven S,Betula forest,"61.42160000,8.90460000",100,Malaise-trap,05 Jun-03 Jul 2012,Gammelmo & Lønnve,2021-03-03 04:01:20
+JPL_A095,NO,,,Ringerike,Veksalbakken,,"60.17400000,10.19880000",10,Slam-trap,26 Dec 2016-02 May 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A096,NO,,,Lunner,"Grindvoll, Vestern-Vestby",dry meadow,"60.30360000,10.46950000",10,Malaise-trap,09-30 Oct 1994,Ole Jørgen Lønnve,2021-03-03 04:01:20
+JPL_A097,NO,,,Lærdal,Moldabakkane,pasture,"61.06130000,7.52550000",100,Light-trap,08 Sep 2015,Berggren & Golf,2021-03-03 04:01:20
+JPL_A098,NO,,,Storfjord,Sørli,,"69.24250000,20.04290000",150,Sweep-net,06 Jul 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A099,NO,,,Skedsmo,Asak Mellom N,Ravine,"59.98730000,11.10010000",250,Sweep-net,20 Jun 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A100,NO,,,Birkenes,Nordåsen,garden,"58.33340000,8.24000000",10,Light-trap,01 Aug 2015,Svendsen & Berggren,2021-03-03 04:01:20
+JPL_A101,NO,,,Tinn,Mjeltegra,,"60.02660000,8.92890000",10,Malaise-trap,27 May-28 Jun 2012,Gammelmo & Lønnve,2021-03-03 04:01:20
+JPL_A102,NO,,,Luster,"Mordalselvi, Mardøleelvi",Roadside,"61.45170000,7.54440000",100,Sweep-net,25 Aug 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A103,NO,,,Enebakk,Tangenelva,river-shore,"59.72320000,11.04897500",750,Sweep-net,14 Nov 2017,Olsen & Lønnve,2021-03-03 04:01:20
+JPL_A104,NO,,,Larvik,"Hummerbakkfj., Guslandrønningen",Alnus beach forest,"58.97730000,9.92040000",225,Sweep-net,06 Jun 2017,Olsen & Olberg,2021-03-03 04:01:20
+JPL_A105,NO,,,Hvaler,Guttormsvauen,Beach meadow,"59.08610000,10.85000000",740,Sweep-net,21 Aug 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A106,NO,,,Larvik,Nevlungstranda,Rocky sea-shore,"58.96860000,9.84730000",320,Sweep-net,07 Jun 2017,Olsen <i>et al.</i>,2021-03-03 04:01:20
+JPL_A107,NO,,,Bode,Ørnneset,Canyon,"67.22580000,14.61290000",100,Sweep-net,18 Jul 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A108,NO,,,Tromsø,Langnes,meadow,"69.67940000,18.89660000",75,Sweep-net,15 Jul 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A109,NO,,,Asker,"Brønnøya, Kuhavna E",beach meadow,"59.85720000,10.54590000",20,Sweep-net,05 Nov 2017,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A110,NO,,,Larvik,Sandvikbukta PFO,Alnus beach forest,"59.01170000,10.14130000",25,Sweep-net,06 Jun 2017,Olsen & Olberg,2021-03-03 04:01:20
+JPL_A111,NO,,,Storfjord,"Skibotndalen, Lulefjellet",Pine forest,"69.30110000,20.44449100",10,Hand-picked,04 Jul 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A112,NO,,oslo,Oslo,"Østensjø, ØstensjøvannetW",Meadow,"59.88628400,10.82430400",50,Sweep-net,05 Oct 2016,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A113,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Sør-Varanger,"Gjøkbekken, Gjøkåsen",Bog,"69.15186000,29.19320700",50,Color-pan,26 Jul 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A114,NO,,,Ås,"Herumveien, Herumhagen",Roadside,"59.65221600,10.77264600",10,Reared,02 Sep 2014,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A115,NO,,,Ås,"Måltrostveien, Prærien",Roadside,"59.65746500,10.78470400",50,Reared,05 Jul 2014,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A116,NO,,,Målselv,"Devddes, Devddesjavri S",Betula forest,"68.86857000,19.66883000",100,Sweep-net,14 Jul 2018,Lind & Lindemann,2021-03-03 04:01:20
+JPL_A117,NO,,,Målselv,Devddes,Meadow,"68.85719000,19.61802000",50,Sweep-net,14 Jul 2018,Lind & Lindemann,2021-03-03 04:01:20
+JPL_A119,NO,,,Storfjord,"Skibotndalen, Stuoratoainibba",Alpine meadow,"69.24938260,20.48092690",25,Sweep-net,05 Jul 2019,Ranjeni Sivasubramaniam,2021-03-03 04:01:20
+JPL_A120,NO,,,Saltdal,"Storjord, Skogvokterg.",Pine forest,"66.81527630,15.38359660",50,Sweep-net,26 Jul 2019,Jostein Kjærandsen,2021-03-03 04:01:20
+JPL_A121,NO,,,Tromsø,"Tromsøya, Alveveien",Urban area,"69.66675900,18.92503300",25,Hand-picked,30 Jul 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A122,NO,,,Tromsø,,,"69.66804600,18.94220500",10000,Hand-picked,30 Jul 2019,,2021-03-03 04:01:20
+JPL_A124,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Målselv,"Dividalen, Kvennstua",Pine forest,"68.79309420,19.69739720",25,Sweep-net,12 Sep 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A125,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Målselv,"Dividalen, Storsteinura",Pine forest,"68.83046350,19.62752900",25,Sweep-net,12 Sep 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A126,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Målselv,"Dividalen, Langmyrhaugen",Pine forest,"68.72117330,19.76468050",25,Sweep-net,13 Sep 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A127,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tromsø,"Sandøya, Langsandan",Rocky sea-shore,"70.03083100,18.55733500",25,Sweep-net,06 Sep 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A128,NO,,,Storfjord,"Skibotndalen, Stuoratoainibba",Alpine meadow,"69.24769820,20.47982960",400,Sweep-net,05 Jul 2019,Ranjeni Sivasubramaniam,2021-03-03 04:01:20
+JPL_A129,NO,,,Storfjord,"Skibotndalen, Stuoratoainibba",Alpine meadow,"69.24769820,20.47982960",400,Sweep-net,05 Jul 2019,Kjell Magne Olsen,2021-03-03 04:01:20
+JPL_A130,NO,,,Storfjord,"Skibotndalen, Stuoratoainibba",Alpine meadow,"69.24840000,20.46805000",5,Sweep-net,05 Jul 2019,Lind & Lindemann,2021-03-03 04:01:20
+JPL_A131,NO,,,Storfjord,"Skibotndalen, Stuoratoaimoski",Alpine meadow,"69.24581000,20.47203500",100,Sweep-net,05 Jul 2019,Lind & Lindemann,2021-03-03 04:01:20
+JPL_A132,NO,,,Storfjord,"Skibotndalen, Lávkaskaidi",Alpine meadow,"69.23328000,20.56197000",25,Sweep-net,07 Jul 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A133,NO,,,Storfjord,"Skibotndalen, Luleelva",Pine forest,"69.30291170,20.43378570",10,Sweep-net,04 Jul 2019,Ranjeni Sivasubramaniam,2021-03-03 04:01:20
+JPL_A134,NO,,,Storfjord,"Skibotn, Saltirånka",Sandy area,"69.37811360,20.22564650",10,Sweep-net,07 Jul 2019,Lind & Lindemann,2021-03-03 04:01:20
+JPL_A135,NO,,,Tromsø,"Tromsdalen, Fløya",Alpine heath,"69.62430000,18.99750000",25,Sweep-net,08 Jul 2019,Helene Lind,2021-03-03 04:01:20
+JPL_A136,NO,,,Storfjord,"Skibotndalen, Luleelva",Pine forest,"69.30232420,20.43965870",10,Sweep-net,04 Jul 2019,Helene Lind,2021-03-03 04:01:20
+JPL_A137,NO,,,Storfjord,"Skibotndalen, Lávkajavri",Alpine meadow,"69.23103000,20.49872000",5,Sweep-net,05 Jul 2019,Lind & Lindemann,2021-03-03 04:01:20
+JPL_A138,NO,,,Sømna,"Teisdalen, Teisdalen n.r.",Ulmus forest,"65.36061500,12.38819500",100,Sweep-net,01 Jun 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A139,NO,,,Hvaler,"Spjærøy, Tredalen",Rocky sea-shore,"59.10300850,10.92680280",10,Sweep-net,17 Jun 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A140,NO,,,Grane,"Holmvassdalen n.r., Bjørntjønna W",Alnus forest,"65.32993880,13.31867510",50,Sweep-net,01 Aug 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A141,NO,,,Hvaler,"Kirkøy, Ørekroken",Sandy pine forest,"59.03254200,11.00950600",100,Yellow-pan,16 Jun 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A142,NO,,,Grane,"Holmvassdalen, Bjørntjønna N",Roadside,"65.33738780,13.32743160",50,Sweep-net,30 May 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A143,NO,,,Horten,"Løvøya, Kjerkebukta E",deciduous forest,"59.45091880,10.44058440",50,Sweep-net,24 Aug 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A144,NO,,,Saltdal,"Brenne, Brennfallet",Sand-slope,"67.02806400,15.35470800",50,Color-pan,27-28 Jul 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A145,NO,,,Holmestrand,"Rønneberg, Rønneberg dammen",bog,"59.51242630,10.10401580",30,Sweep-net,24 Aug 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A146,NO,,,Horten,"Kjølhaleskogen, Reverumpa",Oak forest,"59.43726330,10.45553470",30,Sweep-net,24 Aug 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A147,NO,,,Holmestrand,"Rønneberg, Haslestad sagbruk",Ruderal area,"59.51121940,10.08861970",30,Sweep-net,24 Aug 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A148,NO,,,Grane,"Børgefjell, Simskardet",Alpine meadow,"65.28745850,13.62992970",100,Sweep-net,02 Aug 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A149,NO,,,Storfjord,"Skibotndalen, Stuorraoaivi",Alpine meadow,"69.26428830,20.43966210",200,Sweep-net,07 Jul 2019,Helene Lind,2021-03-03 04:01:20
+JPL_A150,NO,,,Saltdal,"Storjord, Lønsbergneset",Sand-mine,"66.81098360,15.39691070",25,Color-pan,26-27 Jul 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A151,NO,,,Målselv,"Dividalen, Kvennelva",roadside,"68.79229860,19.68729110",25,Sweep-net,14 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A152,NO,,,Målselv,"Akka, Storakka",Scree,"69.20771580,18.49401700",100,Sweep-net,12 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A153,NO,,,Målselv,"Myrfjellet, Bjelmdalen",Betula forest clearing,"69.08434070,18.72889820",50,Color-pan,13 Jul 2019-14 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A154,NO,,,Grane,"Auster Vefsna n.r., Stilleelva E",Spruce forest,"65.54155420,13.74963520",100,Sweep-net,31 May 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A155,NO,,oslo,Oslo,Skullerudmyra,bog,"59.86255100,10.86048000",100,Color-pan,22 Jun 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A156,NO,,,Tromsø,Tromsdalen,Alpine meadow,"69.60534860,19.06739140",100,Reared,19 May 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A157,NO,,,Grane,Svenningdal,Meadow,"65.46604880,13.40847680",50,Sweep-net,31 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A158,NO,,,Grane,"Auster Vefsna n.r., Stilleelva W",mixed forest,"65.53385160,13.72777770",100,Sweep-net,31 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A159,NO,,,Grane,Geitklauvmyra,Spruce forest,"65.60256080,13.28606360",200,Sweep-net,30 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A160,NO,,,Målselv,"Bardufoss, Myrfjellet, Bjelmdalen",Betula forest clearing,"69.08434070,18.72889820",100,Sweep-net,13 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A161,NO,,,Målselv,"Akka, Storakka",Riparian alnus forest,"69.21059650,18.48362430",50,Color-pan,12 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A162,NO,,,Storfjord,"Skibotndalen, Stuorraoaivi",Alpine meadow,"69.26428830,20.43966210",200,Sweep-net,07 Jul 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A163,NO,,,Storfjord,"Skibotndalen, Buvsassjohka",Betula forest,"69.23847000,20.61999900",50,Sweep-net,07 Jul 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A164,NO,,,Storfjord,"Skibotndalen, Lavkaskáidi",Alpine meadow,"69.23228160,20.56211810",50,Sweep-net,07 Jul 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A165,NO,,,Målselv,"Dividalen, Kleivbekken",Pine forest clearing,"68.79755690,19.68694010",100,Sweep-net,13 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A166,NO,,,Storfjord,"Skibotndalen, Lulefjellet n.r.",Pine forest,"69.30338400,20.45256400",100,Sweep-net,04 Jul 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A167,NO,,,Alta,"Mattisdalen, Flintelva",Creek,"69.82770260,22.84620720",100,Sweep-net,29 Jul 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A168,NO,,,Målselv,"Akka, Storakka",Riparian alnus forest,"69.21059650,18.48362430",100,Color-pan,12 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A169,NO,,,Målselv,"Bardufoss, Fosslia",Sand-mine,"69.03634180,18.66461160",100,Color-pan,12 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A170,NO,,,Målselv,"Dividalen, Kvennelva",Pine forest,"68.79277770,19.69333330",100,Color-pan,14 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A171,NO,,,Sømna,"Teisdalen, Teisdalen n.r.",Ulmus forest,"65.36061500,12.38819500",100,Sweep-net,03 Aug 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A172,NO,,,Grane,"Holmvassdalen, Bjørntjønna S",Spruce forest,"65.32486667,13.31888889",10,Sweep-net,01 Aug 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A173,NO,,,Målselv,"Devddes, Devddesjavri S",Betula forest,"68.86487220,19.67413950",100,Sweep-net,14 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A174,NO,,,Målselv,"Dividalen, Kleivbekken",bog,"68.79665710,19.69029680",25,Sweep-net,13 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A175,NO,,,Alta,"Mattisdalen, Flintelva",Creek,"69.82795520,22.84677310",100,Sweep-net,29 Jul 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A176,NO,,,Tromsø,"Tromsøya, Tromsø museum",Urban area,"69.63458800,18.91162500",5,Hand-picked,28 Apr 2019,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A177,NO,,,Målselv,"Bardufoss, Myrfjellet",Betula forest,"69.07893100,18.72417160",25,Sweep-net,11 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A178,NO,,,Tromsø,"Tromsøya, Rismålshaugen",Betula forest clearing,"69.68967790,18.95524220",25,Sweep-net,08 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A179,NO,,,Målselv,"Dividalen, Kvennelva",Pine forest,"68.79292440,19.69967070",25,Color-pan,14 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A180,NO,,,Målselv,"Bardufoss, Storhaugen",Sand-mine,"69.06722970,18.67471890",100,Sweep-net,11 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A181,NO,,,Grane,"Storfiplingdalen, Tømmerosen",Sandy area,"65.30332400,13.55253300",25,Color-pan,03 Aug 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A182,NO,,,Målselv,"Devddes, Devddesjavri S",bog,"68.86487220,19.67413950",100,Sweep-net,14 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A183,NO,,,Målselv,Devddes,Meadow,"68.85719000,19.61802000",100,Sweep-net,14 Jul 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A184,NO,,,Storfjord,"Skibotndalen, Lulefjellet n.r.",Pine forest,"69.30447968,20.44718559",50,Sweep-net,04 Jul 2019,Ranjeni Sivasubramaniam,2021-03-03 04:01:20
+JPL_A185,NO,,,Grane,"Holmvassdalen, Bjørntjønna W",Riparian alnus forest,"65.32993880,13.31867510",50,Sweep-net,30 May 2018,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL_A186,NO,,Hedmark,Tolga,Bjorvollen,Base-rich fen,"62.38694400,11.11863900",10,Window-trap,10 Sep 2016,Rikmyrsprosjektet,2021-05-18 14:18:15
+JPL_A187,NO,,Hedmark,Engerdal,Åsen,Base-rich fen,"61.88583300,11.78277800",10,Window-trap,15 Jul 2016,Rikmyrsprosjektet,2021-05-18 14:30:19
+JPL_A188,NO,,Hedmark,Storelvdal,Nebbtjern,Calcareous quaking mire,"61.37841700,11.19175000",10,Window-trap,17 Sep 2016,Rikmyrsprosjektet,2021-05-18 14:58:09
+JPL_A189,NO,,Troms,Storfjord,"Skibotndalen, Buvssasjohka bridge",Betula forest,"69.23914200,20.61778750",25,Sweep-net,07 Jul 2019,Jon Peder Lindemann,2021-05-18 15:16:48
+JPL_A190,NO,,Nordland,Sømna,"Teisdalen, Almlian",Ulmus forest,"65.35974250,12.38932040",50,Sweep-net,01 Jun 2018,Jon Peder Lindemann,2021-05-18 15:39:22
+JPL_A192,US,California,LA,Wrightwood,Harmony pines,creek,"34.38889600,-117.71451400",50,Color-pan,07 Jun 2017,Jon Peder Lindemann,2021-05-18 17:43:06
+JPL_A193,NO,,Finnmark,Sør-Varanger,"Øvre Passvik, Grensefossen",Pine forest,"69.02555740,29.02662500",50,Sweep-net,25 Jul 2017,Jon Peder Lindemann,2021-05-18 17:46:38
+JPL_A194,NO,,Troms,Tromsø,"Tromsøya, Folkeparken",Roadside,"69.63497500,18.90357700",10,Hand-picked,04 Apr 2021,Jon Peder Lindemann,2021-06-14 11:38:17
+JPL_A195,NO,,Troms,Tromsø,"Workinmarka, Alvevegen 162",Urban area,"69.63497500,18.90357700",100,Hand-picked,01 Jun 2021,Jon Peder Lindemann,2021-06-14 11:59:40
+JPL_A206,NO,,Troms og Finnmark,Tromsø,"Fløya, Revelva (307m S)",Dryas heath,"69.62391060,18.96797970",100,Sweep-net,04 Jun 2021,Jon Peder Lindemann,2021-07-13 13:01:45
+JPL_A207,NO,,Troms og Finnmark,Tromsø,"Tromsdalen, Elveneset",Deciduous scrub,"69.65446300,19.00133200",25,Sweep-net,08 Jun 2021,Jon Peder Lindemann,2021-07-13 13:06:36
+JPL_A208,NO,,Troms og Finnmark,Tromsø,"Tromsøya, Håpet",Urban area,"69.68543300,18.95132300",5,Hand-picked,06 Jul 2018,Jon Peder Lindemann,2021-07-14 13:50:13
+JPL_A210,NO,,Nordland,Sømna,,,"65.31503000,12.18550600",10000,,11 Aug 1928,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A211,NO,,Nordland,Sømna,Sandvågen,,"65.28439300,12.13081000",2000,,09 Jul 1946,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A212,NO,,Troms og Finnmark,Karlsøy,"Lille Måsvær, (Måkeskjær)",,"70.16948300,19.01078700",1000,,10 Jul 1933,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A213,NO,,Troms og Finnmark,Tromsø,Tromsøya,,"69.66873900,18.94080900",5000,,08 Aug 1941,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A214,NO,,Troms og Finnmark,Balsfjord,Nordkjosbotn,,"69.21569800,19.56147900",5000,,02 Aug 1926,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A215,NO,,Troms og Finnmark,Balsfjord,"Nordfjorden, Aspenes",,"69.29888900,18.91472200",5000,,11 Jul 1941,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A216,NO,,Nordland,Brønnøy,Hommelstø,,"65.40642600,12.55053600",5000,,26 Jun 1946,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A217,NO,,Nordland,Brønnøy,Hommelstø,,"65.40642600,12.55053600",2500,,30 Jun 1946,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A218,NO,,Troms og Finnmark,Målsnes,"Dividalen, Frihetsli",,"68.77692800,19.70710400",5000,,28 Jul 1922,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A219,NO,,Agder,Lindesnes,"Mandal, Kvisla",,"58.02527300,7.46844300",2000,,12 Jul 1935,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A220,NO,,Troms og Finnmark,Alta,Jotkajavre,,"69.75412900,23.93400400",5000,,19 Jul 1924,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A221,NO,,Troms og Finnmark,Balsfjord,Fjellfrøsvatnet,,"69.08311900,19.33928100",5000,,25 Jul 1926,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A222,NO,,Troms og Finnmark,Tromsø,Tromsøya,,"69.66873900,18.94080900",5000,,26 Jul 1926,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A223,NO,,Troms og Finnmark,Tromsø,Tromsøya,,"69.66873900,18.94080900",5000,,26 Jun 1926,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A224,NO,,Nordland,Sørfold,"Sørfolda, Røsvik",,"67.47845200,15.45856000",5000,,15 Jul 1923,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A225,NO,,Troms og Finnmark,Balsfjord,Fjellfrøsvatnet,,"69.08311900,19.33928100",5000,,23 Jul 1926,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A226,NO,,Troms og Finnmark,Tromsø,Tromsøya,,"69.66873900,18.94080900",5000,,20 Sep 1934,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A227,NO,,Troms og Finnmark,Karlsøy,"Lille Måsvær, (Måkeskjær)",,"70.16948300,19.01078700",1000,,05 Aug 1934,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A228,NO,,Troms og Finnmark,Karlsøy,"Lille Måsvær, (Måkeskjær)",,"70.16948300,19.01078700",1000,,20 Aug 1934,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A230,NO,,Troms og Finnmark,Karlsøy,Nord-Kvaløy,,"70.17002000,19.15786900",5000,,24 Jul 1934,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A231,NO,,Troms og Finnmark,Grimstad,Eide,,"58.27632800,8.46054600",3000,,25 Jun 1935,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A232,NO,,Troms og Finnmark,Balsfjord,Fjellfrøsvatnet,,"69.08311900,19.33928100",5000,,30 Jul 1926,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL_A233,NO,,Troms og Finnmark,Balsfjord,Sandnes,,"69.32711000,19.40637600",5000,,03 Aug 1926,Tron Soot-Ryen,2021-11-18 22:10:03
+JPL001,NO,,Agder,Evje og Hornnes,"Evjemoen, Jørgen Løvlands veg",Pine forest,"58.56210100,7.77798200",100,Sweep-net,18 Jun 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL002,NO,,Agder,Evje og Hornnes,"Evjemoen, Evjemoen",Sand-slope,"58.56626800,7.78804000",100,Color-pan,18-19 Jun 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL003,NO,,Agder,Bygland,"Heddeviki, Hedde",Hay meadow,"58.93426450,7.72452760",100,Sweep-net,19 Jun 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL004,NO,,Agder,Bygland,"Heddeviki, Hedde",Hay meadow,"58.93426450,7.72452760",100,Color-pan,19 Jun 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL005,NO,,Agder,Bygland,"Heddeviki, Heddeviksfjell",Ulmus forest,"58.93508910,7.72655530",100,Sweep-net,19 Jun 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL007,NO,,Agder,Evje og Hornnes,"Fennefoss, Svinehagen",Oak forest,"58.58545700,7.77597800",100,Sweep-net,21 Jun 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL008,NO,,Agder,Froland,"Jordalsknuten, Soppåsen",Forest fire area,"58.62778000,8.26139000",100,Sweep-net,21 Jun 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL009,NO,,oslo,Oslo,"Bøler, Haraløkka",Urban area,"59.88323500,10.85405500",10,Reared,22-29 Jun 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL010,NO,,oslo,Oslo,"Skulleruddumpa, Skullerudbakken",Roadside,"59.86467000,10.83105900",10,Reared,27 Sep 2016,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL011,NO,,Vestfold og Telemark,Larvik,"Arøya, Hølen",Deciduous forest,"58.99745300,9.80101700",200,Sweep-net,12 Jul 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL012,NO,,Vestfold og Telemark,Larvik,"Arøya, Slåvika",Rocky sea-shore,"58.99383000,9.80010400",200,Sweep-net,12 Jul 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL013,NO,,Vestfold og Telemark,Bamble,"Langøya, Kuskjæret",Meadow,"59.01049600,9.75596300",100,Sweep-net,11 Jul 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL014,NO,,Agder,Evje og Hornnes,"Gautestad, Mittinga",Bog,"58.65070300,7.96765200",100,Reared,20 Jun-08 Jul 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL015,NO,,Agder,Grimstad,"Marivoll, Stilleviga",Roadside,"58.33469430,8.62823380",10,Reared,14 Jul 2014,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL016,NO,,Viken,Krødsherad,"Råaråsen, Handklevassbekken",Spruce forest,"60.11857700,9.83777600",10,Reared,19-29 Apr 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL019,NO,,Vestland,Stord,"Sagvågen, Bregnehaugen",Garden,"59.78182560,5.38744880",10,Reared,09 Jun 2014,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL020,NO,,Nordland,Mosjøen,Elvegata,Roadside,"65.83476760,13.19145070",10,Reared,10 Aug 2016,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL021,NO,,Innlandet,Lom,"Memurubu, Memurubu",Bog,"61.48983870,8.63226600",10,Reared,27-30 Jul 2014,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL022,NO,,Innlandet,Lom,"Surtningsue, Surtningssubekken",Creek,"61.52826810,8.53166580",10,Reared,28 Jul 2014,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL023,NO,,Viken,Aremark,"Lundsneset, Folungdalen",Pine forest,"59.05283100,11.72507570",100,Sweep-net,13 Aug 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL0234,NO,,oslo,Oslo,Haraløkka idrettsanlegg,Urban area,"59.88321570,10.85467190",25,Sweep-net,14 Jun 2022,Jon Peder Lindemann,2022-06-14 18:23:39
+JPL024,NO,,Viken,Råde,"Slangsvold, Leiedalen",Roadside,"59.37291470,10.95119720",10,Reared,06 Aug 2015,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL0249,NO,,Vestfold,Larvik,"Geiterøya, Ærskåla",Sandy beach,"58.99801800,9.77720700",25,Sweep-net,09 Jul 2022,Jon Peder Lindemann,2022-07-14 20:58:17
+JPL025,NO,,Viken,Hvaler,"Skjærhalden, Prestesand",Sandy beach,"59.02596700,11.01761300",100,Sweep-net,12 Jul 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL0251,NO,,Vestfold,Larvik,Geiterøya,Meadow,"59.00290600,9.77483800",20,Sweep-net,09 Jul 2022,Jon Peder Lindemann,2022-07-14 22:23:17
+JPL0252,NO,,Telemark,Vinje,"Arabygdi, Helsvyr",Alpine meadow,"59.77440000,7.63744000",25,Sweep-net,11 Jul 2022,Jon Peder Lindemann,2022-07-15 14:29:02
+JPL0253,NO,,Telemark,Kviteseid,"Brunkeberg, Åmtveit",Pasture,"59.43690000,8.47272000",50,Sweep-net,11 Jul 2022,Jon Peder Lindemann,2022-07-15 14:43:02
+JPL0254,NO,,Telemark,Vinje,"Smørklepp, Bekkhus",Pasture,"59.64530000,7.80332000",25,Sweep-net,11 Jul 2022,Jon Peder Lindemann,2022-07-15 15:06:02
+JPL0255,SE,,Gotland,Gotland,Fårö,Alvar,"57.90622330,19.10790320",25,Sweep-net,18 Jul 2022,,2022-07-18 10:37:29
+JPL0256,SE,,Gotland,Gotland,"Fårö, Sudersand",Beach meadow,"57.94545920,19.22656330",25,Sweep-net,18 Jul 2022,Jon Peder Lindemann,2022-07-18 13:32:42
+JPL0257,SE,,Gotland,Gotland,"Fåro, Gasmorhammaren",Pasture,"57.94277510,19.22642990",25,Sweep-net,18 Jul 2022,Jon Peder Lindemann,2022-07-18 14:41:30
+JPL0258,SE,,Gotland,Gotland,"Visby, Snäckgärd",Beach meadow,"57.67441290,18.33325830",25,Sweep-net,19 Jul 2022,Lindemann & Lind,2022-07-19 11:32:00
+JPL0259,SE,,Gotland,Gotland,"Visby, Skälsö",Roadside,"57.68033500,18.34595120",25,Sweep-net,19 Jul 2022,Jon Peder Lindemann,2022-07-19 12:38:13
+JPL026,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tromsø,"Kvaløya, Ramnberget",Bog,"69.69810800,18.63161900",10,Reared,25-29 Jul 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL0260,SE,,Gotland,Gotland,"Själsö, Brucebo",Beach meadow,"57.68768700,18.34574600",25,Sweep-net,20 Jul 2022,Jon Peder Lindemann,2022-07-20 21:41:07
+JPL0261,SE,,Gotland,Gotland,"Själsö , Brusviken",Beach meadow,"57.70239500,18.36450300",20,Sweep-net,20 Jul 2022,Jon Peder Lindemann,2022-07-20 21:52:17
+JPL0262,SE,,Gotland,Gotland,"Gnisvärd, Tofta",Costal dune,"57.49414910,18.12675290",25,Sweep-net,21 Jul 2022,Lindemann & Lind,2022-07-21 13:42:49
+JPL0263,SE,,Gotland,Gotland,"Själsö , Fiskevegen",Garden,"57.69288000,18.36464700",25,Sweep-net,22 Jul 2022,Jon Peder Lindemann,2022-07-22 11:25:53
+JPL0264,SE,,Gotland,Gotland,"Visby, Östergravar",Meadow,"57.64451190,18.30137950",25,Sweep-net,22 Jul 2022,Jon Peder Lindemann,2022-07-22 15:34:32
+JPL0265,NO,,Vestfold,Sandefjord,"Unneberg, Stangeskogen",Fagus forest clearing,"59.16600650,10.24510170",25,Reared,26 Jul 2022,Jon Peder Lindemann,2022-07-26 13:19:49
+JPL0266,NO,,Telemark,Vinje,"Arabygdi, Bugarden",Alpine meadow,"59.77852530,7.63790080",25,Sweep-net,27 Jul 2022,Jon Peder Lindemann,2022-07-27 11:32:44
+JPL0267,NO,,Telemark,Vinje,"Arabygdi , Tjønndalen",Pasture,"59.77667670,7.64699230",25,Sweep-net,27 Jul 2022,Jon Peder Lindemann,2022-07-27 12:23:54
+JPL0268,NO,,Telemark,Vinje,"Øygarden, Kroi",Meadow,"59.66853950,8.19246030",25,Sweep-net,27 Jul 2022,Jon Peder Lindemann,2022-07-27 14:43:55
+JPL0269,NO,,Telemark,Vinje,Øygarden,Salt marsh,"59.66639610,8.19216060",25,Sweep-net,27 Jul 2022,Jon Peder Lindemann,2022-07-27 15:04:58
+JPL0270,NO,,Østfold,Våler,Store Sjulerød,Hay meadow,"59.44863630,10.83158410",25,Sweep-net,28 Jul 2022,Jon Peder Lindemann,2022-07-28 05:18:08
+JPL0271,NO,,Buskerud,Asker,"Hurum, Tofte",Ruderal area,"59.55093600,10.57274500",25,Sweep-net,31 Jul 2022,Jon Peder Lindemann,2022-07-31 11:29:49
+JPL0272,NO,,oslo,Oslo,"Bøler, Bølerlia 68",Urban area,"59.88317820,10.85463150",25,Hand-picked,04 Jul 2022,Lindemann & Lind,2022-07-31 11:51:28
+JPL0273,NO,,Møre og Romsdal,Surnadal,"Nordmarka, Bøvrasdalen",Bog,"63.01159200,8.66009600",100,Reared,20 Aug 2021-20 Jan 2022,Jon Peder Lindemann,2022-08-04 10:20:50
+JPL0274,NO,,Troms,Tromsø,"Tromsøya, Folkeparken",Park,"69.63394500,18.90727700",20,Reared,04 Aug 2022,Jon Peder Lindemann,2022-08-04 10:36:41
+JPL0275,NO,,Vestfold,Larvik,"Rakke, Grevle",Meadow,"58.98138330,10.02571890",20,Sweep-net,25 Jul 2021,Jon Peder Lindemann,2022-08-04 21:18:03
+JPL0276,NO,,Vestfold,Larvik,"Rakke, Grevle",Dry meadow,"58.98119740,10.02562010",25,Reared,24 Jul 2021,Lindemann & Lind,2022-08-04 22:28:57
+JPL0277,NO,,Vestfold,Larvik,"Rakke, Sjøvika",Dry meadow,"58.97866450,10.02422320",25,Reared,24 Jul 2021,Jon Peder Lindemann,2022-08-04 22:51:00
+JPL0278,NO,,Vestfold,Larvik,"Stavern , Skråvika",Salt marsh,"58.98971600,10.03239360",25,Reared,24 Jul 2021,Jon Peder Lindemann,2022-08-05 11:12:15
+JPL0279,NO,,Vestfold,Larvik,"Rakke, Fuglevikstranda",Sandy beach,"58.98026330,10.01715510",20,Sweep-net,24 Jul 2021,Jon Peder Lindemann,2022-08-05 15:04:37
+JPL0280,NO,,Vestfold,Tønsberg,"Husvik, Husvikkilen",Arable land,"59.25012700,10.46180300",25,Reared,23 Aug 2022,Jon Peder Lindemann,2022-09-02 10:40:27
+JPL0281,RO,,Iasi,Iasi,"Barnova, Poiana cerbarie",Fagus forest edge,"47.03881230,27.66732240",25,Sweep-net,20 Sep 2022,Jon Peder Lindemann,2022-09-20 10:32:01
+JPL0282,NO,,oslo,Oslo,"Bøler, Sørli",Mixed forest,"59.88048300,10.86066400",20,Reared,14 Oct 2022,Jon Peder Lindemann,2022-10-14 12:37:36
+JPL0283,NO,,oslo,Oslo,"Bøler, Sørli",Mixed forest,"59.88017100,10.86056500",10,Reared,13 Oct 2022,Jon Peder Lindemann,2022-10-14 13:03:17
+JPL0284,NO,,Telemark,Porsgrunn,"Siktesøya, Badedammen",Park,"59.02133000,9.76838000",10,Reared,16 Oct 2022,Jon Peder Lindemann,2022-10-23 13:45:43
+JPL0285,NO,,Telemark,Porsgrunn,"Siktesøya, Badedammen",Park,"59.02133000,9.76838000",10,Reared,16 Oct 2022,Jon Peder Lindemann,2022-10-23 13:47:19
+JPL0286,NO,,Oslo,Oslo,"Nøklevann, Sagstua",Roadside,"59.87330900,10.85587000",10,Reared,03 Oct 2022,Jon Peder Lindemann,2022-10-25 12:00:17
+JPL0287,NO,,Oslo,Oslo,"Nøklevann, Rustadsaga",Garden,"59.87271300,10.85676400",10,Reared,03 Oct 2022,Jon Peder Lindemann,2022-10-25 12:08:02
+JPL0288,NO,,Oslo,Oslo,"Bøler, Haraløkka",Park,"59.88286600,10.85716300",10,Reared,05 Oct 2022,Jon Peder Lindemann,2022-10-25 12:53:22
+JPL0289,NO,,Oslo,Oslo,"Bøler, Haraløkka",Park,"59.88310000,10.85707300",10,Reared,05 Oct 2022,Jon Peder Lindemann,2022-10-25 12:55:09
+JPL0290,NO,,Østfold,Våler,"Bjørnerød, Store Sjulerød",Pasture,"59.44839100,10.83126000",10,Reared,08 Aug 2022,Jon Peder Lindemann,2022-10-25 13:05:52
+JPL0291,NO,,Østfold,Våler,"Bjørnerød, Store Sjulerød",Pasture,"59.44856300,10.83168500",10,Reared,06 Sep 2022,Jon Peder Lindemann,2022-10-25 13:13:22
+JPL0292,NO,,Vestfold,Sandefjord,"Unneberg, Stangeskogen",Fagus forest,"59.16415800,10.24593200",50,Reared,23 Aug 2022,Jon Peder Lindemann,2022-10-25 13:27:40
+JPL0293,NO,,Vestfold,Larvik,Geiterøya,Mixed forest,"59.00116500,9.77465000",50,Reared,10 Jul 2022,Jon Peder Lindemann,2022-10-25 13:41:46
+JPL0294,NO,,Oslo,Oslo,"Bøler, Haraløkka",Roadside,"59.88130500,10.85756300",25,Reared,04 Oct 2022,Jon Peder Lindemann,2022-10-25 14:07:33
+JPL0295,NO,,Aust-Agder,Grimstad,"Rønnes , Tollholtheia",Oak forest,"58.34105400,8.61024000",50,Reared,30 Oct 2022,Jon Peder Lindemann,2022-11-10 11:44:25
+JPL0296,NO,,Aust-Agder,Grimstad,"Rønnes , Tollholtheia",Oak forest,"58.34105400,8.61024000",50,Reared,30 Oct 2022,Jon Peder Lindemann,2022-11-10 11:56:31
+JPL0297,NO,,Aust-Agder,Grimstad,"Rønnes , Tollholtheia ",Oak forest,"58.34105400,8.61024000",50,Reared,30 Oct 2022,Jon Peder Lindemann,2022-11-10 12:07:23
+JPL0298,NO,,Vestfold og Telemark,Larvik,Geiterøya,Corylus forest,"59.00497600,9.77419000",25,Sweep-net,20 May 2023,Jon Peder Lindemann,2023-05-22 13:05:57
+JPL0299,NO,,Vestfold og Telemark,Larvik,Geiterøya,Mixed forest,"58.99757200,9.77642400",25,Reared,20 May 2023,Jon Peder Lindemann,2023-05-22 13:17:51
+JPL0300,NO,,Oslo,Oslo,"Bøler, General Ruges vei",Meadow,"59.88917900,10.85192200",25,Sweep-net,30 Sep 2022,Jon Peder Lindemann,2023-06-04 23:51:19
+JPL0301,NO,,Oslo,Oslo,"Nøklevann, Sagstua",Deciduous forest,"59.87270900,10.85418000",25,Sweep-net,30 Sep 2022,Jon Peder Lindemann,2023-06-05 19:16:11
+JPL0302,NO,,Viken,Nittedal,"Movann, Slåttemyra",Bog,"60.04577900,10.82864300",25,Sweep-net,18 Jun 2015,Jon Peder Lindemann,2023-06-05 19:22:26
+JPL0303,NO,,Oslo,Oslo,"Maridalen, Kirkeruinen",meadow,"59.99557000,10.76525700",25,Reared,06 Jul 2016,Jon Peder Lindemann,2023-06-05 19:26:55
+JPL0304,NO,,Viken,Asker,"Hurum, Tofte",Ruderal area,"59.55124700,10.57287000",25,Sweep-net,26 Aug 2022,Jon Peder Lindemann,2023-06-05 20:26:32
+JPL0305,NO,,Viken,Asker,"Hurum, Klokkarstua",Sandy beach,"59.61271800,10.42613600",25,Sweep-net,05 Jun 2023,Jon Peder Lindemann,2023-06-05 20:30:55
+JPL0306,NO,,Viken,Asker,"Hurum, Tofte",Ruderal area,"59.55121600,10.57300900",25,Sweep-net,26 Aug 2022,Jon Peder Lindemann,2023-06-05 20:36:38
+JPL0307,NO,,Oslo,Oslo,"Nøklevann, Lutdalen",Deciduous forest,"59.89594300,10.87572600",25,Sweep-net,25 Sep 2022,Jon Peder Lindemann,2023-06-05 20:39:37
+JPL0308,NO,,Viken,Råde,"Slangsvold, Leiedalen",Spruce forest,"59.36899010,10.95213270",25,Sweep-net,05 Aug 2017,Jon Peder Lindemann,2023-06-05 21:43:19
+JPL0309,NO,,Agder,Froland,"Mykland, Kyrkjekjønn",Pine forest,"58.62990480,8.26179050",25,Sweep-net,20 Jun 2020,Lind & Lindemann,2023-06-05 22:09:28
+JPL031,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tromsø,"Tromsøya, Trudvangvegen",Bog,"69.68895200,18.98331900",10,Reared,23-30 Jul 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL0310,NO,,Oslo,Oslo,"Nøklevann, Lutdalen",Hay meadow,"59.89602100,10.87503900",25,Sweep-net,14 May 2023,Jon Peder Lindemann,2023-06-17 18:42:39
+JPL0311,NO,,Viken,Asker,"Hurum, Delet",Oak-pine forest,"59.62833040,10.60623010",25,Sweep-net,19 Jun 2023,Jon Peder Lindemann,2023-06-19 23:13:58
+JPL0312,NO,,Vestfold og Telemark,Sandefjord,"Mefjorden, Kastetskogen",Fagus forest,"59.12085500,10.27047200",50,Sweep-net,21 Jun 2023,Jon Peder Lindemann,2023-06-23 13:37:52
+JPL0313,NO,,Vestfold og Telemark,Larvik,"Stavern , Rakke fort",Dry meadow,"58.98206570,10.02579710",25,Sweep-net,24 Jun 2023,Jon Peder Lindemann,2023-06-24 11:09:20
+JPL0314,NO,,Vestfold og Telemark,Larvik,"Stavern , Rakke fort",Dry meadow,"58.98009040,10.02348200",25,Sweep-net,24 Jun 2023,Jon Peder Lindemann,2023-06-24 11:25:23
+JPL0315,NO,,Vestfold og Telemark,Larvik,"Stavern , Kuøya",Rocky sea-shore,"58.97893610,10.02054150",25,Sweep-net,24 Jun 2023,Jon Peder Lindemann,2023-06-24 12:15:37
+JPL0316,NO,,Vestfold og Telemark,Larvik,"Stavern , Kuøya",Rocky sea-shore,"58.97887580,10.02064310",25,Hand-picked,24 Jun 2023,Jon Peder Lindemann,2023-06-24 13:07:17
+JPL0317,NO,,Viken,Hvaler,"Kirkeøy, Storesandveien",Sandy pine forest,"59.02673802,11.02197921",10,Sweep-net,23 Jul 2023,Lind & Lindemann,2023-07-23 16:00:28
+JPL0318,NO,,Agder,Grimstad,"Marivoll, Gulodden",Beach meadow,"58.33036100,8.61185500",10,Sweep-net,04 Aug 2023,Jon Peder Lindemann,2023-08-08 13:38:36
+JPL0319,NO,,Oslo,Oslo,"Bøler, Bølerlia 68",Urban area,"59.88316516,10.85470875",25,Hand-picked,08 Aug 2023,Jon Peder Lindemann,2023-08-08 14:15:33
+JPL032,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Tromsø,"Tønsvik, Skytterstien",Bog,"69.74084400,19.15237900",10,Reared,01-02 Aug 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL0324,NO,,Vestland,Aurland,"Nærøyfjorden, Styvi",Deciduous forest,"60.93713335,6.92142283",100,Sweep-net,20 Jun 2015,Helene Lind,2023-10-19 20:56:32
+JPL0325,NO,,Vestland,Aurland,"Aurlandsvangen, Tverrelvi",Pasture,"60.89735269,7.22106147",50,Sweep-net,21 Jun 2015,Jon Peder Lindemann,2023-10-19 21:10:37
+JPL0328,NO,,Viken,Lier,"Tranby, Grøttegata",Sand-mine,"59.81594500,10.23298200",25,Sweep-net,22 Jun 2017,Jon Peder Lindemann,2023-10-19 21:48:57
+JPL0329,NO,,Agder,Grimstad,"Marivoll, Rosseviga",Oak-pine forest,"58.33478900,8.62490600",50,Yellow-pan,21 Jul 2016,Jon Peder Lindemann,2023-10-19 21:54:02
+JPL0330,NO,,Agder,Grimstad,"Levermyr, Furuli terrasse",Garden,"58.34652100,8.59356300",10,Sweep-net,14 Apr 2017,Lind & Lindemann,2023-10-19 22:02:38
+JPL0332,NO,,Troms og Finnmark,Sør-Varanger,"Pasvik, Svanvik",Betula forest,"69.46479500,29.97187600",200,Reared,16 Apr 2023,Jon Peder Lindemann,2023-11-15 10:42:23
+JPL0333,SE,,Öland,Mörbylånga,"Resmo, Gynge",Alvar,"56.52787800,16.52041100",500,Sweep-net,16 Jul 2015,Mattias Forshage,2024-01-07 13:20:29
+JPL0335,NO,,Agder,Grimstad,"Marivoll, Rosseviga",Oak-pine forest,"58.33494318,8.62494028",25,Sweep-net,10 May 2016,Jon Peder Lindemann,2024-01-07 15:30:49
+JPL0338,NO,,Oslo,Oslo,"Skullerud, Korpåsen",Pine forest,"59.86139200,10.85756700",50,White-pan,21-23 May 2017,Jon Peder Lindemann,2024-01-07 16:13:51
+JPL0340,NO,,Akershus,Bærum,Lysakerelva,Deciduous forest,"59.93694000,10.63359000",200,Sweep-net,06 Jun 2016,Jon Peder Lindemann,2024-01-07 16:20:13
+JPL0342,NO,,Agder,Grimstad,"Fevik, Strand",Roadside,"58.37185000,8.66960000",20,Reared,27 Mar 2016,Jon Peder Lindemann,2024-01-07 16:28:54
+JPL0343,NO,,Oslo,Oslo,"Holmlia, Ljanskollen",Pine forest,"59.83835100,10.77157000",100,Color-pan,25-28 May 2017,Jon Peder Lindemann,2024-01-07 16:34:54
+JPL0349,NO,,Telemark,Porsgrunn,"Siktesøya, Tjuvholet",Garden,"59.02143700,9.77719100",25,Sweep-net,09 Jul 2016,Jon Peder Lindemann,2024-01-07 17:09:36
+JPL0351,NO,,Akershus,Ås,"Smedbølbekken, E6",Fallow field,"59.67543223,10.74117462",25,Sweep-net,25 Jun 2014,Jon Peder Lindemann,2024-01-07 17:24:28
+JPL0354,NO,,Agder,Grimstad,"Marivoll, Rosseviga",Mixed forest,"58.33476590,8.62470980",5,Malaise-trap,10 May-11 Sep 2016,Jon Peder Lindemann,2024-01-09 22:17:38
+JPL0355,NO,,Agder,Grimstad,"Rønnes, Osterkilen",Oak forest,"58.33825500,8.61240400",5,Malaise-trap,10 May-11 Sep 2016,Jon Peder Lindemann,2024-01-09 22:22:20
+JPL0356,NO,,Agder,Grimstad,"Marivoll, Marivoldveien",Pasture,"58.33810000,8.61780000",50,Sweep-net,25 Jul 2012,Jon Peder Lindemann,2024-01-09 22:32:20
+JPL0357,SE,,Öland,Mörbylånga,"Algutsrum, Jordtorp",Pond,"56.68711500,16.60205000",100,Sweep-net,20 Aug 2015,Jon Peder Lindemann,2024-01-09 22:42:50
+JPL0358,NO,,Agder,Grimstad,"Fevik, Strand",Roadside,"58.37185000,8.66960000",25,Reared,17 Apr 2015,Jon Peder Lindemann,2024-01-09 22:55:53
+JPL0359,NO,,Agder,Grimstad,"Marivoll, Marivollveien",Meadow,"58.33868900,8.61906200",25,Sweep-net,01 Aug 2012,Jon Peder Lindemann,2024-01-09 22:59:16
+JPL0360,CH,,Valais,Leuk,Satellitenbodenstation,Pine forest clearing,"46.31960000,7.64470000",950,Sweep-net,16 Aug 2016,Jon Peder Lindemann,2024-01-11 10:45:31
+JPL0361,NO,,Østfold,Rakkestad,"Nygård, Skantebygdaveien",Roadside,"59.37928895,11.27092679",25,Sweep-net,27 Aug 2014,Jon Peder Lindemann,2024-01-11 10:50:49
+JPL0362,SE,,Öland,Mörbylånga,"Torslunda, Lenstad",Deciduous forest,"56.61043600,16.58722500",50,Light-trap,11 Aug 2015,Jon Peder Lindemann,2024-01-11 11:09:29
+JPL0363,NO,,Nordland,Træna,"Husøy, Burmaveien",Bog,"66.50524200,12.08521800",25,Sweep-net,09 Jul 2014,Jon Peder Lindemann,2024-01-11 11:13:01
+JPL0364,SE,,Öland,Mörbylånga,"Torslunda, Station Linné",Garden,"56.61922000,16.49805000",50,Sweep-net,24 Aug 2015,Jon Peder Lindemann,2024-01-11 11:15:22
+JPL0365,NO,,Akershus,Ås,"Årungen, Osloveien",Roadside,"59.67542666,10.74632436",25,Sweep-net,15 Aug 2013,Jon Peder Lindemann,2024-01-11 11:52:37
+JPL0368,SE,,Öland,Borgholms k.,"Högby, Alvedsjö",Alvar,"57.17044000,16.93116000",25,Sweep-net,15 Aug 2015,Jon Peder Lindemann,2024-01-11 12:06:32
+JPL0371,NO,,Akershus,Ås,"Årungen, Osloveien",Roadside,"59.67200000,10.75060000",25,Reared,16 Aug 2015,Jon Peder Lindemann,2024-01-11 12:24:35
+JPL0372,NO,,Agder,Lillesand,"Furuøya, Burviga",Rocky sea-shore,"58.18339701,8.30042438",5,Sweep-net,10 Jul 2017,Jon Peder Lindemann,2024-01-11 12:33:35
+JPL0373,NO,,Akershus,Nittedal,"Movann, Slåttemyra",Hay bog,"60.04577900,10.82864300",50,Sweep-net,06 Jul 2016,Jon Peder Lindemann,2024-01-11 12:35:55
+JPL0374,SE,,Öland,Mörbylonga,"Algutsrum, Jordtorp",Roadside,"56.67944473,16.58332902",100,Reared,01 Aug 2015,Pav Johnsson,2024-01-11 12:42:29
+JPL0375,NO,,Østfold,Aremark,"Lundsneset n.r., Bekkengdalen",Pine forest,"59.04481710,11.72119450",5,Sweep-net,13 Aug 2017,Jon Peder Lindemann,2024-01-11 12:51:09
+JPL0376,NO,,Akershus,Ås,"Syverudbekken, Kjærsrud",Pond,"59.68952965,10.76909118",25,Sweep-net,26 Jun 2014,Jon Peder Lindemann,2024-01-11 13:03:15
+JPL0377,NO,,Akershus,Ås,"Askjumskkogen, Kongeveien",Clear cut,"59.68349100,10.77188300",10,Reared,25 Jun 2014,Jon Peder Lindemann,2024-01-11 13:17:01
+JPL0378,NO,,Møre og Romsdal,Surnadal,"Mogstad, Nordsida",Hay meadow,"62.99405350,8.82699000",25,Sweep-net,22 Aug 2021,Jon Peder Lindemann,2024-01-11 13:24:48
+JPL0380,NO,,Østfold,Råde,"Slangsvold, Leidalen",Roadside,"59.37280000,10.94970000",100,Sweep-net,14 Jul 2012,Jon Peder Lindemann,2024-01-11 13:28:35
+JPL0381,SE,,Öland,Mörbylånga,"Resmo, Stenåsvägen",Alvar,"56.53760126,16.45777728",1000,Reared,01 Aug 2015,Jon Peder Lindemann,2024-01-11 13:32:54
+JPL0382,NO,,Akershus,Bærum,"Oksenøya, Lilløyplassen",Meadow,"59.89407000,10.59928300",50,Light-trap,26 Aug 2016,Jon Peder Lindemann,2024-01-11 13:36:04
+JPL0383,NO,,Nordland,Grane,"Laksforsmoen, Geitklauvmyra",Spruce forest,"65.60632000,13.28757000",10,Malaise-trap,12 Jul-11 Aug 2016,Jon Peder Lindemann,2024-01-11 13:42:36
+JPL0385,NO,,Telemark,Tinn,"Gvepseborg, Kalhovdvegen",Alpine meadow,"59.89783860,8.55208540",200,Sweep-net,01 Jul 2012,Jon Peder Lindemann,2024-01-11 13:56:59
+JPL0386,NO,,Agder,Grimstad,Sandholmen,Rocky sea-shore,"58.30666700,8.59980300",25,Sweep-net,22 Jul 2012,Jon Peder Lindemann,2024-01-11 14:26:45
+JPL0388,NO,,Agder,Grimstad,"Levermyr, Furuli terrasse",Garden,"58.34646800,8.59350700",25,Sweep-net,22 Jul 2011,Jon Peder Lindemann,2024-01-11 14:33:37
+JPL0389,NO,,Vestland,Stord,"Sagvåg, Utslettefjellet",Hill-top,"59.78560000,5.38640000",25,Sweep-net,01 Jul 2012,Jon Peder Lindemann,2024-01-11 14:36:39
+JPL0393,NO,,Vestland,Luster,"Skjolden, Lustravegen",Meadow,"61.49050000,7.60176500",10,Sweep-net,24 Jun 2017,Helene Lind,2024-01-12 10:00:38
+JPL0394,NO,,Akershus,Lillestrøm,"Svindal-Fjellsrud, Svendalsbekken",Ravine,"59.88295000,11.21095000",20,Sweep-net,05 May 2018,Helene Lind,2024-01-12 10:05:05
+JPL0398,NO,,Akershus,Frogn,"Drøbak, Seierstenmarka",Meadow,"59.67407100,10.63662100",100,Sweep-net,27 May 2017,Helene Lind,2024-01-12 11:13:38
+JPL0406,NO,,Vestland,Voss,"Ulvund, Ulvundsberget",Hay meadow,"60.81144400,6.48489300",30,Sweep-net,02 Aug 2019,Helene Lind,2024-01-12 12:00:32
+JPL0411,NO,,Nordland,Vefsn,"Skardåsen, Kalvgardshaugan",Roadside,"65.83222920,13.24997090",25,Sweep-net,08 Aug 2016,Helene Lind,2024-01-12 12:22:12
+JPL0412,NO,,Vestland,Kvinnherad,"Varaldsøy, Raudholmsvika",Roadside,"60.09578240,5.96037560",10,Sweep-net,11 Jun 2016,Helene Lind,2024-01-12 12:25:59
+JPL0413,NO,,Østfold,Moss,"Jeløya, Hellebergene",Dry meadow,"59.48284770,10.62686270",50,Sweep-net,13 Jun 2020,Helene Lind,2024-01-12 12:31:00
+JPL0414,NO,,Vestland,Kvinnherad,"Varaldsøy, Skjelnesodden",Roadside,"60.07144090,5.97016890",25,Sweep-net,11 Jun 2016,Helene Lind,2024-01-12 12:35:03
+JPL0415,NO,,Oslo,Oslo,"Bøler, metro-station",Meadow,"59.88409390,10.84388810",20,Sweep-net,22 Jun 2016,Helene Lind,2024-01-12 12:41:15
+JPL0416,NO,,Vestfold,Horten,Østøya,Dry meadow,"59.44441490,10.47596750",10,Sweep-net,18 Jun 2017,Helene Lind,2024-01-12 12:54:03
+JPL0417,NO,,Akershus,Bærum,"Oksenøya, Lilløyplassen",Meadow,"59.89387830,10.59882480",10,Sweep-net,30 Apr 2017,Helene Lind,2024-01-12 12:58:43
+JPL0418,NO,,Østfold,Moss,"Jeløya, Orebukta",Mixed forest,"59.50221700,10.66091700",10,Sweep-net,15 Apr 2018,Helene Lind,2024-01-12 13:00:48
+JPL0419,NO,,Telemark,Seljord,"Hjartdal, Brudalen",Meadow,"59.58583530,8.57733880",10,Sweep-net,29 Jun 2017,Helene Lind,2024-01-12 13:03:49
+JPL0420,NO,,Nordland,Grane,Almdalen,Spruce forest,"65.61819480,13.42263120",10,Sweep-net,09 Aug 2016,Helene Lind,2024-01-12 13:12:05
+JPL0421,NO,,Vestland,Luster,"Jostedalen, Hausamoen",Sandy area,"61.44077970,7.25069340",10,Sweep-net,24 Jun 2017,Helene Lind,2024-01-12 13:16:40
+JPL0422,NO,,Vestland,Luster,"Gaupne, Gaupne kirke",Garden,"61.40885920,7.29542850",10,Sweep-net,24 Jun 2017,Helene Lind,2024-01-12 13:20:58
+JPL0423,SE,,Gotland,Gotland,"Själsö, Fiskvägen",Garden,"57.69288000,18.36464700",5,Reared,22 Jul 2022,Jon Peder Lindemann,2024-01-12 17:19:03
+JPL0424,NO,,Agder,Arendal,"Moland, Dalen",Oak forest,"58.52440859,8.79225046",5000,Reared,14 Nov 2021-04 Jul 2022,Lind & Lindemann,2024-01-12 17:43:45
+JPL0426,NO,,Oslo,Oslo,"Bøler, Bølerlia 68",Urban area,"59.88330820,10.85418370",10,Hand-picked,01 Jun 2023,Jon Peder Lindemann,2024-01-12 18:14:55
+JPL0427,NO,,Innlandet,Nord-Aurdal,Grønstølen,Hay meadow,"60.92939950,9.21941080",10,Sweep-net,14 Jul 2023,Jon Peder Lindemann,2024-01-12 18:28:12
+JPL0428,NO,,Østfold,Hvaler,"Skjærhalden, Granstuveien",Hay meadow,"59.02598010,11.03208750",25,Sweep-net,21 Jul 2023,Jon Peder Lindemann,2024-01-12 18:31:59
+JPL0429,NO,,Østfold,Våler,Store Sjulerød,Meadow,"59.44854995,10.83146450",10,Reared,11 Aug 2022,Jon Peder Lindemann,2024-01-12 18:46:08
+JPL0431,NO,,Oslo,Oslo,Bølerlia,,"59.88315946,10.85417084",25,Sweep-net,11 May 2024,Jon Peder Lindemann,2024-05-11 10:08:16
+JPL0432,RO,,,,,,"44.44971049,26.51362114",25,Sweep-net,14 May 2024,Jon Peder Lindemann,2024-05-14 11:46:01
+JPL054,US,California,LA,,"Cedar Springs, Buckhart trail",Pine forest,"34.34857200,-117.90902100",50,Sweep-net,10 Jun 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL055,US,California,LA,,"Hidden Springs, Upper Big Tujunga",Creek,"34.30747400,-118.07401400",50,Sweep-net,10 Jun 2017,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL064,NO,,,Tromsø,"Tromsøya, Tromsø museum",Urban area,"69.63458800,18.91162500",5,Hand-picked,28 Apr 2019,Robert Bergersen,2021-03-03 04:01:20
+JPL118,CH,,BE,Bern,Münzrain,Urban area,"46.94576200,7.44406400",50,Reared,17 Aug 2016,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL123,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Målselv,"Dividalen, Kvennstua",Pine forest,"68.79309420,19.69739720",25,Reared,12 Sep 2020,Jon Peder Lindemann,2021-03-03 04:01:20
+JPL191,NO,,Troms,Storfjord,"Signaldalen, Parasdalen",Betula forest,"69.08208230,20.13373290",100,Reared,01 Nov 2020,Jon Peder Lindemann,2021-05-18 17:32:27
+JPL196,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Storfjord,"Skibotndalen, Bærfjellet",Pine forest,"69.31782000,20.38607000",100,Malaise-trap,18 Aug-22 Sep 2019,Jon Peder Lindemann,2021-06-22 20:33:37
+JPL197,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Storfjord,"Skibotndalen, Bærfjellet",Pine forest,"69.31782000,20.38607000",100,Malaise-trap,03 Jul-18 Aug 2019,Jon Peder Lindemann,2021-06-23 18:37:07
+JPL198,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Storfjord,"Skibotndalen, Kavleelva",River-shore,"69.31471000,20.39552000",10,Malaise-trap,03 Jul-18 Aug 2019,Jon Peder Lindemann,2021-07-02 18:55:15
+JPL199,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Storfjord,"Skibotndalen, Kavleelva",River-shore,"69.31471000,20.39552000",10,Malaise-trap,01 Jun-03 Jul 2019,Jon Peder Lindemann,2021-07-02 18:56:38
+JPL200,NO,,Troms og Finnmark - Romsa ja Finnmárku - Tromssa j,Storfjord,"Skibotndalen, Kavleelva",River-shore,"69.31471000,20.39552000",10,Malaise-trap,18 Aug-22 Sep 2019,Jon Peder Lindemann,2021-07-02 18:58:02
+JPL201,NO,,Troms og Finnmark,Storfjord,"Skibotndalen, Haskielva",Bog,"69.34831000,20.38277000",10,Malaise-trap,18 Aug-22 Sep 2019,Jon Peder Lindemann,2021-07-02 19:11:40
+JPL202,NO,,Troms og Finnmark,Storfjord,"Skibotndalen, Haskielva",Bog,"69.34831000,20.38277000",10,Malaise-trap,01 Jun-03 Jul 2019,Jon Peder Lindemann,2021-07-02 19:12:48
+JPL203,NO,,Troms og Finnmark,Målselv,"Dividalen, Divifossen",Pine forest,"68.83087000,19.62599000",10,Malaise-trap,31 May 2019-12 Sep 2020,Lindemann <i>et al.</i>,2021-07-02 19:21:24
+JPL204,NO,,Troms og Finnmark,Målselv,"Dividalen, Divifossen",Betula forest,"68.76539100,19.71884500",100,Reared,13 Sep 2020,Jon Peder Lindemann,2021-07-09 18:04:14
+JPL205,NO,,Troms og Finnmark,Tromsø,"Sandøya, Finnkjelneset",Alpine meadow,"70.04798600,18.56724000",100,Reared,05 Sep 2020-12 Apr 2021,Jon Peder Lindemann,2021-07-09 18:10:56
+JPL209,NO,,Troms og Finnmark,Storfjord,"Skibotndalen, Bærfjellet",Pine forest,"69.31782000,20.38607000",10,Malaise-trap,01 Jun-03 Jul 2019,Jon Peder Lindemann,2021-07-20 19:38:29
+JPL229,NO,,Troms og Finnmark,Meløy,"Glomfjord, Storglomvatn",,"66.72357700,14.16715000",10000,,29 Jun 1948,Tron Soot-Ryen,2021-11-18 22:10:03
+NHMO_58.33478.6252016-07-15,NO,,Agder,Grimstad,"Marivold, Rossevika",Mixed forest,"58.33470000,8.62500000",10,Reared,15 Jul 2016,Jon Peder Lindemann,2023-01-30 10:27:00
+NHMO_58.34658.59352015-06-24Ex. Capitulum of Hypochaeris radicata,NO,,Agder,Grimstad,"Levermyr, Furuli",Garden,"58.34650000,8.59350000",10,Reared,24 Jun 2015,Jon Peder Lindemann,2023-01-30 08:26:39
+NHMO_58.34658.59352015-07-01,NO,,Agder,Grimstad,"Levermyr, Furuli",Garden,"58.34650000,8.59350000",10,Reared,01 Jul 2015,Jon Peder Lindemann,2023-01-30 08:36:13
+NHMO_58.39438.72682015-07-12Ex. Capitulum of Tripolium pannonicum,NO,,Agder,Grimstad,"Søm, Hasseltangen",Rocky sea-shore,"58.39430000,8.72680000",10,Reared,12 Jul 2015,Jon Peder Lindemann,2023-01-30 11:22:05
+NHMO_59.641610.77612014-09-02,NO,,Viken,Ås,Herumveien,Roadside,"59.64160000,10.77610000",10,Reared,02 Sep 2014,Jon Peder Lindemann,2023-01-30 08:36:17
+NHMO_59.64410.77542014-09-02Ex. Capitulum of Cirsium arvense,NO,Viken,Ås,,"Herumveien, None",Roadside,"59.64400000,10.77540000",5,Reared,02 Sep 2014,Jon Peder Lindemann,2023-01-30 11:31:43
+NHMO_59.6610.76832015-07-22Ex. Capitulum of Carduus crispus,NO,,Viken,Ås,Kilehagen,Pasture,"59.66000000,10.76830000",5,Reared,22 Jul 2015,Jon Peder Lindemann,2023-01-30 11:21:40
+NHMO_59.669610.76232014-03-31,NO,,Viken,Ås,University area,Roadside,"59.66960000,10.76230000",5,Reared,31 Mar 2014,Jon Peder Lindemann,2023-01-30 08:26:07
+NHMO_59.67210.75062014-04-02Ex. Capitulum of Arctium tomentosum,NO,,Viken,Ås,Årungen S,Cultural landscape,"59.67200000,10.75060000",5,Reared,02 Apr 2014,Jon Peder Lindemann,2023-01-30 08:26:09
+NHMO_59.672810.75232015-04-16Ex. Capitulum of Arctium sp.,NO,,Viken,Ås,Årungen S,Arable land,"59.67280000,10.75230000",5,Reared,16 Apr 2015,Jon Peder Lindemann,2023-01-30 11:58:13
+NHMO_59.675410.74632014-04-02,NO,,Viken,Ås,Årungen W,Cultural landscape,"59.67540000,10.74630000",5,Reared,02 Apr 2014,Jon Peder Lindemann,2023-01-30 08:26:03
+NHMO_59.689110.81462014-09-03Ex. Capitulum of Centaurea jacea,NO,,Viken,Ås,Østensjøvannet,Cultural landscape,"59.68910000,10.81460000",5,Reared,03 Sep 2014,Jon Peder Lindemann,2023-01-30 08:36:52
+NHMO_59.689510.41172015-04-14Ex. Capitulum of Cirsium arvense,NO,,Viken,Asker,"Røyken, Gjærdal",Roadside,"59.68950000,10.41170000",5,Reared,14 Apr 2015,Jon Peder Lindemann,2023-01-30 08:25:45
+NHMO_59.689510.41172015-06-14Ex. Capitulum of Centaurea jacea,NO,,Viken,Asker,"Røyken, Gjærdal",Cultural landscape,"59.68950000,10.41170000",5,Reared,14 Jun 2015,Jon Peder Lindemann,2023-01-30 10:27:28
+NHMO_59.829710.81762016-07-06,NO,,Oslo,Oslo,"Hauketo, Prinsdal skytebane",Ruderal area,"59.82970000,10.81760000",10,Reared,06 Jul 2016,Jon Peder Lindemann,2023-01-30 08:36:32
+NHMO_59.897810.83812016-07-17,NO,,Oslo,Oslo,"Oppsal, Haakon Tveters vei",Urban area,"59.89780000,10.83810000",10,Reared,17 Jul 2016,Jon Peder Lindemann,2023-01-30 10:26:53
+NHMO_59.907910.80822016-07-17,NO,Oslo,Oslo,Oslo,"Ettestad, Ettestadkroken",Roadside,"59.90790000,10.80820000",10,Sweep-net,17 Jul 2016,Jon Peder Lindemann,2023-01-30 08:26:45
+NHMO_59.996910.76732015-04-15Ex. Capitulum of Arctium tomentosum,NO,,Oslo,Oslo,"Maridalen, Kirkeruinen",Roadside,"59.99690000,10.76730000",5,Reared,15 Apr 2015,Jon Peder Lindemann,2023-01-30 11:58:22
+NHMO_59.997310.76772015-04-15Ex. Capitulum of Arctium tomentosum,NO,,Oslo,Oslo,"Maridalen, Kirkeruinen",Cultural landscape,"59.99730000,10.76770000",5,Reared,15 Apr 2015,Jon Peder Lindemann,2023-01-30 07:35:36
+NHMO_60.039110.81542016-07-06,NO,,Viken,Nittedal,"Movann, Movann St.",Roadside,"60.03907900,10.81543700",10,Reared,06 Jul 2016,Jon Peder Lindemann,2023-01-30 10:27:10
+NHMO_60.039110.81542016-07-07,NO,,Viken,Nittedal,"Movann, Movann St.",Roadside,"60.03910000,10.81540000",10,Reared,07 Jul 2016,Jon Peder Lindemann,2023-01-30 10:27:15
+"NHMO_Finn A. Grøndahl, Lars Ove Hansen61.20449.81962010-08-09",NO,,Innlandet,Gausdal,"Ormtjernkampen NR, Dokkakampen E",Spruce forest,"61.20440000,9.81960000",10,Malaise-trap,09 Aug-14 Sep 2010,Grøndahl & Hansen,2023-01-26 21:32:21
+NHMO_Jon Peder Lindemann58.37188.66962015-04-17,NO,,Agder,Grimstad,"Fevik, Fevikkilen",Roadside,"58.37180000,8.66960000",10,Reared,17 Apr 2015,Jon Peder Lindemann,2023-01-26 21:32:05
+NHMO_Svein Svendsen58.11838.13972004-08-01,NO,,Agder,Kristiansand,Stangenes,Garden,"58.11830000,8.13970000",10,Malaise-trap,01-31 Aug 2004,Svein Svendsen,2023-01-26 21:31:44
+NHMO_Svein Svendsen58.11838.13972004-08-29,NO,,Agder,Kristiansand,Stangenes,Garden,"58.11830000,8.13970000",10,Sweep-net,29 Aug 2004,Svein Svendsen,2023-01-26 21:46:39
+TES_A0001,NO,,oslo,Oslo,Haraløkka idrettsanlegg,,"59.88317100,10.85456010",25,Sweep-net,17 Jun 2022,Sivasubramaniam <i>et al.</i>,2022-06-16 23:35:46
+TES_A0002,NO,,oslo,Oslo,Haraløkka idrettsanlegg,,"59.88317100,10.85456010",25,Sweep-net,17 Jun 2022,Sivasubramaniam & Olsen,2022-06-16 23:40:36
+TES_A0003,NO,,oslo,Oslo,Haraløkka idrettsanlegg,,"59.88317990,10.85460720",25,Sweep-net,17 Jun 2022,Sivasubramaniam & Olsen,2022-06-17 12:37:37
+TMU-JKJ-COL-000192,NO,,Troms,Tromsø,"Kvaløya, Skjelhollet",Alnus forest,"69.76797200,18.85137500",10,Window-trap,03-24 May 2015,Jostein Kjærandsen,2021-05-18 19:56:26
+TMU-JKJ-COL-000226,NO,,Troms,Tromsø,"Kvaløya, Skjelhollet",Alnus forest,"69.76797200,18.85137500",10,Malaise-trap,14 Jun-12 Jul 2015,Jostein Kjærandsen,2021-05-18 19:58:02
+TMU-JKJ-COL-000427,NO,,Troms,Storfjord,"Galggojavri, Myggbukta",Betula forest,"69.12505460,20.75631580",100,Slam-trap,22 Jul 2016-24 Aug 2015,Kjærandsen & Dahl,2021-05-18 20:05:52
+TMU-JKJ-COL-000442,NO,,Troms,Kåfjord,"Kåfjorddalen, Fierahat",Pasture,"69.43277800,20.96750000",50,Sweep-net,22 Sep 2016,Jostein Kjærandsen,2021-05-18 20:08:37
+TMU-JKJ-COL-000444,NO,,Troms,Nordreisa,"Reisa NP, Avvejohka",Betula forest,"69.31194400,21.99694400",50,Sweep-net,22 Sep 2016,Jostein Kjærandsen,2021-05-18 20:11:39
+TMU-JKJ-COL-000480,NO,,Troms,Tromsø,"Oldervik, Brattfjellet",Pasture,"69.72444400,19.69055600",50,Sweep-net,09 Jul 2017,Jostein Kjærandsen,2021-05-18 20:58:10
+TMU-JKJ-COL-000482,NO,,Finnmark,Sør-Varanger,"Pasvik, Gjøkbekken",Bog,"69.14462380,29.14580140",50,Window-trap,18 Jun-25 Jul 2017,Kjærandsen & Dahl,2021-05-18 20:17:05
+TMU-JKJ-COL-000488,NO,,Finnmark,Sør-Varanger,"Pasvik, Sametielva",Old pine forest,"69.45000000,29.70722200",50,Malaise-trap,17 Jun-24 Jul 2017,Kjærandsen & Dahl,2021-05-18 20:21:15
+TMU-JKJ-COL-000491,NO,,Finnmark,Tana,"Harrelv, Harrelv NR",Alnus riparian forest,"70.39166700,28.25583300",50,Malaise-trap,19 Jun-28 Jul 2017,Kjærandsen & Dahl,2021-05-18 20:23:50
+TMU-JKJ-COL-000492,NO,,Finnmark,Tana,"Harrelv, Harrelv NR",Alnus riparian forest,"70.39166700,28.25555600",50,Window-trap,19 Jun-28 Jul 2017,Kjærandsen & Dahl,2021-05-18 20:25:41
+TMU-JKJ-COL-000501,NO,,Finnmark,Alta,Mattisdalen indre V,Old pine forest,"69.82666700,22.84916700",50,Window-trap,21 Jun-29 Jul 2017,Kjærandsen & Dahl,2021-05-18 20:28:16
+TMU-JKJ-COL-000505,NO,,Finnmark,Sør-Varanger,"Pasvik, Sametielva",Old pine forest,"69.44666700,29.70055600",50,Sweep-net,17 Jun 2017,Martin Torp Dahl,2021-05-18 20:31:12
+TMU-JKJ-COL-000508,NO,,Troms,Storfjord,"Skibotn, Langbakken",Tall-herb forest,"69.28583300,20.45027800",50,Sweep-net,17 Jul 2017,Jostein Kjærandsen,2021-05-18 20:33:37
+TMU-JKJ-COL-000509,NO,,Finnmark,Tana,Syltefjorddalen Nature Reserve,Alnus forest,"70.52555600,29.97027800",10,Malaise-trap,27 Jul-27 Sep 2017,Kjærandsen & Lindemann,2021-05-18 21:29:09
+TMU-JKJ-COL-000516,NO,,Troms og Finnmark,Sørvaranger,Treriksgrensen,Pine forest,"69.02472200,29.02583300",50,Sweep-net,26 Jul 2017,Jostein Kjærandsen,2021-07-15 16:48:51
+TMU-JKJ-COL-000522,NO,,Troms og Finnmark,Alta,Mattisdalen indre,Old pine forest,"69.82777800,22.84638900",10,Sweep-net,29 Jul 2017,Jostein Kjærandsen,2021-07-15 17:23:48
+TMU-JKJ-COL-000537,NO,,Finnmark,Sør-Varanger,"Pasvik, Gjøkbekken",Old pine forest,"69.15277800,29.15222200",50,Window-trap,25 Jul-26 Sep 2017,Kjærandsen & Dahl,2021-05-18 20:37:18
+TMU-JKJ-COL-000540,NO,,Finnmark,Sør-Varanger,"Pasvik, Sukkeråsen ",Populus forest,"69.36333300,29.42416700",100,Malaise-trap,26 Jul-26 Sep 2017,Kjærandsen & Dahl,2021-05-18 21:21:03
+TMU-JKJ-COL-000541,NO,,Finnmark,Sør-Varanger,"Pasvik, Sukkeråsen",Populus forest,"69.36333300,29.42388900",50,Window-trap,26 Jul-26 Sep 2017,Kjærandsen & Dahl,2021-05-18 20:39:25
+TMU-JKJ-COL-000543,NO,,Troms og Finnmark,Sørvaranger,"Pasvik, Sametielva W",Old pine forest,"69.45000000,29.70722200",10,Malaise-trap,24 Jul-25 Sep 2017,Kjærandsen & Dahl,2021-07-15 17:36:59
+TMU-JKJ-COL-000547,NO,,Finnmark,Tana,Harrelv NR,Alnus riparian forest,"70.39166700,28.25555600",50,Window-trap,28 Jul-28 Sep 2017,Kjærandsen & Dahl,2021-05-18 20:41:25
+TMU-JKJ-COL-000551,NO,,Finnmark,Tana,"Varangerhalvøya, Syltefjorddalen NR",Riparian Alnus forest,"70.52472200,29.97333300",50,Slam-trap,27 Jul-27 Sep 2017,Kjærandsen & Dahl,2021-05-18 20:44:37
+TMU-JKJ-COL-000553,NO,,Finnmark,Alta,"Gargia, Gargialia",Old pine forest,"69.80583300,23.49444400",50,Malaise-trap,29 Jul-29 Sep 2017,Kjærandsen & Dahl,2021-05-18 20:46:47
+TMU-JKJ-COL-000570,JP,Hokkaido,,Samani cho,Samani,,"42.20000000,142.98500000",100,Hand-picked,17 Oct 2009,M. Kato,2021-05-18 21:04:49
+TMU-JKJ-COL-000807,NO,,Nordland,Hattfjelldal,"Auster-Vefsna NR, Stilleelva E",Spruce forest,"44.43658888,25.95977619",10,Malaise-trap,02 Aug-05 Oct 2018,Kjærandsen <i>et al.</i>,2021-05-18 20:50:49

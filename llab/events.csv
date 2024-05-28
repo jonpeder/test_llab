@@ -1,0 +1,3 @@
+CollectingEventID,CountryCode,State/Province,County,Municipality,Locality,Habitat,DecimalDeg,googleMapsLink,Radius,SamplingProtocol,date,recordedBy,Remarks,databased
+JPL0281,RO,,Iasi,Iasi,"Barnova, Poiana cerbarie",Fagus forest edge,"47.03881230, 27.66732240","http://maps.google.com/maps?q=47.03881230,27.66732240",25,Sweep-net,20 Sep 2022,Jon Peder Lindemann,Fagus forest edge/meadow,2022-09-20 10:32:01
+JPL0432,RO,,,,,,"44.44971049, 26.51362114","http://maps.google.com/maps?q=44.44971049,26.51362114",25,Sweep-net,14 May 2024,Jon Peder Lindemann,,2024-05-14 11:46:01

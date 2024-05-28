@@ -6,6 +6,7 @@ from .models import Occurrences, Taxa, Identification_events, Collecting_events,
 from . import db
 import numpy as np
 import pandas as pd
+import json
 
 # connect to __init__ file
 filter = Blueprint('filter', __name__)
@@ -59,6 +60,7 @@ def home():
             # 8. QR filter. If any QR-codes are scanned, crete a specimen-list from these
             if request.form.get("occurrence_ids") or request.form.get("unit_ids") or request.form.get("drawer_name"):
                 specimen_ids = []
+                event_ids = [] # Empty list of event-IDs
                 # 8.1 Specimen-label QR-codes 
                 if request.form.get("occurrence_ids"):
                     specimen_QR_label = request.form.get("occurrence_ids")
@@ -81,6 +83,7 @@ def home():
                     specimen_ids = np.unique(specimen_ids+drawer_QR_label)
             # 1. Taxon filter
             if request.form.get("taxon_name"):
+                event_ids = [] # Empty list of event-IDs
                 taxa = request.form.getlist("taxon_name")
                 # Loop over selected taxa and get scientific names of (children) species
                 scientific_names = list()
@@ -112,6 +115,7 @@ def home():
                 specimen_ids = np.intersect1d(specimen_ids, taxon_fiter_occurrences)
             # 2. Taxon rank filter
             if request.form.get("taxon_rank"):
+                event_ids = [] # Empty list of event-IDs
                 taxon_rank = request.form.get("taxon_rank")
                 # Get occurrences for selected taxon rank
                 rank_fiter_occurrences = Occurrences.query\
@@ -120,8 +124,10 @@ def home():
                     .filter_by(taxonRank=taxon_rank).all()
                 rank_fiter_occurrences = [i.occurrenceID for i in rank_fiter_occurrences]
                 specimen_ids = np.intersect1d(specimen_ids, rank_fiter_occurrences)
+            print(event_ids)
             # 3. Sex filter
             if request.form.get("sex"):
+                event_ids = [] # Empty list of event-IDs
                 sex = request.form.get("sex")
                 # Get occurrences for selected sex
                 sex_fiter_occurrences = Occurrences.query\
@@ -138,6 +144,8 @@ def home():
                     .filter_by(eventID=eventID).all()
                 event_fiter_occurrences = [i.occurrenceID for i in event_fiter_occurrences]
                 specimen_ids = np.intersect1d(specimen_ids, event_fiter_occurrences)
+                # Add eventID to eventIDs list
+                event_ids = eventID
             # 4. Locality filter
             if request.form.get("country") or request.form.get("county") or request.form.get("municipality"):                
                 # 4.3 Municipality. If municipality is selected, forget about country and county
@@ -146,12 +154,16 @@ def home():
                     locality_fiter_occurrences = Occurrences.query\
                         .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
                         .filter_by(municipality=municipality).all()
+                    # Get eventIDs
+                    locality_filter_eventIDs = Collecting_events.query.filter_by(municipality=municipality).all()
                 # 4.2 County. If county is selected, forget about country
                 elif request.form.get("county"):
                     county = request.form.get("county")
                     locality_fiter_occurrences = Occurrences.query\
                         .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
                         .filter_by(county=county).all()
+                    # Get eventIDs
+                    locality_filter_eventIDs = Collecting_events.query.filter_by(county=county).all()
                 # 4.1 Country
                 else:
                     country = request.form.get("country")
@@ -159,8 +171,12 @@ def home():
                         .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
                         .join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode)\
                         .filter(Country_codes.country==country).all()
+                    # Get eventIDs
+                    locality_filter_eventIDs = Collecting_events.query.join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode).filter(Country_codes.country==country).all()
                 locality_fiter_occurrences = [i.occurrenceID for i in locality_fiter_occurrences]
                 specimen_ids = np.intersect1d(specimen_ids, locality_fiter_occurrences)
+                # Add eventIDs to eventIDs list
+                event_ids = np.intersect1d([i.eventID for i in locality_filter_eventIDs], event_ids)
             # 5. Habitat
             if request.form.get("eunis"):
                 habitat = request.form.get("eunis")
@@ -169,18 +185,26 @@ def home():
                         .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
                         .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode)\
                         .filter_by(level1=habitat).all()
+                    # Get eventIDs
+                    habitat_filter_eventIDs = Collecting_events.query.join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode).filter_by(level1=habitat).all()
                 elif Eunis_habitats.query.filter_by(level2=habitat).first():
                     habitat_fiter_occurrences = Occurrences.query\
                         .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
                         .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode)\
                         .filter_by(level2=habitat).all()
+                    # Get eventIDs
+                    habitat_filter_eventIDs = Collecting_events.query.join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode).filter_by(level2=habitat).all()
                 else:
                     habitat_fiter_occurrences = Occurrences.query\
                         .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
                         .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode)\
                         .filter_by(eunisCode=habitat).all()
+                    # Get eventIDs
+                    habitat_filter_eventIDs = Collecting_events.query.join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode).filter_by(eunisCode=habitat).all()
                 habitat_fiter_occurrences = [i.occurrenceID for i in habitat_fiter_occurrences]
                 specimen_ids = np.intersect1d(specimen_ids, habitat_fiter_occurrences)
+                # Add eventIDs to eventIDs list
+                event_ids = np.intersect1d([i.eventID for i in habitat_filter_eventIDs], event_ids)
             # 6. Date
             if request.form.get("date_from"):
                 date_from = request.form.get("date_from")
@@ -190,6 +214,9 @@ def home():
                     .filter(Collecting_events.eventDate_1>=date_from, Collecting_events.eventDate_1<=date_to).all()
                 date_fiter_occurrences = [i.occurrenceID for i in date_fiter_occurrences]
                 specimen_ids = np.intersect1d(specimen_ids, date_fiter_occurrences)
+                # Add eventIDs to eventIDs list
+                date_filter_eventIDs = Collecting_events.query.filter(Collecting_events.eventDate_1>=date_from, Collecting_events.eventDate_1<=date_to).all()
+                event_ids = np.intersect1d([i.eventID for i in date_filter_eventIDs], event_ids)
             # 7. Method
             if request.form.get("method"):
                 method = request.form.get("method")
@@ -198,13 +225,15 @@ def home():
                     .filter_by(samplingProtocol=method).all()
                 method_fiter_occurrences = [i.occurrenceID for i in method_fiter_occurrences]
                 specimen_ids = np.intersect1d(specimen_ids, method_fiter_occurrences)
+                # Add eventIDs to eventIDs list
+                method_fiter_occurrences = Collecting_events.query.filter_by(samplingProtocol=method).all()
+                event_ids = np.intersect1d([i.eventID for i in method_fiter_occurrences], event_ids)
             # 9. Dataset
             if request.form.get("datasetfilter"):
                 dataset = request.form.get("datasetfilter")
                 dataset_fiter_occurrences = Datasets.query.filter_by(datasetName=dataset).first()
                 # The occurrences in the dataset are formatted as a string delimited by " | ". Split the string and convert to list.
                 dataset_fiter_occurrences = dataset_fiter_occurrences.specimenIDs.split(" | ")
-                print(dataset_fiter_occurrences)
                 specimen_ids = np.intersect1d(specimen_ids, dataset_fiter_occurrences)        
         # If requested, get event-id from show_event.html
         if request.form.get("collecting_event_id") == "collecting_event_id":
@@ -231,9 +260,11 @@ def home():
     # METRICS
     # 1. Collecting_events
     # If filter is applied, get updated event_ids
+    #event_ids = np.ndarray.tolist(event_ids)
+    event_ids = list(event_ids)
     if request.method == 'POST':
         # Get unique eventIDs
-        event_ids = []
+        #event_ids = []
         for occurrence in occurrences:
             if occurrence.eventID not in event_ids:
                 event_ids.append(occurrence.eventID)
@@ -385,5 +416,5 @@ def home():
         if occurrence not in [i.occurrenceID for i in occurrences]:
             flash(f'{occurrence} not in database', category="error")
     # Return template
-    return render_template("home.html", user=current_user, habitats=habitats, habitat_level2=habitat_level2, countries=countries, counties=counties, municipalities=municipalities, methods=methods, collecting_events=collecting_events, datasets=datasets, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks, occurrences=occurrences, events=events, ranks=ranks, occ_len=occ_len, event_len=event_len, taxa_len=taxa_len, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_habitat1=occurrence_habitat1, occurrence_habitat2=occurrence_habitat2, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank, met_taxon_count=met_taxon_count, taxa_year=taxa_year, taxa_taxonRank=taxa_taxonRank, taxa_order=taxa_order, taxa_family=taxa_family, event_year = event_year, event_month = event_month, event_method = event_method, event_habitat1 = event_habitat1, event_habitat2 = event_habitat2, drawers=drawers)
+    return render_template("home.html", user=current_user, habitats=habitats, habitat_level2=habitat_level2, countries=countries, counties=counties, municipalities=municipalities, methods=methods, collecting_events=collecting_events, datasets=datasets, dropdown_names=dropdown_names, dropdown_ranks=dropdown_ranks, occurrences=occurrences, events=events, ranks=ranks, occ_len=occ_len, event_len=event_len, taxa_len=taxa_len, occurrence_year=occurrence_year, occurrence_month=occurrence_month, occurrence_method=occurrence_method, occurrence_habitat1=occurrence_habitat1, occurrence_habitat2=occurrence_habitat2, occurrence_order=occurrence_order, occurrence_family=occurrence_family, occurrence_genus=occurrence_genus, occurrence_taxonRank=occurrence_taxonRank, met_taxon_count=met_taxon_count, taxa_year=taxa_year, taxa_taxonRank=taxa_taxonRank, taxa_order=taxa_order, taxa_family=taxa_family, event_year = event_year, event_month = event_month, event_method = event_method, event_habitat1 = event_habitat1, event_habitat2 = event_habitat2, drawers=drawers, event_ids=event_ids)
 

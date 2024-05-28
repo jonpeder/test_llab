@@ -319,6 +319,32 @@
         </div>
       </div>
     </div>
+    <!-- EXPORT -->
+    <div class="card-header">
+      <a class="btn" data-bs-toggle="collapse" href="#collapseExport">
+        Export
+      </a>
+    </div>
+    <!-- Export collapsible -->
+    <div id="collapseExport" class="collapse">
+      <div class="card-body">
+        <!-- Buttons to export values -->
+        <div class="mb-1">
+          <button type="button" class="btn btn-success" id="exportEvents" >Export collecting-events</button>
+        </div>
+        <div class="mb-1">
+          <small id="exportEvents-dataHelp" class="form-text text-muted">Export collecting-events in query</small>
+        </div>
+        <!-- Dismissible Alert -->
+        <div id="exportEventMessage" class="alert alert-warning fade hide" role="alert">
+          <span id="exportEventMessageContent"></span>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+
+    </div>
   </div>
 </div>
 
@@ -627,6 +653,62 @@
       });
     });
   });
+
+  $('#exportEvents').on('click', function () {
+  var exportEventIDs = {{ event_ids|tojson }};
+  console.log(exportEventIDs);
+
+  $.ajax({
+    url: '/export_events',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({ ids: exportEventIDs }),
+    xhrFields: {
+      responseType: 'blob'
+    },
+    success: function (response, status, xhr) {
+      var filename = "";
+      var disposition = xhr.getResponseHeader('Content-Disposition');
+      if (disposition && disposition.indexOf('attachment') !== -1) {
+        var matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(disposition);
+        if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+      }
+      var type = xhr.getResponseHeader('Content-Type');
+
+      var blob = new Blob([response], { type: type });
+      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        // IE workaround
+        window.navigator.msSaveBlob(blob, filename);
+      } else {
+        var URL = window.URL || window.webkitURL;
+        var downloadUrl = URL.createObjectURL(blob);
+
+        if (filename) {
+          // use HTML5 a[download] attribute to specify filename
+          var a = document.createElement("a");
+          // safari doesn't support this yet
+          if (typeof a.download === 'undefined') {
+            window.location = downloadUrl;
+          } else {
+            a.href = downloadUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+          }
+        } else {
+          window.location = downloadUrl;
+        }
+
+        setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 100); // cleanup
+      }
+    },
+    error: function (xhr, status, error) {
+      $('#exportEventMessageContent').text('Error: ' + error);
+      $('#exportEventMessage').addClass('show').removeClass('hide');
+    }
+  });
+});
+
 
 </script>
 

@@ -240,6 +240,7 @@ def home():
             eventID = request.form.get("eventID")
             event = Collecting_events.query.filter_by(eventID=eventID).first()
             specimen_ids = [i.occurrenceID for i in event.occurrences]
+            event_ids = [eventID]
     # Get occurrences for filtered specimen-IDs
     occurrences = Occurrences.query.filter(Occurrences.occurrenceID.in_(specimen_ids))\
             .join(Identification_events, Occurrences.identificationID==Identification_events.identificationID, isouter=True)\

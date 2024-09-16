@@ -35,7 +35,7 @@ def export_events():
             for event in events:
                 row = [event.eventID, event.countryCode, event.stateProvince, event.county, event.municipality, locality_format(event.locality_1, event.locality_2), event.habitat, f'{event.decimalLatitude}, {event.decimalLongitude}', f"http://maps.google.com/maps?q={event.decimalLatitude},{event.decimalLongitude}", event.coordinateUncertaintyInMeters, event.samplingProtocol, remove_bold(format_dates(event.eventDate_1, event.eventDate_2)), leg_format(event.recordedBy), event.eventRemarks, event.databased]
                 export_list.append(row)
-            with open('/var/www/llab/llab/static/events.csv', 'w') as f:
+            with open('/var/www/llab/llab/static/events.csv', 'w', encoding='utf-8') as f:
                 # using csv.writer method from CSV package
                 write = csv.writer(f)
                 write.writerow(header)

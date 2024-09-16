@@ -75,7 +75,7 @@ def sign_up():
         else:
             # Add user to database
             new_user = User(email=email, initials=initials, password=generate_password_hash(
-                password1, method='sha256'), entomologist_name=entomologist_name, institutionCode=institutionCode, createdByUserID=current_user.id)
+                password1, method='pbkdf2:sha256'), entomologist_name=entomologist_name, institutionCode=institutionCode, createdByUserID=current_user.id)
             db.session.add(new_user)
             db.session.commit()
             user = User.query.filter_by(email=email).first()

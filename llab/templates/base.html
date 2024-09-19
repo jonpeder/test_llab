@@ -26,7 +26,8 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <!-- CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-    
+    <!-- exif -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
     
     <!-- TITLE -->
     <title>The Lindemann lab</title>
@@ -190,10 +191,11 @@
         {% block content %}{% endblock %}
     </div>
 
+    <!-- JS -->
+    <!-- javascript -->
+    <script type="text/javascript" src="{{ url_for('static', filename='index.js')}}"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- JS -->
     <!-- DataTables -->
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
@@ -208,8 +210,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/i18n/defaults-*.min.js"></script>
     <!-- multiselect dropdown -->
     <script src="{{ url_for('static', filename='multiselect-dropdown.js') }}"></script>
-    <!-- javascript -->
-    <script type="text/javascript" src="{{ url_for('static', filename='index.js')}}"></script>
 </body>
 
 </html>

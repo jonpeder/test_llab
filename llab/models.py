@@ -218,6 +218,26 @@ class Eunis_habitats(db.Model):
     redlistCode = db.Column(db.String(10))
     habitatName = db.Column(db.String(200))
 
+class Observations(db.Model):
+    occurrenceID = db.Column(db.String, primary_key=True)
+    taxonInt = db.Column(db.Integer)
+    imageFileNames = db.Column(db.String)
+    eventDateTime = db.Column(db.String(19))
+    decimalLatitude = db.Column(db.Numeric(11,8))
+    decimalLongitude = db.Column(db.Numeric(11,8))
+    coordinateUncertaintyInMeters = db.Column(db.Integer)
+    countryCode = db.Column(db.String(2))
+    county = db.Column(db.String)
+    municipality = db.Column(db.String)
+    locality = db.Column(db.String)
+    individualCount = db.Column(db.Integer)
+    lifeStage = db.Column(db.String)
+    sex = db.Column(db.String)
+    recordedBy = db.Column(db.String)
+    occurrenceRemarks = db.Column(db.String)
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
+    databased = db.Column(db.DateTime(timezone=True), default=func.now())
+
 # Pteromalidae database
 class pteromalidae_events(db.Model):
     #__bind_key__ = "pteromalidae"

@@ -90,18 +90,9 @@ async function stedsnavn_call() {
     if (typeof administReg_out.fylkesnavn !== 'undefined') {document.getElementById("County").value = administReg_out.fylkesnavn};
     if (typeof administReg_out.kommunenavn !== 'undefined') {document.getElementById("Municipality").value = administReg_out.kommunenavn};
 }
+
 // Selectpicker
 //$('#ScientificName').selectpicker();
-
-// Delete notes function
-function deleteNote(noteId) {
-    fetch('/delete-note', {
-        method: 'POST',
-        body: JSON.stringify({ noteId: noteId }),
-    }).then((_res) => {
-        window.location.href = "/";
-    });
-}
 
 // Use today as default date
 Date.prototype.toDateInputValue = (function () {
@@ -127,6 +118,7 @@ function showPosition(position) {
     document.getElementById("Radius").value = 25
 }
 
+/*
 // Find document variable
 const output = document.querySelector("#result");
 
@@ -164,3 +156,4 @@ function myFunction() {
   var element = document.body;
   element.classList.toggle("dark-mode");
 }
+*/

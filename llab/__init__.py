@@ -36,6 +36,7 @@ def create_app():
     from .filter import filter
     from .collection import collection
     from .export import export
+    from .observations import observations
 
 
     app.register_blueprint(auth, url_prefix='/')
@@ -50,9 +51,10 @@ def create_app():
     app.register_blueprint(filter, url_prefix='/')
     app.register_blueprint(collection, url_prefix='/')
     app.register_blueprint(export, url_prefix='/')
+    app.register_blueprint(observations, url_prefix='/')
 
 
-    from .models import User, Catalog_number_counter, Print_events, Print_det, Event_images, Occurrence_images, Identification_events, Eunis_habitats
+    from .models import User, Catalog_number_counter, Print_events, Print_det, Event_images, Occurrence_images, Identification_events, Eunis_habitats, Observations
 
     with app.app_context():
         db.create_all()

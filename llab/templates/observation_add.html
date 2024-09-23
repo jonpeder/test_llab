@@ -37,14 +37,20 @@
                     <label for="uncertainty">Longitude</label>
                     <input type="text" class="form-control" id="Longitude" name="Longitude" >
                 </div>
-                <div class="col mb-1">
+                <div class="col mb-3">
                     <label for="uncertainty">Uncertainty (m)</label>
                     <input type="text" class="form-control" id="uncertaintyInMeters" name="uncertaintyInMeters" value=10>
                 </div>
             </div>
-            <div class="mb-3">
-                <label for="eventDateTime">Date and time</label>
-                <input type="text" class="form-control" id="eventDateTime" name="eventDateTime">
+            <div class="row">
+                <div class="col mb-1">
+                    <label for="date">Date</label>
+                    <input type="date" class="form-control" id="date" name="date">
+                </div>
+                <div class="col mb-1">
+                    <label for="time">Time</label>
+                    <input type="time" class="form-control" id="time" name="time">
+                </div>
             </div>
         </div>
     </div>
@@ -53,7 +59,7 @@
 
     <div class="card" id="card2" onclick="stedsnavn_call()">
         <div class="card-header">
-            Geography
+            Location
         </div>
         <div class="card-body">
             <!-- Country code -->
@@ -201,15 +207,20 @@
                 const latitude = convertDMSToDD(lat, latRef);
                 const longitude = convertDMSToDD(lon, lonRef);
 
-                // Display or store the extracted data
-                console.log('Latitude:', latitude);
-                console.log('Longitude:', longitude);
-                console.log('Date Taken:', eventDateTime);
+                // Split eventDateTime
+                const date = eventDateTime.split(" ")[0];
+                const date2 = date.split(":")[0]+"-"+date.split(":")[1]+"-"+date.split(":")[2];
+                const time = eventDateTime.split(" ")[1];
+                const time2 = time.split(":")[0]+":"+time.split(":")[1]+":00";
+
+                console.log("time2")
 
                 // Set hidden form inputs
                 document.getElementById('Latitude').value = latitude || '';
                 document.getElementById('Longitude').value = longitude || '';
-                document.getElementById('eventDateTime').value = eventDateTime || '';
+                document.getElementById('date').value = date2 || '';
+                document.getElementById('time').value = time2 || '';
+
             });
         } else {
             console.log('No image found in the container.');

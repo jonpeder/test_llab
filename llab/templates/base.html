@@ -76,6 +76,19 @@
                     </li>
                 </ul>
 
+                <!-- Observations dropdown -->
+                 <ul class="navbar-nav">
+                    <li class ="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">
+                            Observation
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" id="observation_add" href="/observation_add">add observation</a>
+                        </div>
+                    </li>
+                 </ul>
+
                 <!-- Taxon dropdown -->
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
@@ -192,8 +205,6 @@
     </div>
 
     <!-- JS -->
-    <!-- javascript -->
-    <script type="text/javascript" src="{{ url_for('static', filename='index.js')}}"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables -->
@@ -210,6 +221,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/i18n/defaults-*.min.js"></script>
     <!-- multiselect dropdown -->
     <script src="{{ url_for('static', filename='multiselect-dropdown.js') }}"></script>
+    <!-- javascript -->
+    <script src="{{ url_for('static', filename='index.js')}}"></script>
 </body>
 
 </html>

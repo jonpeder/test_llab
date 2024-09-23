@@ -43,8 +43,9 @@ def observation_add():
             decimalLatitude = round(float(request.form.get("Latitude")), 8)
             decimalLongitude =  round(float(request.form.get("Longitude")), 8)
             coordinateUncertaintyInMeters = request.form.get("uncertaintyInMeters")
-            eventDateTime = request.form.get("eventDateTime")
-            eventDateTime = eventDateTime.split(" ")[0].replace(":", "-")+" "+eventDateTime.split(" ")[1] # format datetime YYYY:MM:DD HH:MM:SS > YYYY-MM-DD HH:MI:SS
+            date = request.form.get("date")
+            time = request.form.get("time")
+            eventDateTime = date+" "+time
             countryCode = request.form.get("Country")
             county = request.form.get("County")
             municipality = request.form.get("Municipality")

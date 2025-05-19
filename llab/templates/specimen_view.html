@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
+<style>
+    th.tablespace {
+        padding-top: 15px
+    }
+</style>
+
 {% if occurrence %}
 
 <!-- Leaflet -->
@@ -26,14 +32,11 @@
     style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;">
     <!-- Identification table  -->
     <tr class="border-bottom border-dark align-bottom">
-        <th>Specimen:</th>
+        <th class="tablespace">Specimen:</th>
         <th></th>
     </tr>
     <!-- Occurrence ID -->
-    <tr>
-        <td>Specimen ID</td>
-        <td>{{ occurrence.occurrenceID }}</td>
-    </tr>
+    {{ occurrence.occurrenceID | tablerow("Specimen ID") | safe }}
     <!-- Catalogue number -->
     {{ occurrence.catalogNumber | tablerow("Catalog number") | safe }}
     <!-- Owner institution -->
@@ -43,7 +46,7 @@
     <!-- Occurrence remarks -->
     {{ occurrence.occurrenceRemarks | tablerow("Occurrence remarks") | safe }}
     <!-- Associated taxa -->
-    {{ occurrence.associatedTaxa | tablerow("Associated taxa") | safe }}
+    {{ occurrence.associatedTaxa | italicize_scientific_name | tablerow("Associated taxa") | safe }}
     <!-- Associated references -->
     {{ occurrence.associatedReferences | tablerow("Associated references") | safe }}
     <!-- Verbatim label -->
@@ -51,14 +54,11 @@
     
     <!-- Identification table  -->
     <tr class="border-bottom border-dark align-bottom">
-        <th>Identification:</th>
+        <th class="tablespace">Identification:</th>
         <th></th>
     </tr>
     <!-- Taxon name -->
-    <tr>
-        <td>Taxon name</td>
-        <td>{{ identification.scientificName | scn_italic2 (identification.taxonRank,identification.scientificNameAuthorship) | safe }}</td>
-    </tr>
+    {{ identification.scientificName | scn_italic2 (identification.taxonRank,identification.scientificNameAuthorship) | tablerow("Taxon name") | safe }}
     <!-- Identification qualifyer -->
     {{ identification.identificationQualifier | tablerow("Identification qualifyer") | safe }}
     <!-- Sex -->
@@ -68,16 +68,13 @@
     <!-- Identified by -->
     {{ identification.identifiedBy | tablerow("Identified by") | safe }}
     <!-- Date identified -->
-    <tr>
-        <td>Date identified</td>
-        <td>{{ identification.dateIdentified | string_to_date | date_format("%d %B %Y") }}</td>
-    </tr>
+    {{ identification.dateIdentified | string_to_date | date_format("%d %B %Y") | tablerow("Date identified") | safe }}
     <!-- Identification remarks -->
     {{ identification.identificationRemarks | tablerow("Identification remarks") | safe }}
 
     <!-- Taxon table -->
     <tr class="border-bottom border-dark align-bottom">
-        <th>Taxon:</th>
+        <th class="tablespace">Taxon:</th>
         <th></th>
     </tr>
     <!-- Taxon ID -->
@@ -100,26 +97,29 @@
 
     <!-- Event table -->
     <tr class="border-bottom border-dark align-bottom">
-        <th>Event:</th>
+        <th class="tablespace">Collecting event:</th>
         <th></th>
     </tr>
     <!-- Event ID -->
     {{ occurrence.eventID | tablerow("Event ID") | safe }}
-    <!-- Method -->
-    {{ occurrence.samplingProtocol | tablerow("Method") | safe }}
     <!-- Event date -->
     {{ occurrence.eventDate_1 | format_dates(occurrence.eventDate_2) | striptags | tablerow("Event date") | safe }}
+    <!-- Method -->
+    {{ occurrence.samplingProtocol | tablerow("Method") | safe }}
     <!-- Habitat -->
     {{ occurrence.habitat | tablerow("Habitat") | safe }}
-    <!-- Substrate -->
+    <!-- Eunis habitat -->
+    {{ occurrence.habitatName | format_eunis (occurrence.eunisCode) | tablerow("Eunis habitat") | safe }}
+    <!-- Substrate name -->
     {{ occurrence.substrateName | format_substrate(occurrence.substratePlantPart, occurrence.substrateType) | tablerow("Substrate") | safe }}
     <!-- Collected by -->
     {{ occurrence.recordedBy | tablerow("Collected by") | safe }}
     <!-- Event remarks -->
     {{ occurrence.eventRemarks | tablerow("Event remarks") | safe }}
+    
     <!-- Locality table -->
     <tr class="border-bottom border-dark align-bottom">
-        <th>Locality:</th>
+        <th class="tablespace">Locality:</th>
         <th></th>
     </tr>
     <!-- Country -->
@@ -136,6 +136,24 @@
     <!-- Coordinate uncertainty (m) -->
     {{ occurrence.coordinateUncertaintyInMeters | tablerow("Coordinate uncertainty (m)") | safe }}
     
+    <!-- CO1 barcode -->
+    {% if occurrence.sequenceID %}
+    <tr class="border-bottom border-dark align-bottom">
+        <th class="tablespace">DNA barcode (CO1):</th>
+        <th></th>
+    </tr>
+    <!-- sequenceID -->
+    {{ occurrence.sequenceID | tablerow("Sequence ID") | safe }}
+    <!-- sequence length -->
+    {{ occurrence.sequence_length | tablerow("Base pair length") | safe }}
+    <!-- source -->
+    {{ occurrence.source | tablerow("Source") | safe }}
+    <!-- sequence -->
+    <tr>
+        <td>Sequence</td>
+        <td style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">{{ occurrence.sequence | wrap_dna_sequence (50) | safe}}</td>
+    </tr>
+    {% endif %}
 </table>
 </div>
 
@@ -179,9 +197,9 @@
             {% endif %}
 
             <!-- Taxon -->
-            <td>{{ identification.scientificName | scn_italic (identification.taxonRank,
+            <td>{{ identification.scientificName | scn_italic2 (identification.taxonRank,
                 identification.scientificNameAuthorship) |
-                safe }} {{identification.scientificNameAuthorship}}</td>
+                safe }}</td>
             <!-- Identification qualifyer -->
             <td>{{ identification.identificationQualifier | if_present }}</td>
             <!-- Sex -->
@@ -209,6 +227,9 @@
     </table>
 </div>
 
+
+
 {% endif %}
 
 {% endblock %}
+

@@ -1,0 +1,338 @@
+
+<div id="report" class="indented">
+
+<div class="checkbox-container">
+    <!-- Checkboxes for toggling parameters -->
+    <label><input type="checkbox" id="toggleIndent" checked > Use Indentation</label>
+    <label><input type="checkbox" id="toggleTable" checked > Show Taxon Table</label>
+    <!-- Checkboxes for toggling parameters -->
+    <label><input type="checkbox" id="include_occurrenceID" {% if request.args.get('include_occurrenceID') == 'true' %}checked{% endif %}> Include Occurrence ID</label>
+    <label><input type="checkbox" id="include_catalogNumber" {% if request.args.get('include_catalogNumber') == 'true' %}checked{% endif %}> Include Catalog Number</label>
+    <label><input type="checkbox" id="include_recordedBy" {% if request.args.get('include_recordedBy') == 'true' %}checked{% endif %}> Include Recorded By</label>
+    <label><input type="checkbox" id="include_institutionCode" {% if request.args.get('include_institutionCode') == 'true' %}checked{% endif %}> Include Institution Code</label>
+    <label><input type="checkbox" id="include_country" {% if request.args.get('include_country') == 'true' %}checked{% endif %}> Include Country</label>
+
+
+<br>
+<br>
+
+<h2 style="color:rgb(0, 98, 255);">Faunistic report: Pteromalidae s. l.</h2>
+
+<!-- TAXON TABLE -->
+<div id="taxon_table" class="show_table">
+<table>
+<thead>
+    <tr>
+        <th style="width: 40%;">Taxon</th>
+        <th style="width: 15%;">Individuals</th>
+        <th style="text-wrap: wrap;">New regions*</th>
+        <th style="text-wrap: wrap;">Previous regions*</th>
+    </tr>
+</thead>
+<tbody>
+    {% for family, subfamilies in chalcid_hierarchy.items() %}
+    <tr class="family">
+        <td style="text-indent: 1em;">{{ family | safe }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    {% for subfamily, tribes in subfamilies.items() %}
+    <tr class="subfamily">
+        <td style="text-indent: 2em;">{{ subfamily | safe }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    {% for tribe, genera in tribes.items() %}
+    <tr class="tribe">
+        <td style="text-indent: 3em;">{{ tribe | safe }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    {% for genus, specimen_ids in genera.items() %}
+    <tr class="genus">
+        {% set names = [] %}
+        {% for occurrence in occurrences %}
+          {% if occurrence.scientificName == genus %}
+            {% set _ = names.append(genus | scn_italic3 (occurrence.taxonRank)) %}
+          {% endif %}
+        {% endfor %}
+        {% if names[0] %}
+            <td style="text-indent: 4em;">{{ names[0] | safe }}</td>
+        {% else %}
+            <td>{{ genus | safe }}</td>
+        {% endif %}
+        <td>{{ number_of_individuals(specimen_ids, occurrences_dict) }}</td>
+        <td style="font-size: 8;text-wrap: wrap;">{{ format_new_distribution(genus, occurrences_dict, specimen_ids) }}</td>
+        <td style="font-size: 8;text-wrap: wrap;">{{ format_distribution_block(genus, output = "table") | safe }}</td>
+        <td style="font-size: 8;text-wrap: wrap;">{{ format_distribution_block(genus, output = "table", output_type = "references") }}</td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+</tbody>
+</table>
+</div>
+
+
+<!-- PTEROMALIDAE FAUNISTIC REPORT  -->
+{% for family, subfamilies in chalcid_hierarchy.items() %}
+  <h3>{{ family | safe }}</h3>
+  {% for subfamily, tribes in subfamilies.items() %}
+    <h4>{{ subfamily | safe }}</h4>
+    {% for tribe, genera in tribes.items() %}
+      <h5>{{ tribe | safe }}</h5>
+      {% for genus, specimen_ids in genera.items() %}
+        {% set names = [] %}
+        {% for occurrence in occurrences %}
+          {% if occurrence.scientificName == genus %}
+            {% set _ = names.append(genus | scn_italic3 (occurrence.taxonRank)) %}
+          {% endif %}
+        {% endfor %}
+        {% if names[0] %}
+          <h6>{{ names[0] | safe }}</h6>
+        {% else %}
+          <h6>{{ genus | safe }}</h6>
+        {% endif %}
+        <p>{{ format_occurrence_block(
+            specimen_ids, occurrences_dict,
+            include_occurrenceID = request.args.get('include_occurrenceID') == 'true',
+            include_catalogNumber = request.args.get('include_catalogNumber') == 'true',
+            include_recordedBy = request.args.get('include_recordedBy') == 'true',
+            include_institutionCode = request.args.get('include_institutionCode') == 'true',
+            include_country = request.args.get('include_country') == 'true'
+        ) | safe }}</p>
+        {{ format_biology_block(specimen_ids, occurrences_dict) | safe }}
+        {{ format_distribution_block(genus) | safe }}
+      {% endfor %}
+    {% endfor %}
+  {% endfor %}
+{% endfor %}
+
+<!-- OTHER TAXA -->
+<h2 style="color:rgb(0, 98, 255);">Faunistic report: All taxa</h2>
+<!-- Occurrences not identified to any taxonomical level -->
+{% set occurrenceIDs_1 = [] %}
+{% for occurrence in occurrences %}
+    {% if not occurrence.order %}
+        {% set _ = occurrenceIDs_1.append(occurrence.occurrenceID) %}
+    {% endif %}
+{% endfor %}
+{% if occurrenceIDs_1|length > 0 %}
+<h3>Unidentified taxa</h3>
+<!-- Formatted occurrence-data should be inserted here -->
+<p>{{ format_occurrence_block(occurrenceIDs_1, occurrences_dict) | safe }}</p>
+<p>{{ format_biology_block(occurrenceIDs_1, occurrences_dict) | safe }}</p>
+{% endif %}
+
+<!-- Sort and display by Order -->
+{% for order in orders|sort %}
+    <h3>Order: {{ order }}</h3>
+    <!-- Occurrences not identified to family within this order -->
+    {% set occurrenceIDs_2 = [] %}
+    {% for occurrence in occurrences %}
+        {% if occurrence.order == order and occurrence.taxonRank == "order" %}
+            {% set _ = occurrenceIDs_2.append(occurrence.occurrenceID) %}
+        {% endif %}
+    {% endfor %}
+    {% if occurrenceIDs_2|length > 0 %}
+        <h4>Not identified to Family</h4>
+        <!-- Formatted occurrence-data should be inserted here -->
+        <p>{{ format_occurrence_block(occurrenceIDs_2, occurrences_dict) | safe }}</p>
+        <p>{{ format_biology_block(occurrenceIDs_2, occurrences_dict) | safe }}</p>
+    {% endif %}
+
+    <!-- Sort and display by Family -->
+    {% for family in families|sort %}
+        {% set family_name = [] %}
+        {% for occurrence in occurrences %}
+            {% if occurrence.order == order and occurrence.family == family %}
+                {% set _ = family_name.append(occurrence.family) %}
+            {% endif %}
+        {% endfor %}
+        {% if family_name|length > 0 %}
+            <h4>Family: {{ family_name[0] }}</h4>
+        {% endif %}
+        <!-- Occurrences not identified to genus or species within this family -->
+        {% set occurrenceIDs_3 = [] %}
+        {% for occurrence in occurrences %}
+            {% if occurrence.order == order and occurrence.family == family and occurrence.taxonRank == "family" %}
+                {% set _ = occurrenceIDs_3.append(occurrence.occurrenceID) %}
+            {% endif %}
+        {% endfor %}
+        {% if occurrenceIDs_3|length > 0 %}
+            <h6>Not identified to Genus/Species</h6>
+            <!-- Formatted occurrence-data should be inserted here -->
+            <p>{{ format_occurrence_block(occurrenceIDs_3, occurrences_dict) | safe }}</p>
+            <p>{{ format_biology_block(occurrenceIDs_3, occurrences_dict) | safe }}</p>
+        {% endif %}
+
+        <!-- Sort and display by Scientific Name -->
+        {% for scientific_name in scientific_names|sort %}
+            {% set occurrenceIDs_4 = [] %}
+            {% set names = [] %}
+            {% for occurrence in occurrences %}
+                {% if occurrence.order == order and occurrence.family == family and occurrence.scientificName == scientific_name %}
+                    {% set _ = names.append(scientific_name | scn_italic3 (occurrence.taxonRank)) %}
+                    {% set _ = occurrenceIDs_4.append(occurrence.occurrenceID) %}
+                {% endif %}
+            {% endfor %}
+            {% if occurrenceIDs_4|length > 0 %}
+                <h6>{{ names[0] | safe }}</h6>
+            {% endif %}
+            <!-- Formatted occurrence-data should be inserted here -->
+            <p>{{ format_occurrence_block(occurrenceIDs_4, occurrences_dict) | safe }}</p>
+            <p>{{ format_biology_block(occurrenceIDs_4, occurrences_dict) | safe }}</p>
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
+</div>
+
+<style>
+
+    #report {
+            width: 210mm;  /* A4 width */
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+            background: white;
+    }
+
+    .indented h4, .indented h5 {
+        text-indent: 2em;
+    }
+    .indented h5 {
+        text-indent: 4em;
+    }
+    .indented h6 {
+        text-indent: 6em;
+    }
+    .indented p {
+        margin-left:10%; 
+    }
+
+    p {
+        font-size: 10;
+    }
+
+
+    h3, h4, h5 {
+        margin-bottom: 10px;
+        margin-top: 25px;
+        font-size: 12;
+    }
+
+    h6 {
+        margin-bottom: 5px;
+        margin-top: 25px;
+    }
+
+    #taxon_table {
+        display: block; /* Initially visible */
+    }
+
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10;
+    line-height: 1.2;
+    }
+
+    th, td {
+        padding: 6px;
+        text-align: left;
+    }
+    
+    tr {
+        height:10px
+    }
+    
+
+    tr.family {
+        border-top: 1px solid rgb(60, 60, 60); /* Family separator */
+        font-weight: bold;
+    }
+    
+    tr.subfamily {
+        /*border-top: 1px dashed rgb(170, 170, 170);*/
+        font-weight: bold;
+    }
+
+    tr.tribe {
+        /*border-top: 1px dashed rgb(170, 170, 170);*/
+        font-weight: bold;
+    }
+
+    tr.genus{
+        text-wrap: nowrap;
+    }
+    
+
+    /* Remove other borders */
+    td {
+        border: none;
+    }
+
+    <!-- CSS for stacking -->
+
+    .checkbox-container {
+        display: flex;
+        flex-direction: column; /* Stack checkboxes vertically */
+        gap: 5px; /* Adds spacing between checkboxes */
+        max-width: 300px; /* Optional: Prevents too wide checkboxes */
+    }
+    
+    .checkbox-container label {
+        display: flex;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+        margin-right: 8px; /* Adds space between checkbox and label text */
+    }
+    
+</style>
+
+<script>
+    document.getElementById('toggleIndent').addEventListener('change', function() {
+        document.getElementById('report').classList.toggle('indented', this.checked);
+    });
+
+    document.getElementById('toggleTable').addEventListener('change', function() {
+        let tableDiv = document.getElementById('taxon_table');
+        tableDiv.style.display = this.checked ? 'block' : 'none';
+    });
+
+    function updateURLParams() {
+        let url = new URL(window.location.href);
+        let params = url.searchParams;
+
+        let ids = ["include_occurrenceID", "include_catalogNumber", "include_recordedBy", "include_institutionCode", "include_country"];
+
+        ids.forEach(id => {
+            let checkbox = document.getElementById(id);
+            if (checkbox) {
+                params.set(id, checkbox.checked);
+            }
+        });
+
+        window.location.href = url.toString();
+    }
+
+    // Attach event listeners only to the specific checkboxes
+    ["include_occurrenceID", "include_catalogNumber", "include_recordedBy", "include_institutionCode", "include_country"].forEach(id => {
+        let checkbox = document.getElementById(id);
+        if (checkbox) {
+            checkbox.addEventListener('change', updateURLParams);
+        }
+    });
+</script>

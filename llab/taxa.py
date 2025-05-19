@@ -6,7 +6,9 @@ from . import db
 import numpy as np
 from werkzeug.utils import secure_filename
 import os
-import qrcode
+from pylibdmtx.pylibdmtx import encode
+from PIL import Image
+import io
 
 # connect to __init__ file
 taxa = Blueprint('taxa', __name__)
@@ -155,7 +157,7 @@ def edit_taxon():
             if update:
             # Update taxon
                 taxon = Taxa.query.filter_by(scientificName=scientificName_old).first()
-                taxon.scientificName = scientificName_new
+                taxon.scientificName = scientificName_new.strip()
                 taxon.taxonID = taxonID
                 taxon.taxonRank = taxonRank
                 taxon.scientificNameAuthorship = scientificNameAuthorship
@@ -345,11 +347,14 @@ def det_labels():
                         if det.scientificName==data.scientificName:
                             for n in range(det.print_n):
                                 filename = f'{current_user.id}_detqrlabel_{det.id}_{n}.png'
-                                qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
-                                qr.add_data(f'TAX:{data.taxonInt}:{det.identificationQualifier}:{det.sex}:{new_unit_id()}')
-                                qr.make(fit = True)
-                                img = qr.make_image(fill_color = 'black', back_color = 'white')
-                                img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                                #qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
+                                #qr.add_data(f'TAX:{data.taxonInt}:{det.identificationQualifier}:{det.sex}:{new_unit_id()}')
+                                #qr.make(fit = True)
+                                #img = qr.make_image(fill_color = 'black', back_color = 'white')
+                                #img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                                encoded_data = encode(f'TAX:{data.taxonInt}:{det.identificationQualifier}:{det.sex}:{new_unit_id()}'.encode('utf8'))
+                                image = Image.frombytes('RGB', (encoded_data.width, encoded_data.height), encoded_data.pixels)
+                                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 # Return labels
                 return render_template("taxon_labels_output.html", title=title, dets=dets, user=current_user, det_data=det_data)
 

@@ -34,7 +34,7 @@
     Taxon name
     <div class="mb-3">
         <input type="text" class="form-control" id="taxonName" name="taxonName"
-            value="{{ taxon.scientificName | replace(" "+taxon.scientificNameAuthorship, "") }}" required >
+            value="{{ taxon.scientificName | replace(taxon.scientificNameAuthorship, "") }}" required >
     </div>
 
     <!-- Authorship -->

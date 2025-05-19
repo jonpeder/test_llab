@@ -64,8 +64,7 @@
     <!-- EUNIS Habitat -->
     {% for habitat in habitats %} 
     {% if habitat.eunisCode == event.eunisCode %}
-    {% set eunis = habitat.habitatName+" ("+event.eunisCode+")" %}
-    {{ eunis | tablerow("EUNIS-habitat") | safe }}
+    {{ habitat.habitatName | format_eunis (event.eunisCode) | tablerow("Eunis habitat") | safe }}
     {% endif %}
     {% endfor %}
     <!-- Substrate -->

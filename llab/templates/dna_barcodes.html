@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jinja2 Dynamic Display</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get checkboxes and add event listeners
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener("change", updateDisplay);
+            });
+
+            function updateDisplay() {
+                let selectedFields = [];
+                document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                    selectedFields.push(checkbox.value);
+                });
+
+                // Loop through all sequence entries and update visibility
+                document.querySelectorAll('.sequence-entry').forEach(entry => {
+                    entry.querySelectorAll('.field').forEach(field => {
+                        if (selectedFields.includes(field.dataset.type)) {
+                            field.style.display = "inline"; // Show
+                        } else {
+                            field.style.display = "none"; // Hide
+                        }
+                    });
+                });
+            }
+
+            // Initial update on page load (in case checkboxes are unchecked by default)
+            updateDisplay();
+        });
+    </script>
+</head>
+<body>
+    <h3>Select Fields to Display</h3>
+    <form>
+        <label><input type="checkbox" value="scientificName" checked> Scientific Name</label>
+        <label><input type="checkbox" value="sex" checked> Sex</label>
+        <label><input type="checkbox" value="associatedTaxa" checked> Associated Taxa</label>
+        <label><input type="checkbox" value="substrateName" checked> Substrate Name</label>
+        <label><input type="checkbox" value="substratePlantPart" checked> Substrate Part</label>
+        <label><input type="checkbox" value="substrateType" checked> Substrate Type</label>
+        <label><input type="checkbox" value="eunisCode" checked> Eunis Code</label>
+        <label><input type="checkbox" value="occurrenceID" checked> Occurrence ID</label>
+        <label><input type="checkbox" value="sequenceID" checked> Sequence ID</label>
+        <label><input type="checkbox" value="eventID" checked> Event ID</label>
+    </form>
+
+    <hr>
+
+    {%- for sequence in output_alignment %}
+        <div class="sequence-entry">
+            ><span class="field" data-type="scientificName">{{ sequence.scientificName | remove_author_string2 }}</span><span class="field" data-type="sex">_{{ sequence.sex }}</span><span class="field" data-type="associatedTaxa">_{{ sequence.associatedTaxa | remove_author_string }}</span><span class="field" data-type="substrateName">_{{ sequence.substrateName | remove_author_string }}</span><span class="field" data-type="substratePlantPart">_{{ sequence.substratePlantPart }}</span><span class="field" data-type="substrateType">_{{ sequence.substrateType }}</span><span class="field" data-type="eunisCode">_{{ sequence.eunisCode }}</span><span class="field" data-type="occurrenceID">_{{ sequence.occurrenceID }}</span><span class="field" data-type="sequenceID">_{{ sequence.sequenceID }}</span><span class="field" data-type="eventID">_{{ sequence.eventID }}</span>
+            <br>
+            <span style="text-wrap: nowrap;">{{ sequence.sequence }}</span><br>
+        </div>
+    {% endfor %}
+</body>
+</html>

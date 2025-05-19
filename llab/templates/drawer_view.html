@@ -147,7 +147,7 @@
                 <td>{{ specimen_count.value }}</td>
                 <td>{{ rank.value }}</td>
                 <td>{{ unit.sex }}</td>
-                <td>{{ scientificName.value | scn_italic(rank.value, author.value) | safe }}</td>
+                <td>{{ scientificName.value | italicize_scientific_name | safe }}</td>
                 <td>{{ author.value }}</td>
                 <td>{{ unit.identificationQualifier }}</td>
                 <td>{{ family.value }}</td>

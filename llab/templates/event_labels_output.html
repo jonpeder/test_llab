@@ -61,7 +61,13 @@
     {% if data.locality_1 %}{{ data.locality_1 }}{% endif %}{% if data.locality_1 and data.locality_2 %}, {% endif %}{% if data.locality_2 %}{{ data.locality_2 }}{% endif %}{% if data.locality_1 or data.locality_2 %}<br/>{% endif %}
     <!-- Line 3: Habitat/Substrate -->
     {% if data.substrateName %}
-    (<i>{{ data.substrateName|scn_format }}</i>-{{ data.substratePlantPart }}-{{ data.substrateType }})
+    ({{ data.substrateName | scn_format | safe }}
+    {% if data.substratePlantPart %}
+    {{ data.substratePlantPart }}
+    {% endif %}
+    {% if data.substrateType %}
+    {{ data.substrateType }})
+    {% endif %}
     <br/>
     {% elif data.habitat %}
     ({{ data.habitat }})

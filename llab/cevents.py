@@ -10,6 +10,10 @@ from os.path import exists
 import qrcode
 import sqlalchemy
 import pandas as pd
+from pylibdmtx.pylibdmtx import encode
+from PIL import Image
+import io
+
 
 # connect to __init__ file
 cevents = Blueprint('cevents', __name__)
@@ -24,7 +28,7 @@ latlon = ["Latitude", "Longitude", "Radius"]
 date = ["Date_1", "Date_2"]
 substrate_types = ["gall", "mine", "colony"]
 substrate_parts = ["flower", "stem", "leaf", "shoot", "twig", "root",
-                  "fruit", "seed", "cone", "female_catkin", "male_catkin", "fruitbody", "waste/dung/heap"]
+                  "fruit", "seed", "cone", "catkin", "female_catkin", "male_catkin", "fruitbody", "waste/dung/heap"]
 met = ["Sweep-net","Reared","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","Color-pan","Yellow-pan","White-pan"]
 
 
@@ -272,11 +276,16 @@ def labels():
                                 catalog_numbers[f'{current_user.id}_{event.id}_{n}'] = catalog_number
                                 # Create qr-code image files
                                 filename = f'{current_user.id}_qrlabel_{event.id}_{n}.png'
-                                qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
-                                qr.add_data(f'{current_user.institutionCode}:{event.eventID}:{catalog_number}')
-                                qr.make(fit = True)
-                                img = qr.make_image(fill_color = 'black', back_color = 'white')
-                                img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                                if request.form.get("code_type") == "qr":
+                                    qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
+                                    qr.add_data(f'{current_user.institutionCode}:{event.eventID}:{catalog_number}')
+                                    qr.make(fit = True)
+                                    img = qr.make_image(fill_color = 'black', back_color = 'white')
+                                    img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                                else:
+                                    encoded_data = encode(f'{current_user.institutionCode}:{event.eventID}:{catalog_number}'.encode('utf8'))
+                                    image = Image.frombytes('RGB', (encoded_data.width, encoded_data.height), encoded_data.pixels)
+                                    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 # Return labels
                 return render_template("event_labels_output.html", title=title, events=events, user=current_user, event_data=event_data, catalog_numbers=catalog_numbers)
 

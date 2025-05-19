@@ -239,10 +239,17 @@ class Observations(db.Model):
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
 
 # Pteromalidae database
-class pteromalidae_events(db.Model):
-    #__bind_key__ = "pteromalidae"
-    eventID = db.Column(db.String(100), primary_key=True)
-    country = db.Column(db.String(255))
+class Pteromalidae_norway(db.Model):
+    occurrenceID = db.Column(db.String(100), primary_key=True)
+    eventID = db.Column(db.String(100))
+    scientificName = db.Column(db.String(100))
+    notes = db.Column(db.String(255))
+    reference = db.Column(db.String(255))
+    institutionCode = db.Column(db.String(20))
+    source = db.Column(db.String(20))
+    sex = db.Column(db.String(10))
+    individualCount = db.Column(db.Integer)
+    identifiedBy = db.Column(db.String(200))
     county = db.Column(db.String(255))
     strand = db.Column(db.String(255))
     municipality = db.Column(db.String(255))
@@ -255,18 +262,32 @@ class pteromalidae_events(db.Model):
     eventDate_1 = db.Column(db.String(10))
     eventDate_2 = db.Column(db.String(10))
     recordedBy = db.Column(db.String(255))
-    note = db.Column(db.String(255))
-    method = db.Column(db.String(20))
+    catalogNumber = db.Column(db.String(100))
+    basisOfRecord = db.Column(db.String(100))
+    dataset = db.Column(db.String(255))
+    occurrenceRemarks = db.Column(db.String)
+    eventRemarks = db.Column(db.String)
+    
+class Chalcidoidea(db.Model):
+    ID = db.Column(db.Integer, primary_key=True)
+    parent = db.Column(db.Integer)
+    name = db.Column(db.String(100))
+    author = db.Column(db.String(100))
+    rank = db.Column(db.String(100))
+    family = db.Column(db.String(100))
+    subfamily = db.Column(db.String(100))
+    tribe = db.Column(db.String(100))
+    status = db.Column(db.String(10))
+    extant = db.Column(db.String(10))
 
-class Pteromalidae_occurrences(db.Model):
-    #__bind_key__ = "pteromalidae"
-    occurrenceID = db.Column(db.String(100), primary_key=True)
-    eventID = db.Column(db.String(100))
-    scientificName = db.Column(db.String(100))
-    notes = db.Column(db.String(255))
-    reference = db.Column(db.String(255))
-    institutionCode = db.Column(db.String(20))
-    source = db.Column(db.String(20))
-    sex = db.Column(db.String(10))
-    individualCount = db.Column(db.Integer)
-    identifiedBy = db.Column(db.String(200))
+class co1(db.Model):
+    sequenceID = db.Column(db.String(100), primary_key=True)
+    occurrenceID = db.Column(db.String(100))
+    sequence = db.Column(db.String)
+    sequence_length = db.Column(db.Integer)
+    source = db.Column(db.String(50))
+
+class Sequence_alignment(db.Model):
+    sequenceID = db.Column(db.String(100), primary_key=True)
+    sequence = db.Column(db.String)
+    createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))

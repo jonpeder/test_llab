@@ -54,12 +54,10 @@ def create_app():
     app.register_blueprint(observations, url_prefix='/')
 
 
-    from .models import User, Catalog_number_counter, Print_events, Print_det, Event_images, Occurrence_images, Identification_events, Eunis_habitats, Observations
+    from .models import User
 
     with app.app_context():
         db.create_all()
-
-    #db.create_all(app=app)
 
     login_manager = LoginManager()
     # Redirect to login-page if not logged in

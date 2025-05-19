@@ -2,7 +2,7 @@
 from .functions import bar_plot_dict
 from flask import Blueprint, request, render_template, flash, request
 from flask_login import login_required, current_user
-from .models import Occurrences, Taxa, Identification_events, Collecting_events, Country_codes, Eunis_habitats, Datasets, Units, Drawers
+from .models import Occurrences, Taxa, Identification_events, Collecting_events, Country_codes, Eunis_habitats, Datasets, Units, Drawers, co1, Observations
 from . import db
 import numpy as np
 import pandas as pd
@@ -124,7 +124,6 @@ def home():
                     .filter_by(taxonRank=taxon_rank).all()
                 rank_fiter_occurrences = [i.occurrenceID for i in rank_fiter_occurrences]
                 specimen_ids = np.intersect1d(specimen_ids, rank_fiter_occurrences)
-            print(event_ids)
             # 3. Sex filter
             if request.form.get("sex"):
                 event_ids = [] # Empty list of event-IDs
@@ -226,15 +225,20 @@ def home():
                 method_fiter_occurrences = [i.occurrenceID for i in method_fiter_occurrences]
                 specimen_ids = np.intersect1d(specimen_ids, method_fiter_occurrences)
                 # Add eventIDs to eventIDs list
-                method_fiter_occurrences = Collecting_events.query.filter_by(samplingProtocol=method).all()
-                event_ids = np.intersect1d([i.eventID for i in method_fiter_occurrences], event_ids)
+                method_fiter_eventIDs = Collecting_events.query.filter_by(samplingProtocol=method).all()
+                event_ids = np.intersect1d([i.eventID for i in method_fiter_eventIDs], event_ids)
             # 9. Dataset
             if request.form.get("datasetfilter"):
                 dataset = request.form.get("datasetfilter")
                 dataset_fiter_occurrences = Datasets.query.filter_by(datasetName=dataset).first()
                 # The occurrences in the dataset are formatted as a string delimited by " | ". Split the string and convert to list.
                 dataset_fiter_occurrences = dataset_fiter_occurrences.specimenIDs.split(" | ")
-                specimen_ids = np.intersect1d(specimen_ids, dataset_fiter_occurrences)        
+                specimen_ids = np.intersect1d(specimen_ids, dataset_fiter_occurrences)
+                # Add eventIDs to eventIDs list. THIS MAY CAUSE BUGS!!!
+                dataset_filter_occurrences = Occurrences.query.filter(Occurrences.occurrenceID.in_(dataset_fiter_occurrences))
+                dataset_filter_eventIDs = [i.eventID for i in dataset_filter_occurrences]
+                dataset_filter_eventIDs = np.unique(dataset_filter_eventIDs)
+                event_ids = np.intersect1d(dataset_filter_eventIDs, event_ids)        
         # If requested, get event-id from show_event.html
         if request.form.get("collecting_event_id") == "collecting_event_id":
             eventID = request.form.get("eventID")
@@ -248,13 +252,15 @@ def home():
             .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID, isouter=True)\
             .join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode, isouter=True)\
             .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode, isouter=True)\
+            .join(co1, Occurrences.occurrenceID==co1.occurrenceID, isouter=True)\
             .with_entities(Occurrences.occurrenceID, Country_codes.country, Collecting_events.eventID,
             Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, 
             Collecting_events.habitat, Collecting_events.substrateName, Collecting_events.substratePlantPart, 
             Collecting_events.substrateType, Collecting_events.eventDate_1, Collecting_events.eventDate_2, 
             Collecting_events.samplingProtocol, Collecting_events.recordedBy, Taxa.scientificName, Taxa.genus, Taxa.family, 
             Taxa.order, Taxa.taxonRank, Taxa.scientificNameAuthorship, Identification_events.identifiedBy, 
-            Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex, Eunis_habitats.level1, Eunis_habitats.level2, Eunis_habitats.habitatName, Eunis_habitats.eunisCode)\
+            Identification_events.dateIdentified, Identification_events.identificationQualifier, Identification_events.sex, 
+            Eunis_habitats.level1, Eunis_habitats.level2, Eunis_habitats.habitatName, Eunis_habitats.eunisCode, co1.sequenceID)\
             .order_by(Taxa.scientificName, Collecting_events.eventID)\
             .all()
     

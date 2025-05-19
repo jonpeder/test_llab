@@ -3,7 +3,7 @@ from .functions import bar_plot_dict
 from flask import Blueprint, request, redirect, url_for, render_template, flash, request, jsonify
 from flask_login import login_required, current_user
 import sqlite3
-from .models import User, Collectors, Occurrences, Taxa, Identification_events, Collecting_events, Country_codes, Eunis_habitats, Datasets, Units
+from .models import User, Collectors, Occurrences, Taxa, Identification_events, Collecting_events, Country_codes, Eunis_habitats, Datasets, Units, co1
 from . import db
 import re
 import datetime
@@ -61,6 +61,10 @@ def specimen_det():
                         identificationQualifier = identificationQualifier_tmp
                     if det_data.split(":")[2]:
                         sex = det_data.split(":")[2]
+                        if sex == "m":
+                            sex = "male"
+                        else:
+                            sex = "female"
                     else:
                         sex = sex_tmp
                     # Get unit-ID. Add to database if not already present
@@ -187,6 +191,8 @@ def specimen_view(occurrence_id):
     occurrence = Occurrences.query.filter_by(occurrenceID=occurrence_id)\
             .join(Collecting_events, Occurrences.eventID==Collecting_events.eventID)\
             .join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode)\
+            .join(co1, Occurrences.occurrenceID==co1.occurrenceID, isouter=True)\
+            .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode, isouter=True)\
             .with_entities(Occurrences.occurrenceID, Occurrences.identificationID, Occurrences.catalogNumber, Occurrences.individualCount, 
             Occurrences.preparations, Occurrences.occurrenceRemarks, Occurrences.associatedTaxa, 
             Occurrences.associatedReferences, Occurrences.ownerInstitutionCode, Occurrences.verbatimLabel,
@@ -194,7 +200,8 @@ def specimen_view(occurrence_id):
             Collecting_events.locality_1, Collecting_events.locality_2, Collecting_events.habitat, Collecting_events.substrateName, 
             Collecting_events.substratePlantPart, Collecting_events.substrateType, Collecting_events.eventDate_1, 
             Collecting_events.eventDate_2, Collecting_events.samplingProtocol, Collecting_events.recordedBy, Collecting_events.decimalLatitude, 
-            Collecting_events.decimalLongitude, Collecting_events.coordinateUncertaintyInMeters, Collecting_events.eventRemarks)\
+            Collecting_events.decimalLongitude, Collecting_events.coordinateUncertaintyInMeters, Collecting_events.eventRemarks,
+            co1.sequenceID, co1.sequence, co1.source, co1.sequence_length, Eunis_habitats.eunisCode, Eunis_habitats.habitatName)\
             .first()
     # Query identification events
     identifications = Identification_events.query.filter_by(occurrenceID=occurrence_id)\

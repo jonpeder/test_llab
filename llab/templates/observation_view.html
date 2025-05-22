@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    th.tablespace {
+        padding-top: 15px
+    }
+
+    .observation-gallery-container {
+        margin: 1.5rem 0;
+    }
+
+    .observation-gallery {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        padding-bottom: 1rem;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+    
+    .gallery-item {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        width: 500px; /* Fixed width or use min-width/max-width */
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        background: white;
+    }
+    
+    .gallery-item img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery-item img:hover {
+        transform: scale(1.02);
+    }
+    
+    .image-caption {
+        padding: 0.5rem;
+        margin: 0;
+        font-size: 0.9rem;
+        color: #555;
+        text-align: center;
+    }
+    
+    /* Hide scrollbar but keep functionality */
+    .observation-gallery::-webkit-scrollbar {
+        display: none;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .gallery-item {
+            width: 400px;
+        }
+        .gallery-item img {
+            height: 350px;
+        }
+    }
+    
+</style>
+
+{% if occurrence %}
+
+<!-- Leaflet -->
+<div id="map" style="height: 250px;"></div>
+<script type="text/javascript">
+    // The first parameters are the coordinates of the center of the map, the second parameter is the zoom level
+    var map = L.map('map', {fullscreenControl: true}).setView([{{ occurrence.decimalLatitude }}, {{ occurrence.decimalLongitude }}], 11);
+    // Add leaflet map as a new layer
+    var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+    }).addTo(map);
+    // It even opens up a popup when you click it!
+    var occ_marker = L.marker([{{ occurrence.decimalLatitude }}, {{ occurrence.decimalLongitude }}]).addTo(map)
+    occ_marker.bindPopup('<form action="/event_show" method="post"><input type="text" name="eventID" id="eventID" value="{{ occurrence.eventID }}" hidden><button type="submit" name="action1" value="VALUE1">{{ occurrence.eventID }}</button></form>');
+</script>
+<br />
+
+<!-- Specimen data-table -->
+<div class="table-responsive">
+<table class="table table-sm"
+    style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;">
+    <!-- Identification table  -->
+    <tr class="border-bottom border-dark align-bottom">
+        <th class="tablespace">Observation:</th>
+        <th></th>
+    </tr>
+    <!-- Occurrence ID -->
+    {{ occurrence.occurrenceID | tablerow("Specimen ID") | safe }}
+    <!-- Event date -->
+    {{ occurrence.eventDateTime | tablerow ("Event date") | safe }}
+    <!-- Collected by -->
+    {{ occurrence.recordedBy | tablerow("Recorded by") | safe }}
+    <!-- Occurrence remarks -->
+    {{ occurrence.occurrenceRemarks | tablerow("Occurrence remarks") | safe }}
+    
+    <!-- Identification table  -->
+    <tr class="border-bottom border-dark align-bottom">
+        <th class="tablespace">Identification:</th>
+        <th></th>
+    </tr>
+    <!-- Taxon name -->
+    {{ occurrence.scientificName | scn_italic2 (occurrence.taxonRank, occurrence.scientificNameAuthorship) | tablerow("Taxon name") | safe }}
+    <!-- Sex -->
+    {{ occurrence.sex | tablerow("Sex") | safe }}
+    <!-- Life stage -->
+    {{ occurrence.lifeStage | tablerow("Life stage") | safe }}
+    <!-- Identified by -->
+    {{ occurrence.recordedBy | tablerow("Identified by") | safe }}
+   
+    
+    <!-- Taxon table -->
+    <tr class="border-bottom border-dark align-bottom">
+        <th class="tablespace">Taxon:</th>
+        <th></th>
+    </tr>
+    
+    <tr>
+        <td>Taxon ID</td>
+        <td><a href="{{ occurrence.taxonID }}">{{ occurrence.taxonID }}</a></td>
+    </tr>
+    
+    <!-- Taxon rank -->
+    {{ occurrence.taxonRank | tablerow("Taxon rank") | safe }}
+    <!-- Scientific name -->
+    {{ occurrence.scientificName | scn_italic2 (occurrence.taxonRank, occurrence.scientificNameAuthorship) | tablerow("Scientific name") | safe }}
+    <!-- Family -->
+    {{ occurrence.family | tablerow("Family") | safe }}
+    <!-- Order -->
+    {{ occurrence.order | tablerow("Order") | safe }}
+    <!-- Class -->
+    {{ occurrence.cl | tablerow("Class") | safe }}
+
+    
+    <!-- Locality table -->
+    <tr class="border-bottom border-dark align-bottom">
+        <th class="tablespace">Locality:</th>
+        <th></th>
+    </tr>
+    <!-- Country -->
+    {{ occurrence.country | tablerow("Country") | safe }}
+    <!-- Municipality -->
+    {{ occurrence.municipality | tablerow("Municipality") | safe }}
+    <!-- Locality name -->
+    {{ occurrence.locality | tablerow("Locality") | safe }}
+    <!-- Coordinates -->
+    <tr>
+        <td>Coordinates</td>
+        <td><a href="http://maps.google.com/maps?q={{ occurrence.decimalLatitude }},{{ occurrence.decimalLongitude }}">{{ occurrence.decimalLatitude }}, {{ occurrence.decimalLongitude }}</a></td>
+    </tr>
+    <!-- Coordinate uncertainty (m) -->
+    {{ occurrence.coordinateUncertaintyInMeters | tablerow("Coordinate uncertainty (m)") | safe }}
+
+</table>
+</div>
+
+<div class="observation-gallery-container">
+    <h3>Images</h3>
+    <div class="observation-gallery">
+      <!-- Dynamic images from your backend -->
+      {% for file in files %}
+      <div class="gallery-item">
+        <img src="/static/images/compressed/{{ file }}" alt="Observation photo {{ loop.index }}" loading="lazy" onclick="window.open(window.location.origin+'/static/images/observations/{{file}}', '_blank');">
+      </div>
+      {% endfor %}
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+

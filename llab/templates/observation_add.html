@@ -168,80 +168,110 @@
 
 
 <script>
-    // Function to load selected files
+    // Function to load selected files and store their EXIF data
     function loadFiles(event) {
         const files = event.target.files;
         const resultDiv = document.getElementById('result');
         resultDiv.innerHTML = ''; // Clear previous results
 
-        Array.from(files).forEach(file => {
+        // Array to store all images with their EXIF data
+        const imagesWithExif = [];
+
+        Array.from(files).forEach((file, index) => {
             const reader = new FileReader();
 
             reader.onload = function (e) {
-                // Create an img element
                 const img = new Image();
                 img.src = e.target.result;
-                img.style.maxWidth = '300px'; // Adjust image size for display
+                img.style.maxWidth = '300px';
+                img.dataset.index = index; // Add index to identify the image
 
-                // Add the image to the container
-                resultDiv.appendChild(img);
+                // Process EXIF data when image loads
+                img.onload = function() {
+                    EXIF.getData(img, function() {
+                        // Store the image with its EXIF data
+                        imagesWithExif[index] = {
+                            element: img,
+                            exif: {
+                                lat: EXIF.getTag(this, 'GPSLatitude'),
+                                lon: EXIF.getTag(this, 'GPSLongitude'),
+                                latRef: EXIF.getTag(this, 'GPSLatitudeRef') || "N",
+                                lonRef: EXIF.getTag(this, 'GPSLongitudeRef') || "E",
+                                dateTime: EXIF.getTag(this, 'DateTimeOriginal')
+                            }
+                        };
+
+                        // Add to DOM
+                        resultDiv.appendChild(img);
+                    });
+                };
             };
 
-            // Read the image file as a data URL
             reader.readAsDataURL(file);
         });
+
+        // Store the array for later use
+        window.uploadedImages = imagesWithExif;
     }
 
-    // Function to extract EXIF data from the first image in the container
+    // Function to extract EXIF data from images
     function image_coordinates() {
-        const img = document.querySelector("#result img"); // Get the first image from the result container
+        if (!window.uploadedImages || window.uploadedImages.length === 0) {
+            console.log('No images uploaded yet.');
+            return;
+        }
 
-        if (img) {
-            EXIF.getData(img, function () {
-                const lat = EXIF.getTag(this, 'GPSLatitude');
-                const lon = EXIF.getTag(this, 'GPSLongitude');
-                const eventDateTime = EXIF.getTag(this, 'DateTimeOriginal');
+        // Find the first image that has GPS data
+        const imageWithData = window.uploadedImages.find(img => 
+            img && img.exif && img.exif.lat && img.exif.lon
+        );
 
-                const latRef = EXIF.getTag(this, 'GPSLatitudeRef') || "N";
-                const lonRef = EXIF.getTag(this, 'GPSLongitudeRef') || "W";
-                const latitude = convertDMSToDD(lat, latRef);
-                const longitude = convertDMSToDD(lon, lonRef);
+        if (imageWithData) {
+            const { lat, lon, latRef, lonRef, dateTime } = imageWithData.exif;
+            
+            const latitude = convertDMSToDD(lat, latRef);
+            const longitude = convertDMSToDD(lon, lonRef);
 
-                // Split eventDateTime
-                const date = eventDateTime.split(" ")[0];
-                const date2 = date.split(":")[0]+"-"+date.split(":")[1]+"-"+date.split(":")[2];
-                const time = eventDateTime.split(" ")[1];
-                const time2 = time.split(":")[0]+":"+time.split(":")[1]+":00";
+            let date2 = '';
+            let time2 = '';
+            
+            if (dateTime) {
+                const [date, time] = dateTime.split(" ");
+                date2 = date?.replace(/:/g, "-") || '';
+                time2 = time?.split(":").slice(0, 2).join(":") + ":00" || '';
+            }
 
-                console.log("time2")
-
-                // Set hidden form inputs
-                document.getElementById('Latitude').value = latitude || '';
-                document.getElementById('Longitude').value = longitude || '';
-                document.getElementById('date').value = date2 || '';
-                document.getElementById('time').value = time2 || '';
-
-            });
+            // Set form inputs
+            document.getElementById('Latitude').value = latitude || '';
+            document.getElementById('Longitude').value = longitude || '';
+            document.getElementById('date').value = date2 || '';
+            document.getElementById('time').value = time2 || '';
         } else {
-            console.log('No image found in the container.');
+            console.log('No GPS data found in any of the uploaded images.');
+            alert('No GPS coordinates found in any of the uploaded images.');
         }
     }
 
-    // Function to convert DMS (degrees, minutes, seconds) to decimal degrees
+    // Improved DMS to DD conversion
     function convertDMSToDD(dms, ref) {
-        if (!dms) return null;
+        if (!dms || !Array.isArray(dms) || dms.length < 3) return null;
 
-        const degrees = dms[0];
-        const minutes = dms[1];
-        const seconds = dms[2];
-        let dd = degrees + (minutes / 60) + (seconds / 3600);
-
-        // If the reference is South or West, make the coordinates negative
-        if (ref === "S" || ref === "W") {
-            dd = dd * -1;
+        try {
+            const degrees = Number(dms[0]);
+            const minutes = Number(dms[1]);
+            const seconds = Number(dms[2]);
+            
+            let dd = degrees + (minutes / 60) + (seconds / 3600);
+            
+            if (ref === "S" || ref === "W") {
+                dd = dd * -1;
+            }
+            
+            return dd.toFixed(6);
+        } catch (e) {
+            console.error('Error converting coordinates:', e);
+            return null;
         }
-
-        return dd;
     }
 </script>
 

@@ -1,0 +1,433 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    th.tablespace {
+        padding-top: 15px
+    }
+
+    .observation-gallery-container {
+        margin: 1.5rem 0;
+    }
+
+    .observation-gallery {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        padding-bottom: 1rem;
+        -webkit-overflow-scrolling: touch;
+        /* Smooth scrolling on iOS */
+    }
+
+    .gallery-item {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        width: 500px;
+        /* Fixed width or use min-width/max-width */
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background: white;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item img:hover {
+        transform: scale(1.02);
+    }
+
+    .image-caption {
+        padding: 0.5rem;
+        margin: 0;
+        font-size: 0.9rem;
+        color: #555;
+        text-align: center;
+    }
+
+    /* Hide scrollbar but keep functionality */
+    .observation-gallery::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .gallery-item {
+            width: 400px;
+        }
+
+        .gallery-item img {
+            height: 350px;
+        }
+    }
+</style>
+
+<!-- SIDEBAR -->
+<!-- A collapsible sidebar hovering over the left side of the page -->
+<div class="collapse width" id="sidebar"
+    style="position: fixed;top: 1;left: 0;height: 100%;width: 500px;z-index: 1000;max-height: 80vh;overflow-y: auto;padding: 5px;margin: 0px;border: 0px;">
+    <div class="card">
+        <!-- FILTERS -->
+        <div class="card">
+            <div class="card-header">
+                <a class="btn" data-bs-toggle="collapse" href="#collapseFilters">
+                    Filters
+                </a>
+            </div>
+            <!-- Filter collapsible -->
+            <div id="collapseFilters" class="collapse">
+                <div class="card-body">
+                    <!-- Filter form -->
+                    <form method="GET" action="{{ url_for('observations.observation_filter') }}" class="mb-4">
+                        <!-- Identification filters -->
+                        Identification filters
+                        <div class="container-fluid">
+                            <!-- 1. Taxa -->
+                            <div class="mb-1">
+                                <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#taxa" aria-expanded="true" aria-controls="taxa">
+                                    Taxa
+                                </button>
+                            </div>
+                            <div class="collapse" id="taxa">
+                                <div class="mb-1">
+                                    <select class="form-control selectpicker" id="taxon_name" name="taxon_name"
+                                        data-live-search="true">
+                                        <option value=""></option>
+                                        {% for name in dropdown_names %}
+                                        {% set concat_name = name ~ ' [' ~ dropdown_ranks[loop.index0] ~ ']' %}
+                                        <option value="{{ concat_name }}" {% if filters.taxon_name==concat_name
+                                            %}selected{% endif %}>
+                                            {{ concat_name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- 2. Rank -->
+                            <div class="mb-1">
+                                <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#rank" aria-expanded="false" aria-controls="rank">
+                                    Rank
+                                </button>
+                            </div>
+                            <div class="collapse" id="rank">
+                                <div class="mb-1">
+                                    <select class="form-control selectpicker" id="taxon_rank" name="taxon_rank">
+                                        <option value=""></option>
+                                        {% for rank in ranks %}
+                                        <option value="{{ rank }}" {% if filters.rank==rank %}selected{% endif %}>{{
+                                            rank }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- 3. sex -->
+                            <div class="mb-1">
+                                <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#sex" aria-expanded="false" aria-controls="sex">
+                                    Sex
+                                </button>
+                            </div>
+                            <div class="collapse" id="sex">
+                                <div class="mb-1">
+                                    <select class="form-control selectpicker" id="sex" name="sex">
+                                        <option value=""></option>
+                                        {% for sex in sexes %}
+                                        <option value="{{ sex }}" {% if filters.sex==sex %}selected{% endif %}>{{ sex }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- 7. Life stage -->
+                            <div class="mb-1">
+                                <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#lifeStage" aria-expanded="false" aria-controls="lifeStage">
+                                    Life stage
+                                </button>
+                            </div>
+                            <div class="collapse" id="lifeStage">
+                                <div class="mb-1">
+                                    <select class="form-control selectpicker" id="life_stage" name="life_stage">
+                                        <option value=""></option>
+                                        {% for life_stage in life_stages %}
+                                        <option value="{{ life_stage }}" {% if filters.life_stage==life_stage
+                                            %}selected{% endif %}>{{ life_stage }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Event filters -->
+                        Event filters
+                        <div class="container-fluid">
+                            <!-- 7. date -->
+                            <div class="mb-1">
+                                <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#date" aria-expanded="false" aria-controls="date">
+                                    Date
+                                </button>
+                            </div>
+                            <div class="collapse" id="date">
+                                <div class="mb-1">
+                                    <input type="date" class="form-control" id="start_date" name="start_date"
+                                        value="{{ filters.start_date }}" placeholder="From">
+                                </div>
+                                <div class="mb-1">
+                                    <input type="date" class="form-control" id="end_date" name="end_date"
+                                        value="{{ filters.end_date }}" placeholder="To">
+                                </div>
+                            </div>
+                            <!-- 5. Locality -->
+                            <div class="mb-1">
+                                <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#Locality" aria-expanded="false" aria-controls="Locality">
+                                    Locality
+                                </button>
+                            </div>
+                            <div class="collapse" id="Locality">
+                                <!-- 5.1 Country -->
+                                <div class="mb-1">
+                                    Country
+                                    <select class="form-control selectpicker" id="country" name="country"
+                                        data-live-search="true">
+                                        <option value=""></option>
+                                        {% for country in countries %}
+                                        <option value="{{ country }}" {% if filters.country==country %}selected{% endif
+                                            %}>{{ country }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <!-- 5.2 County -->
+                                <div class="mb-1">
+                                    County
+                                    <select class="form-control selectpicker" id="county" name="county"
+                                        data-live-search="true">
+                                        <option value=""></option>
+                                        {% for county in counties %}
+                                        <option value="{{ county }}" {% if filters.county==county %}selected{% endif %}>
+                                            {{ county }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <!-- 5.3 Municipality -->
+                                <div class="mb-1">
+                                    Municipality
+                                    <select class="form-control selectpicker" id="municipality" name="municipality"
+                                        data-live-search="true">
+                                        <option value=""></option>
+                                        {% for municipality in municipalities %}
+                                        <option value="{{ municipality }}" {% if filters.municipality==municipality
+                                            %}selected{% endif %}>{{ municipality }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- 7. Recorded by -->
+                            <div class="mb-1">
+                                <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#recordedBy" aria-expanded="false" aria-controls="recordedBy">
+                                    Recorded by
+                                </button>
+                            </div>
+                            <div class="collapse" id="recordedBy">
+                                <div class="mb-1">
+                                    <select class="form-control selectpicker" id="recorded_by" name="recorded_by">
+                                        <option value=""></option>
+                                        {% for recorder in recorders %}
+                                        <option value="{{ recorder }}" {% if filters.recorded_by==recorder %}selected{%
+                                            endif %}>{{ recorder }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <p></p>
+                        <!-- buttons -->
+                        <div class="d-inline mb-3">
+                            <!-- Apply filter button -->
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                            <!-- Clear filter button -->
+                            <a href="{{ url_for('observations.observation_filter') }}" class="btn btn-secondary">Reset
+                                Filters</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- HOVERING TOGGLE BUTTONS -->
+<div class="fixed-bottom-left" style="position: fixed;left: 10px;bottom: 10px;z-index: 1030;">
+    <!-- Button to toggle the sidebar -->
+    <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar">Tools</button>
+    <!-- Buttons to toggle between table, map and stat view -->
+    <button type="button" class="btn btn-secondary"
+        onclick="document.getElementById('mapContainer').style.display = 'block'; document.getElementById('galleryContainer').style.display = 'none'; document.getElementById('tableContainer').style.display = 'none';">Map</button>
+    <button type="button" class="btn btn-secondary"
+        onclick="document.getElementById('mapContainer').style.display = 'none'; document.getElementById('galleryContainer').style.display = 'none'; document.getElementById('tableContainer').style.display = 'block';">Table</button>
+    <button type="button" class="btn btn-secondary"
+        onclick="document.getElementById('mapContainer').style.display = 'none'; document.getElementById('galleryContainer').style.display = 'block'; document.getElementById('tableContainer').style.display = 'none';">Gallery</button>
+</div>
+
+<!-- MAP -->
+<div class="container-fluid" id="mapContainer">
+    <div id="map" style="height: 600px;z-index: 10;">
+        <!-- leaflet script -->
+        <script type="text/javascript">
+            // The first parameters are the coordinates of the center of the map, the second parameter is the zoom level
+            var map = L.map('map', { fullscreenControl: true }).setView([65, 5], 3);
+            // Add leaflet map as a new layer
+            var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+            }).addTo(map);
+            // It even opens up a popup when you click it!
+            {% for observation in observations %}
+            var marker{{ loop.index }} = L.marker([{{ observation.decimalLatitude }}, {{ observation.decimalLongitude }}]).addTo(map);
+            marker{{ loop.index }}.bindPopup('<a href= {{ url_for("observations.observation_view", occurrence_id=observation.occurrenceID) }} role="button">view</a>');
+            {% endfor %}
+        </script>
+    </div>
+</div>
+
+
+<!-- TABLE -->
+<div id="tableContainer" style="display: none;">
+    <div class="table-responsive">
+        <table class="table table table-hover" id="specimen-table"
+            style="white-space: nowrap; font-family: Verdana; font-weight: normal; font-style: normal;">
+            <thead>
+                <tr style="font-size: smaller;">
+                    <th><input type="checkbox" id="select-all"></th> <!-- Select all checkboxes in table-->
+                    <th>Observation page</th>
+                    <th>Rank</th>
+                    <th>Taxon</th>
+                    <th>Sex</th>
+                    <th>Life stage</th>
+                    <th>Country</th>
+                    <th>Municipality</th>
+                    <th>Locality</th>
+                    <th>Date</th>
+                    <th>Recorded by</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rank in ranks %}
+                {% for observation in observations %}
+                {% if observation.taxonRank == rank %}
+                <tr>
+                    <!-- Checkbox -->
+                    <td>{{observation.occurrenceID}}</td>
+                    <!-- Specimen -->
+                    <td><a class="btn btn-outline-dark btn-sm"
+                            href="{{ url_for('observations.observation_view', occurrence_id=observation.occurrenceID) }}"
+                            role="button"
+                            style="width: 120px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">View</a>
+                    </td>
+                    <!-- Taxon rank -->
+                    <td>{{ observation.taxonRank }}</td>
+                    <!-- Taxon -->
+                    <td>{{ observation.scientificName | italicize_scientific_name | safe }} {% if
+                        observation.identificationQualifier %},
+                        {{observation.identificationQualifier}}{% endif %}</td>
+                    <!-- Sex -->
+                    <td>{{ observation.sex | if_present }}</td>
+                    <!-- Life stage -->
+                    <td>{{ observation.lifeStage | if_present }}</td>
+                    <!-- Country -->
+                    <td>{{ observation.country | if_present }}</td>
+                    <!-- Municipality -->
+                    <td>{{ observation.municipality | if_present }}</td>
+                    <!-- Locality -->
+                    <td>{{ observation.locality | if_present }}</td>
+                    <!-- Date -->
+                    <td>{{ observation.eventDateTime }}</td>
+                    <!-- Collected by -->
+                    <td>{{ observation.recordedBy | leg_format | if_present | safe }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Gallery -->
+<div id="galleryContainer" style="display: none;">
+    <div class="observation-gallery-container">
+        <div class="observation-gallery">
+            {% for observation in observations %}
+            {% set files = observation.imageFileNames.split(' | ') %}
+            {% for file in files %}
+            <div class="gallery-item">
+                <a href="{{ url_for('observations.observation_view', occurrence_id=observation.occurrenceID) }}"><img src="/static/images/compressed/{{ file }}" alt="Observation photo {{ loop.index }}" loading="lazy"></a>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // CHECKBOXES
+    // Function to select all checkboxes by clicking the header checkbox
+    $(document).ready(function () {
+        // Initiate the datatable. The first row of the table is not searchable or orderable, and is a checkbox
+        var table = $('#specimen-table').DataTable({
+            'columnDefs': [{
+                'targets': 0,
+                'searchable': false,
+                'orderable': false,
+                'className': 'dt-body-center',
+                'render': function (data, type, full, meta) {
+                    return '<input type="checkbox" class="row-checkbox" value="' + full[0] + '">'; // full[0] is the first column of the table, it includes the occurrenceID
+                }
+            }],
+            'order': [[1, 'asc']]
+        });
+
+        var checkboxStates = {};
+
+        // Handle the select-all checkbox
+        $('#select-all').on('click', function () {
+            var rows = table.rows({ 'search': 'applied' }).nodes();
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            var isChecked = this.checked;
+            table.rows({ 'search': 'applied' }).every(function () {
+                var data = this.data();
+                var id = data[0]; // The unique Occurrence-ID is in the first index
+                checkboxStates[id] = isChecked;
+            });
+        });
+
+        // Handle checkbox change and update state object
+        $('#specimen-table tbody').on('change', 'input[type="checkbox"]', function () {
+            var row = $(this).closest('tr');
+            var data = table.row(row).data();
+            var id = data[0]; // The unique Occurrence-ID is in the first index
+            checkboxStates[id] = this.checked;
+        });
+
+        // Function to collect data from selected checkboxes
+        function getSelectedCheckboxValues() {
+            var selected = [];
+            for (var id in checkboxStates) {
+                if (checkboxStates[id]) {
+                    selected.push(id);
+                }
+            }
+            return selected;
+        };
+    });
+
+</script>
+
+{% endblock %}

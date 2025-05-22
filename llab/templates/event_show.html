@@ -1,6 +1,70 @@
 {% extends "base.html" %}
 {% block content %}
 
+<style>
+    th.tablespace {
+        padding-top: 15px
+    }
+
+    .observation-gallery-container {
+        margin: 1.5rem 0;
+    }
+
+    .observation-gallery {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        padding-bottom: 1rem;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+    
+    .gallery-item {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        width: 500px; /* Fixed width or use min-width/max-width */
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        background: white;
+    }
+    
+    .gallery-item img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery-item img:hover {
+        transform: scale(1.02);
+    }
+    
+    .image-caption {
+        padding: 0.5rem;
+        margin: 0;
+        font-size: 0.9rem;
+        color: #555;
+        text-align: center;
+    }
+    
+    /* Hide scrollbar but keep functionality */
+    .observation-gallery::-webkit-scrollbar {
+        display: none;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .gallery-item {
+            width: 400px;
+        }
+        .gallery-item img {
+            height: 350px;
+        }
+    }
+    
+</style>
+
 <form action="/event_show" method=post>
 
     Select collecting event
@@ -102,15 +166,17 @@
 <p></p>
 
 <!-- Show images -->
-{% for file in files %}
-<strong>Image {{loop.index}}:</strong> {{file.imageCategory}}
-<br />
-{{file.comment}}
-<div>
-    <img src="static/images/compressed/{{file.filename}}" onclick="window.open(window.location.origin+'/static/images/events/{{file.filename}}', '_blank');" height="200">
+<div class="observation-gallery-container">
+    <div class="observation-gallery">
+      <!-- Dynamic images from your backend -->
+      {% for file in files %}
+      <div class="gallery-item">
+        <img src="static/images/compressed/{{file.filename}}" alt="Observation photo {{ loop.index }}" loading="lazy" onclick="window.open(window.location.origin+'/static/images/events/{{file.filename}}', '_blank');">
+        <p class="image-caption">{{ file.comment or '' }}</p>
+      </div>
+      {% endfor %}
+    </div>
 </div>
-<br />
-{% endfor %}
 
 <form action="/" method=post>
 
@@ -125,6 +191,40 @@
 <p></p>
 <p></p>
 <p> </p>
+
+<script>
+    document.querySelectorAll('.observation-gallery').forEach(gallery => {
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+    
+      gallery.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - gallery.offsetLeft;
+        scrollLeft = gallery.scrollLeft;
+        gallery.style.cursor = 'grabbing';
+      });
+    
+      gallery.addEventListener('mouseleave', () => {
+        isDown = false;
+        gallery.style.cursor = 'grab';
+      });
+    
+      gallery.addEventListener('mouseup', () => {
+        isDown = false;
+        gallery.style.cursor = 'grab';
+      });
+    
+      gallery.addEventListener('mousemove', (e) => {
+        if(!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - gallery.offsetLeft;
+        const walk = (x - startX) * 2; // Adjust scroll speed
+        gallery.scrollLeft = scrollLeft - walk;
+      });
+    });
+    </script>
+    
 
 {% endif %}
 

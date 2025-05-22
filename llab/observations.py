@@ -25,7 +25,9 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+#####
 # Add determinations to database. Add specimens to database if not already present.
+#####
 @observations.route('/observation_add', methods=["POST", "GET"])
 @login_required
 def observation_add():
@@ -105,7 +107,151 @@ def observation_add():
     return render_template("observation_add.html", user=current_user, entomologists=entomologists, taxa=taxa, countries=countries)
 
 #####
+# Edit observation
+#####
+@observations.route('/observation_edit/<string:occurrence_id>/', methods=['POST', 'GET'])
+@login_required
+def observation_edit(occurrence_id):
+    title = "Edit observation"
+    # Path to image directory
+    dir_path = "/var/www/llab/llab/static/images"
+    # Get researchers
+    entomologists = Collectors.query.all()
+    # Get taxon data
+    taxa = Taxa.query.all()
+    # Get Country codes
+    countries = Country_codes.query.all()
+    # Error handling
+    try:
+        # Get observation
+        observation = Observations.query.filter_by(occurrenceID=occurrence_id)\
+            .join(Country_codes, Observations.countryCode==Country_codes.countryCode, isouter=True)\
+            .join(Taxa, Observations.taxonInt==Taxa.taxonInt, isouter=True)\
+            .with_entities(Observations.occurrenceID, Observations.imageFileNames, Observations.eventDateTime, Observations.decimalLatitude, Observations.decimalLongitude, Observations.coordinateUncertaintyInMeters, Country_codes.countryCode, Country_codes.country, Observations.county, Observations.municipality, Observations.locality, Taxa.taxonInt, Taxa.taxonID, Taxa.taxonRank, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.cl, Observations.individualCount, Observations.lifeStage, Observations.sex, Observations.recordedBy, Observations.occurrenceRemarks)\
+            .first()
+        # separate date and time
+        date = str(observation.eventDateTime).split(" ")[0]
+        time = str(observation.eventDateTime).split(" ")[1]
+        files = observation.imageFileNames.split(" | ")
+        if request.method == 'POST':
+            if request.form.get('action') == 'DELETE':
+                # Get observation to delete
+                observation_delete = Observations.query.filter_by(occurrenceID=occurrence_id).first()
+                # Delete images
+                for file in files:
+                    try:
+                        os.remove(f'{dir_path}/compressed/{file}')
+                        os.remove(f'{dir_path}/observations/{file}')
+                    except Exception as e:
+                        app.logger.error(f"Error deleting image {file}: {str(e)}")
+                        flash(f'Error deleting image {file}', category="error")
+                # Delete observation
+                db.session.delete(observation_delete)
+                # Commit changes
+                db.session.commit()
+                flash(f'Observation deleted!', category="success")
+                return redirect(url_for('observations.observation_filter'))
+            if request.form.get('action') == 'CANCEL':
+                return redirect(url_for('observations.observation_view', occurrence_id=occurrence_id))
+            if request.form.get('action') == 'UPDATE':
+                #imageFileNames = request.form.get("imageFileNames")
+                taxonInt = request.form.get("taxonInt")
+                decimalLatitude = round(float(request.form.get("Latitude")), 8)
+                decimalLongitude =  round(float(request.form.get("Longitude")), 8)
+                coordinateUncertaintyInMeters = request.form.get("uncertaintyInMeters")
+                date = request.form.get("date")
+                time = request.form.get("time")
+                eventDateTime = date+" "+time
+                countryCode = request.form.get("Country")
+                county = request.form.get("County")
+                municipality = request.form.get("Municipality")
+                locality = request.form.get("Locality_2")
+                recordedBy = request.form.get("recordedBy")
+                lifeStage = request.form.get("lifeStage")
+                individualCount = request.form.get("individualCount")
+                sex = request.form.get("sex")
+                occurrenceRemarks = request.form.get("occurrenceRemarks")
+                # Get observation
+                observation_update = Observations.query.filter_by(occurrenceID=occurrence_id).first()
+                # Initialize imageFileNames with existing files that are checked to be kept
+                imageFileNames = []
+                
+                # First handle existing files that should be kept
+                for file in files:
+                    if request.form.get(file) == 'CHECKED':  # Check if checkbox was checked
+                        imageFileNames.append(file)
+                
+                # Then handle new file uploads
+                for file in request.files.getlist("files"):
+                    if file.filename == '':
+                        continue  # Skip if no file selected
+                        
+                    if file and allowed_file(file.filename):
+                        filename = secure_filename(file.filename)
+                        filename2 = f'{taxonInt}_{filename}'
+                        
+                        if filename2 in os.listdir(f"{dir_path}/observations/"):
+                            flash(f'Image already exists under the filename {filename2}', category="error")
+                            return redirect(request.url)
+                            
+                        try:
+                            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+                            shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", 
+                                        f"{dir_path}/observations/{filename2}")
+                            compress_image(os.path.join(app.config['UPLOAD_FOLDER'], filename2), 
+                                        f"{dir_path}/compressed/{filename2}", 20)
+                            os.remove(f"{app.config['UPLOAD_FOLDER']}/{filename2}")
+                            imageFileNames.append(filename2)
+                        except Exception as e:
+                            app.logger.error(f"Error processing image {filename2}: {str(e)}")
+                            flash(f'Error processing image {filename2}', category="error")
+                            continue
+                
+                # Delete unchecked images
+                for file in files:
+                    if request.form.get(file) != 'CHECKED':  # Only delete if not checked
+                        try:
+                            os.remove(f'{dir_path}/compressed/{file}')
+                            os.remove(f'{dir_path}/observations/{file}')
+                        except Exception as e:
+                            app.logger.error(f"Error deleting image {file}: {str(e)}")
+                            flash(f'Error deleting image {file}', category="error")
+                
+                # Join list of image filenames to string
+                imageFileNames = ' | '.join(imageFileNames)
+
+                # Update record
+                observation_update.taxonInt = taxonInt
+                observation_update.decimalLatitude = decimalLatitude
+                observation_update.decimalLongitude = decimalLongitude
+                observation_update.coordinateUncertaintyInMeters = coordinateUncertaintyInMeters
+                observation_update.eventDateTime = eventDateTime
+                observation_update.countryCode = countryCode
+                observation_update.county = county
+                observation_update.municipality = municipality
+                observation_update.locality = locality
+                observation_update.recordedBy = recordedBy
+                observation_update.lifeStage = lifeStage
+                observation_update.individualCount = individualCount
+                observation_update.sex = sex
+                observation_update.occurrenceRemarks = occurrenceRemarks
+                observation_update.imageFileNames = imageFileNames
+                db.session.commit()
+                flash(f'Observation updated!', category="success")
+                # Go back to original page
+                return redirect(url_for('observations.observation_view', occurrence_id=occurrence_id))
+        else:
+            return render_template("observation_edit.html", user=current_user, title=title, entomologists=entomologists, taxa=taxa, countries=countries, observation=observation, date=date, time=time, files=files)
+    except Exception as e:
+        # Log the error for debugging
+        app.logger.error(f"Error editing observation {occurrence_id}: {str(e)}")
+        flash('An error occurred while processing your request', category="error")
+        return redirect(url_for('observations.observation_filter'))
+
+
+#####
 # Query database for observation-data and return an overview of a single observation
+#####
 @observations.route('/observation_view/<string:occurrence_id>/', methods=['GET'])
 @login_required
 def observation_view(occurrence_id):
@@ -123,6 +269,7 @@ def observation_view(occurrence_id):
 
 #####
 # Filter observations
+#####
 @observations.route('/observation_filter', methods=['POST', 'GET'])
 @login_required
 def observation_filter():

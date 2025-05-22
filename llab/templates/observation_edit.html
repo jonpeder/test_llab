@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Form -->
+<form action="{{ url_for('observations.observation_edit', occurrence_id=observation.occurrenceID) }}" method="POST" enctype="multipart/form-data">
+
+    <!-- Scientific name -->
+    <div class="mb-3">
+        Scientific name
+        <select class="form-control selectpicker" id="taxonInt" name="taxonInt" data-live-search="true">
+            {% for taxon in taxa %}
+            <option value="{{ taxon.taxonInt }}" {% if observation.taxonInt==taxon.taxonInt %}selected{%
+                endif %}>{{ taxon.scientificName }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Images -->
+    <div class="mb-3">
+        <label for="files">Select images</label>
+        <input type="file" id="files" multiple="multiple" accept="image/jpeg, image/png, image/jpg"
+            class="form-control" name="files" onchange="loadFiles(event)">
+        <div class="img_container" id="result"></div>
+    </div>
+    <br>
+
+    <div class="card" id="card1" onclick="image_coordinates()">
+        <div class="card-header">
+            Image coordinates and time
+        </div>
+        <div class="card-body">
+            <!-- Image data: Coordinates and date -->
+            <div class="row">
+                <div class="col mb-1">
+                    <label for="uncertainty">Latitude</label>
+                    <input type="text" class="form-control" id="Latitude" name="Latitude" value={{ observation.decimalLatitude }}>
+                </div>
+                <div class="col mb-1">
+                    <label for="uncertainty">Longitude</label>
+                    <input type="text" class="form-control" id="Longitude" name="Longitude" value={{ observation.decimalLongitude }}>
+                </div>
+                <div class="col mb-3">
+                    <label for="uncertainty">Uncertainty (m)</label>
+                    <input type="text" class="form-control" id="uncertaintyInMeters" name="uncertaintyInMeters" value={{ observation.coordinateUncertaintyInMeters }}>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col mb-1">
+                    <label for="date">Date</label>
+                    <input type="date" class="form-control" id="date" name="date" value={{ date }}>
+                </div>
+                <div class="col mb-1">
+                    <label for="time">Time</label>
+                    <input step="1" type="time" class="form-control" id="time" name="time" value={{ time }}>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="card" id="card2" onclick="stedsnavn_call()">
+        <div class="card-header">
+            Location
+        </div>
+        <div class="card-body">
+            <!-- Country code -->
+            <div class="mb-1">
+                <select class="form-control selectpicker" id="Country" name="Country" data-live-search="true">
+                    {% for country in countries %}
+                    <option value="{{ country.countryCode }}" {% if observation.countryCode == country.countryCode %}selected{% endif %}>{{ country.country }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- County -->
+            <div class="mb-1">
+                <input type="text" class="form-control" id="County" aria-describedby="County" placeholder="County"
+                    name="County" value="{{ observation.county }}">
+            </div>
+
+            <!-- Municipality -->
+            <div class="mb-1">
+                <input type="text" class="form-control" id="Municipality" aria-describedby="Municipality"
+                    placeholder="Municipality" name="Municipality" value="{{ observation.municipality }}">
+            </div>
+
+            <!-- Locality -->
+            <div class="mb-3">
+                <input type="text" class="form-control" id="Locality_2" aria-describedby="Locality_2"
+                    placeholder="Locality" name="Locality_2" value="{{ observation.locality }}">
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <!-- Collapsible input -->
+    <div class="card">
+        <!-- Collapse button -->
+        <div class="card-header">
+            <a class="btn" data-bs-toggle="collapse" href="#collapseInput">
+                Additional input
+            </a>
+        </div>
+        <!-- Collapsible area -->
+        <div id="collapseInput" class="collapse">
+            <div class="card-body">
+                <!-- Recorded by -->
+                Recorded by
+                <div class="mb-3">
+                    <select class="form-select" id="recordedBy" name="recordedBy">
+                        {% for name in entomologists %}
+                        <option value="{{name.recordedBy}}" {% if observation.recordedBy == name.recordedBy %}selected{% endif %}>{{name.recordedBy}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- lifestage -->
+                Lifestage
+                <div class="mb-3">
+                    <select class="form-select" name="lifeStage" id="lifeStage">
+                        {% set lifestages = ["adult","nymph","pupa","larva"] %}
+                        {% for lifestage in lifestages %}
+                        <option value="{{ lifestage }}" {% if observation.lifeStage == lifestage %}selected{% endif %}>{{ lifestage }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Individual count -->
+                Individual count
+                <div class="mb-3">
+                    <input type="number" class="form-control" id="individualCount" name="individualCount" min="1"
+                        value="{{ observation.individualCount }}">
+                </div>
+
+                <!-- Sex -->
+                Sex
+                <div class="mb-3">
+                    <select class="form-select" name="sex" id="sex">
+                        <option value=""></option>
+                        <option value="female" {% if observation.sex == 'female' %}selected{% endif %}>female</option>
+                        <option value="male" {% if observation.sex == 'male' %}selected{% endif %}>male</option>
+                    </select>
+                </div>
+
+                <!-- occurrenceRemarks -->
+                Occurrence remarks
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="occurrenceRemarks" name="occurrenceRemarks" value="{{ observation.occurrenceRemarks }}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Show images --> 
+    <h5>Images</h5>
+    {% for file in files %}
+    {% if file %}
+    <br />
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="CHECKED" id="{{ file }}" name="{{ file }}" checked>
+    </div>
+    <img src="/static/images/compressed/{{ file }}" height="200">
+    <br />
+    {% endif %}
+    {% endfor %}
+
+    <br>
+    <div class="mb-3">
+        <!-- Button 2-->
+        <button type="submit" class="btn btn-lg btn-success" name="action" value="UPDATE">Update</button>
+        <button type="submit" class="btn btn-lg btn-danger" name="action" value="DELETE">Delete</button>
+        <button type="submit" class="btn btn-lg btn-secondary" name="action" value="CANCEL">Cancel</button>
+    </div>
+    <br>
+</form>
+<br>
+
+
+<script>
+    // Function to load selected files and store their EXIF data
+    function loadFiles(event) {
+        const files = event.target.files;
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = ''; // Clear previous results
+
+        // Array to store all images with their EXIF data
+        const imagesWithExif = [];
+
+        Array.from(files).forEach((file, index) => {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.style.maxWidth = '300px';
+                img.dataset.index = index; // Add index to identify the image
+
+                // Process EXIF data when image loads
+                img.onload = function() {
+                    EXIF.getData(img, function() {
+                        // Store the image with its EXIF data
+                        imagesWithExif[index] = {
+                            element: img,
+                            exif: {
+                                lat: EXIF.getTag(this, 'GPSLatitude'),
+                                lon: EXIF.getTag(this, 'GPSLongitude'),
+                                latRef: EXIF.getTag(this, 'GPSLatitudeRef') || "N",
+                                lonRef: EXIF.getTag(this, 'GPSLongitudeRef') || "E",
+                                dateTime: EXIF.getTag(this, 'DateTimeOriginal')
+                            }
+                        };
+
+                        // Add to DOM
+                        resultDiv.appendChild(img);
+                    });
+                };
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        // Store the array for later use
+        window.uploadedImages = imagesWithExif;
+    }
+
+    // Function to extract EXIF data from images
+    function image_coordinates() {
+        if (!window.uploadedImages || window.uploadedImages.length === 0) {
+            console.log('No images uploaded yet.');
+            return;
+        }
+
+        // Find the first image that has GPS data
+        const imageWithData = window.uploadedImages.find(img => 
+            img && img.exif && img.exif.lat && img.exif.lon
+        );
+
+        if (imageWithData) {
+            const { lat, lon, latRef, lonRef, dateTime } = imageWithData.exif;
+            
+            const latitude = convertDMSToDD(lat, latRef);
+            const longitude = convertDMSToDD(lon, lonRef);
+
+            let date2 = '';
+            let time2 = '';
+            
+            if (dateTime) {
+                const [date, time] = dateTime.split(" ");
+                date2 = date?.replace(/:/g, "-") || '';
+                time2 = time?.split(":").slice(0, 2).join(":") + ":00" || '';
+            }
+
+            // Set form inputs
+            document.getElementById('Latitude').value = latitude || '';
+            document.getElementById('Longitude').value = longitude || '';
+            document.getElementById('date').value = date2 || '';
+            document.getElementById('time').value = time2 || '';
+        } else {
+            console.log('No GPS data found in any of the uploaded images.');
+            alert('No GPS coordinates found in any of the uploaded images.');
+        }
+    }
+
+    // Improved DMS to DD conversion
+    function convertDMSToDD(dms, ref) {
+        if (!dms || !Array.isArray(dms) || dms.length < 3) return null;
+
+        try {
+            const degrees = Number(dms[0]);
+            const minutes = Number(dms[1]);
+            const seconds = Number(dms[2]);
+            
+            let dd = degrees + (minutes / 60) + (seconds / 3600);
+            
+            if (ref === "S" || ref === "W") {
+                dd = dd * -1;
+            }
+            
+            return dd.toFixed(6);
+        } catch (e) {
+            console.error('Error converting coordinates:', e);
+            return null;
+        }
+    }
+</script>
+
+{% endblock %}

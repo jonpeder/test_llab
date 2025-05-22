@@ -160,16 +160,27 @@
 </table>
 </div>
 
+
 <div class="observation-gallery-container">
     <h3>Images</h3>
     <div class="observation-gallery">
       <!-- Dynamic images from your backend -->
       {% for file in files %}
+      {% if file %}
       <div class="gallery-item">
-        <img src="/static/images/compressed/{{ file }}" alt="Observation photo {{ loop.index }}" loading="lazy" onclick="window.open(window.location.origin+'/static/images/observations/{{file}}', '_blank');">
+        <img src="/static/images/compressed/{{ file }}" loading="lazy" onclick="window.open(window.location.origin+'/static/images/observations/{{file}}', '_blank');">
       </div>
+      {% endif %}
       {% endfor %}
     </div>
+</div>
+
+
+<br>
+
+<!-- Edit button -->
+<div class="mb-3">
+    <a href={{ url_for("observations.observation_edit", occurrence_id=occurrence.occurrenceID) }} type="button" class="btn btn-lg btn-secondary">Edit</a>
 </div>
 
 {% endif %}

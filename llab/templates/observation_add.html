@@ -64,7 +64,7 @@
         <div class="card-body">
             <!-- Country code -->
             <div class="mb-1">
-                <select class="form-control selectpicker" id="Country" name="Country" data-live-search="true">
+                <select class="form-select" id="Country" name="Country">
                     {% for country in countries %}
                     {% if country.countryCode == "NO" %}
                     <option selected value="{{ country.countryCode }}">{{ country.country }}</option>

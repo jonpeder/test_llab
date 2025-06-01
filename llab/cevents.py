@@ -22,7 +22,7 @@ cevents = Blueprint('cevents', __name__)
 app = current_app
 
 # Variables for creating form loops
-loc = ["County", "Region_abbr", "Municipality",
+loc = ["County", "Municipality",
        "Locality_1", "Locality_2", "Habitat"]
 substrate_types = ["gall", "mine", "colony"]
 substrate_parts = ["flower", "stem", "leaf", "shoot", "twig", "root",
@@ -51,7 +51,6 @@ def event_new():
         countryCode = request.form.get("Country")
         stateProvince = ""
         county = request.form.get("County")
-        strand_id = request.form.get("Region_abbr")
         municipality = request.form.get("Municipality")
         locality_1 = request.form.get("Locality_1")
         locality_2 = request.form.get("Locality_2")
@@ -82,7 +81,7 @@ def event_new():
                 if not eventDate_2:
                     eventDate_2 = None #"0000-00-00"
                 # new Collecting_events object
-                new_event = Collecting_events(eventID=eventID, countryCode=countryCode, stateProvince=stateProvince, county=county, strand_id=strand_id, municipality=municipality, locality_1=locality_1, locality_2=locality_2, habitat=habitat, decimalLatitude=decimalLatitude, decimalLongitude=decimalLongitude,
+                new_event = Collecting_events(eventID=eventID, countryCode=countryCode, stateProvince=stateProvince, county=county, municipality=municipality, locality_1=locality_1, locality_2=locality_2, habitat=habitat, decimalLatitude=decimalLatitude, decimalLongitude=decimalLongitude,
                                               coordinateUncertaintyInMeters=coordinateUncertaintyInMeters, samplingProtocol=samplingProtocol, eventDate_1=eventDate_1, eventDate_2=eventDate_2, recordedBy=" | ".join(recordedBy), eventRemarks=eventRemarks, createdByUserID=current_user.id, substrateName=substrate_name, substrateType=substrate_type, substratePlantPart=substrate_part, eunisCode=eunis_code)
                 # Add new objects to database
                 db.session.add(new_event)

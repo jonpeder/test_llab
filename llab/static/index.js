@@ -43,7 +43,7 @@ function GetCoordinates(e)
   document.getElementById("y").innerHTML = PosY;
 }
 
-
+/*
 // Function to make any api call
 async function api_call(gbif_url) {
     const response = await fetch(gbif_url);
@@ -51,6 +51,8 @@ async function api_call(gbif_url) {
     // do something with myJson
     return myJson;
 }
+*/
+
 
 // Transform gbif-id to api-url, make api-call and return gbif-data
 async function gbif_call() {
@@ -71,12 +73,13 @@ async function gbif_call() {
 
 }
 
-//
+/*
+// Get political region names. First try to get names from  the Norwegian locality-name-service API. If this returns nothing, try to get the names from OpenStreetMap.
 async function stedsnavn_call() {
     // Get longitude and latitude from input form
     let lat = document.getElementById('Latitude').value;
     let lon = document.getElementById('Longitude').value;
-    // Prepare url for api call
+    // Prepare url for api call for  the Norwegian locality-name-service API
     const stedsnavn_url = 'https://ws.geonorge.no/stedsnavn/v1/punkt?nord='+lat+'&ost='+lon+'&koordsys=4326&radius=2000&utkoordsys=4326&treffPerSide=200&side=1';
     const administReg_url = 'https://ws.geonorge.no/kommuneinfo/v1/punkt?koordsys=4326&ost='+lon+'&nord='+lat
     // Make api calls
@@ -89,10 +92,93 @@ async function stedsnavn_call() {
     if (typeof stedsnavn_sorted[0].stedsnavn[0].skrivemåte !== 'undefined') {document.getElementById("Locality_2").value = stedsnavn_sorted[0].stedsnavn[0].skrivemåte};
     if (typeof administReg_out.fylkesnavn !== 'undefined') {document.getElementById("County").value = administReg_out.fylkesnavn};
     if (typeof administReg_out.kommunenavn !== 'undefined') {document.getElementById("Municipality").value = administReg_out.kommunenavn};
+    // If no result use OpenStreetMap    
+}
+*/
+
+async function stedsnavn_call() {
+    // Get coordinates from input form
+    const lat = document.getElementById('Latitude').value;
+    const lon = document.getElementById('Longitude').value;
+
+    // URLs for Norwegian APIs
+    const stedsnavn_url = `https://ws.geonorge.no/stedsnavn/v1/punkt?nord=${lat}&ost=${lon}&koordsys=4326&radius=2000&utkoordsys=4326&treffPerSide=200&side=1`;
+    const administReg_url = `https://ws.geonorge.no/kommuneinfo/v1/punkt?koordsys=4326&ost=${lon}&nord=${lat}`;
+
+    // Try Norwegian APIs first
+    try {
+        const [stedsnavn_out, administReg_out] = await Promise.all([
+            api_call(stedsnavn_url).catch(() => null),  // Return null if API fails
+            api_call(administReg_url).catch(() => null)
+        ]);
+
+        // Process Norwegian API results if they exist
+        let locality, county, municipality;
+
+        // Get closest locality name (if available)
+        if (stedsnavn_out?.navn) {
+            const stedsnavn_sorted = [...stedsnavn_out.navn].sort((a, b) => a.meterFraPunkt - b.meterFraPunkt);
+            locality = stedsnavn_sorted[0]?.stedsnavn[0]?.skrivemåte;
+            if (locality) document.getElementById("Locality_2").value = locality;
+        }
+
+        // Get county/municipality (if available)
+        if (administReg_out) {
+            county = administReg_out.fylkesnavn;
+            municipality = administReg_out.kommunenavn;
+            if (county) document.getElementById("County").value = county;
+            if (municipality) document.getElementById("Municipality").value = municipality;
+        }
+
+        // If all fields are filled, exit early (no need for OSM)
+        if (locality && county && municipality) return;
+
+    } catch (error) {
+        console.error("Norwegian API error:", error);
+    }
+
+    // Fallback to OpenStreetMap if Norwegian APIs failed or returned incomplete data
+    await getLocationFromOSM(lat, lon);
 }
 
-// Selectpicker
-//$('#ScientificName').selectpicker();
+// Helper: Fetch data from OpenStreetMap (Nominatim)
+async function getLocationFromOSM(lat, lon) {
+    try {
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`,
+            { headers: { "User-Agent": "llab.no/1.0 (jonpeder.lindemann@gmail.com)" } } // Required by OSM
+        );
+        const data = await response.json();
+
+        if (data.error) throw new Error(data.error);
+
+        const address = data.address;
+        
+        // Fill fields
+        document.getElementById("Country").value = address.country_code.toUpperCase();
+        // locality
+        const locality =  address.town || address.village || address.city;
+        if (locality) document.getElementById("Locality_1").value = locality;
+        // county
+        const county = address.county || address.state_district;
+        if (county) document.getElementById("County").value = county.replace(/\s(County)$/i, '');
+        // municipality
+        const municipality = address.municipality || address.city || address.town;
+        if (municipality) document.getElementById("Municipality").value = municipality.replace(/\s(Municipality)$/i, '');
+
+    } catch (error) {
+        console.error("OpenStreetMap error:", error);
+        alert("Could not fetch location details from any service.");
+    }
+}
+
+// Generic API call function (assuming you already have this)
+async function api_call(url) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`API request failed: ${response.status}`);
+    return await response.json();
+}
+
 
 // Use today as default date
 Date.prototype.toDateInputValue = (function () {
@@ -129,43 +215,5 @@ function showPosition(position) {
     document.getElementById("Radius").value = 25;
 }
 
-/*
-// Find document variable
-const output = document.querySelector("#result");
 
-// Get input images and loop over each image
-function loadFiles(event) {
-    output.innerHTML = ""
-    for (let i = 0; i < event.target.files.length; i++) {
-        var img_item = document.createElement("div"); // Create new div element
-        img_item.className = "img_item";
-        img_item.appendChild(imageAppend(event.target.files[i])); // Append element to img_item
-        output.appendChild(img_item);
-    }
-}
-
-function clearFiles() {
-    output.innerHTML = ""
-    document.getElementById("imgInp").value = ""
-}
-
-// Append image to output
-function imageAppend(x) {
-    var image = document.createElement("img"); // Create new image element
-    image.src = URL.createObjectURL(x); // Add soure to image element
-    image.id = x.name; // Add name to image element
-    // free memory
-    image.onload = function () {
-        URL.revokeObjectURL(image.src); // free memory
-    };
-    // Return img element
-    return (image);
-}
-
-// Dark mode
-function myFunction() {
-  var element = document.body;
-  element.classList.toggle("dark-mode");
-}
-*/
 

@@ -390,8 +390,6 @@ def home():
     taxa_family = bar_plot_dict(taxa_df, "family", 0.5)
     # Rank
     taxa_taxonRank = bar_plot_dict(taxa_df, "taxonRank", 1)
-    # Count taxa
-    taxa_len = len(taxa_df)
     # Taxa per method
     met_count = []
     for method in methods:

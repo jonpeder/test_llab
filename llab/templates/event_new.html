@@ -14,12 +14,18 @@
     <!-- Coordinates -->
     Coordinates
     <div class="row">
-        {% for i in range(latlon|length) %}
         <div class="col mb-1">
-            <input type="text" class="form-control" id={{latlon[i]}} aria-describedby={{latlon[i]}}
-                placeholder={{latlon[i]}} name={{latlon[i]}} required>
+            <input type="text" class="form-control" id="Latitude" aria-describedby="Latitude"
+                placeholder="Latitude" name="Latitude" required>
         </div>
-        {% endfor %}
+        <div class="col mb-1">
+            <input type="text" class="form-control" id="Longitude" aria-describedby="Longitude"
+                placeholder="Longitude" name="Longitude" required>
+        </div>
+        <div class="col mb-1">
+            <input type="text" class="form-control" id="Radius" aria-describedby="Radius"
+                placeholder="Radius" name="Radius" required>
+        </div>
     </div>
     <br>
 
@@ -107,12 +113,14 @@
     <!-- Date -->
     Date
     <div class="row">
-        {% for i in range(date|length) %}
         <div class="col mb-3">
-            <input type="date" class="form-control" id={{date[i]}} aria-describedby={{date[i]}} placeholder={{date[i]}}
-                name={{date[i]}} >
+            <input type="date" class="form-control" id="Date_1" aria-describedby="Date_1" placeholder="Date_1"
+                name="Date_1" >
         </div>
-        {% endfor %}
+        <div class="col mb-3">
+            <input type="date" class="form-control" id="Date_2" aria-describedby="Date_2" placeholder="Date_2"
+                name="Date_2" >
+        </div>
     </div>
 
     <!-- Collecting method -->
@@ -182,6 +190,7 @@ async function stedsnavn_call() {
     if (typeof administReg_out.fylkesnavn !== 'undefined') {document.getElementById("County").value = administReg_out.fylkesnavn};
     if (typeof administReg_out.kommunenavn !== 'undefined') {document.getElementById("Municipality").value = administReg_out.kommunenavn};
 }
+
 </script>
 
 {% endblock %}

@@ -103,19 +103,30 @@ Date.prototype.toDateInputValue = (function () {
 
 document.getElementById('Date_1').defaultValue = new Date().toDateInputValue();
 
-// get position
+// get position coordinates
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+        navigator.geolocation.getCurrentPosition(
+            showPosition, 
+            function(error) {
+                // Handle errors
+                alert("Error getting location: " + error.message);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            }
+        );
     } else {
-        x.innerHTML = "Geolocation is not supported by this browser.";
+        alert("Geolocation is not supported by this browser.");
     }
 }
 
 function showPosition(position) {
-    document.getElementById("Latitude").value = position.coords.latitude
-    document.getElementById("Longitude").value = position.coords.longitude
-    document.getElementById("Radius").value = 25
+    document.getElementById("Latitude").value = position.coords.latitude;
+    document.getElementById("Longitude").value = position.coords.longitude;
+    document.getElementById("Radius").value = 25;
 }
 
 /*

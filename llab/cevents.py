@@ -24,8 +24,6 @@ app = current_app
 # Variables for creating form loops
 loc = ["County", "Region_abbr", "Municipality",
        "Locality_1", "Locality_2", "Habitat"]
-latlon = ["Latitude", "Longitude", "Radius"]
-date = ["Date_1", "Date_2"]
 substrate_types = ["gall", "mine", "colony"]
 substrate_parts = ["flower", "stem", "leaf", "shoot", "twig", "root",
                   "fruit", "seed", "cone", "catkin", "female_catkin", "male_catkin", "fruitbody", "waste/dung/heap"]
@@ -99,7 +97,7 @@ def event_new():
         IDs.append(i.eventID)
     new_ID = newEventID(IDs, current_user.initials)
     # Return html-page
-    return render_template("event_new.html", title=title, loc=loc, latlon=latlon, substrate_types=substrate_types, substrate_parts=substrate_parts, date=date, new_ID=new_ID, met=met, leg=leg, ctries=ctries, user=current_user, habitats=habitats, habitat_level2=habitat_level2)
+    return render_template("event_new.html", title=title, loc=loc, substrate_types=substrate_types, substrate_parts=substrate_parts, new_ID=new_ID, met=met, leg=leg, ctries=ctries, user=current_user, habitats=habitats, habitat_level2=habitat_level2)
 
 
 @cevents.route('/event_show', methods=['GET', 'POST'])

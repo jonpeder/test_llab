@@ -33,7 +33,7 @@
 
     .gallery-item img {
         width: 100%;
-        height: 400px;
+        height: 500px;
         object-fit: cover;
         transition: transform 0.3s ease;
     }
@@ -42,12 +42,35 @@
         transform: scale(1.02);
     }
 
+    .map-gallery-item {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        width: 200px;
+        /* Fixed width or use min-width/max-width */
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background: white;
+    }
+
+    .map-gallery-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .map-gallery-item img:hover {
+        transform: scale(1.02);
+    }
+
     .image-caption {
-        padding: 0.5rem;
+        padding: 0.1rem;
         margin: 0;
-        font-size: 0.9rem;
+        font-size: 0.7rem;
         color: #555;
         text-align: center;
+        white-space: pre-wrap;
     }
 
     /* Hide scrollbar but keep functionality */
@@ -58,13 +81,14 @@
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .gallery-item {
-            width: 400px;
+            width: 350px;
         }
 
         .gallery-item img {
             height: 350px;
         }
     }
+
 </style>
 
 <!-- SIDEBAR -->
@@ -292,12 +316,16 @@
             }).addTo(map);
             // It even opens up a popup when you click it!
             {% for observation in observations %}
-            var marker{{ loop.index }} = L.marker([{{ observation.decimalLatitude }}, {{ observation.decimalLongitude }}]).addTo(map);
-            marker{{ loop.index }}.bindPopup('<a href= {{ url_for("observations.observation_view", occurrence_id=observation.occurrenceID) }} role="button">view</a>');
+            var popupContent = '<div class="observation-gallery-container"><div class="observation-gallery">{% set files = observation.imageFileNames.split(" | ") %}{% for file in files %}<div class="map-gallery-item"><a href="{{ url_for("observations.observation_view", occurrence_id=observation.occurrenceID) }}"><img src="/static/images/compressed/{{ file }}" alt="Observation photo {{ loop.index }}" loading="lazy"></a><p class="image-caption">{{ observation.scientificName | italicize_scientific_name | safe }}\n{{observation.municipality}} - {{observation.eventDateTime | format_datetime }}</p></div>{% endfor %}</div></div>';
+            var marker{{ loop.index }} = L.marker([{{ observation.decimalLatitude }}, {{ observation.decimalLongitude }}]).bindPopup(popupContent).addTo(map);
             {% endfor %}
         </script>
     </div>
 </div>
+
+
+
+
 
 
 <!-- TABLE -->
@@ -393,6 +421,7 @@
             {% for file in files %}
             <div class="gallery-item">
                 <a href="{{ url_for('observations.observation_view', occurrence_id=observation.occurrenceID) }}"><img src="/static/images/compressed/{{ file }}" alt="Observation photo {{ loop.index }}" loading="lazy"></a>
+                <p class="image-caption">{{ observation.scientificName | italicize_scientific_name | safe }} - {{observation.municipality}} - {{observation.eventDateTime | format_datetime }}</p>
             </div>
             {% endfor %}
             {% endfor %}
@@ -401,21 +430,6 @@
 </div>
 
 <script>
-    // METRICS
-    // Plot function with Plotly
-    /*
-    function myBarplot(myplot, orient, type, title, yArray, xArray) {
-        let data
-        if (type == "pie") {
-            data = [{ labels: xArray, values: yArray, type: type, orientation: orient, marker: { color: "rgba(0,0,255,0.6)" }, textinfo: 'none', showlegend: true }];
-        } else {
-            data = [{ x: xArray, y: yArray, type: type, orientation: orient, marker: { color: "rgba(0,0,255,0.6)" }, showlegend: false }];
-        }
-        const layout = { 
-            title: title, 
-        };
-        return Plotly.newPlot(myplot, data, layout, { displayModeBar: false });
-    }*/
     function myBarplot(myplot, orient, type, title, yArray, xArray) {
         let data
         if (type == "pie") {

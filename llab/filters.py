@@ -31,6 +31,17 @@ def scale_value(value, factor):
 def date_format(date, format="%d.%m.%Y"):
     return date.strftime(format)
 
+
+# Format datetime
+@filters.app_template_filter('format_datetime')
+def format_datetime(date_time):
+    date = ""
+    if date_time:
+        date_time = datetime.strptime(str(date_time), "%Y-%m-%d %H:%M:%S")
+        date = f'{date_time.strftime("%d")} {date_time.strftime("%b")} {date_time.strftime("%Y")}'
+    return date
+
+
 # Format dates
 @filters.app_template_filter('format_dates')
 def format_dates(date_1, date_2):

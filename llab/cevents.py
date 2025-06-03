@@ -25,7 +25,7 @@ app = current_app
 loc = ["County", "Municipality",
        "Locality_1", "Locality_2", "Habitat"]
 substrate_types = ["gall", "mine", "colony"]
-substrate_parts = ["flower", "stem", "leaf", "shoot", "twig", "root",
+substrate_parts = ["flower", "stem", "leaf", "bud", "shoot", "twig", "root",
                   "fruit", "seed", "cone", "catkin", "female_catkin", "male_catkin", "fruitbody", "waste/dung/heap"]
 met = ["Sweep-net","Reared","Malaise-trap","Hand-picked","Light-trap","Slam-trap","Window-trap","Color-pan","Yellow-pan","White-pan"]
 

@@ -64,6 +64,13 @@
         transform: scale(1.02);
     }
 
+    .area-observations-container {
+                    max-height: 400px;
+                    max-width: 400px;
+                    overflow-y: auto;
+                    overflow-x: auto;
+                }
+
     .image-caption {
         padding: 0.1rem;
         margin: 0;
@@ -303,7 +310,29 @@
         onclick="document.getElementById('mapContainer').style.display = 'none'; document.getElementById('galleryContainer').style.display = 'block'; document.getElementById('tableContainer').style.display = 'none'; document.getElementById('statContainer').style.display = 'none';">Gallery</button>
 </div>
 
-<!-- MAP -->
+<!-- MAP: Old map 
+<div class="container-fluid" id="mapContainer">
+    <div id="map" style="height: 600px;z-index: 10;">
+        -->
+        <!-- leaflet script 
+        <script type="text/javascript">
+            // The first parameters are the coordinates of the center of the map, the second parameter is the zoom level
+            var map = L.map('map', { fullscreenControl: true }).setView([65, 5], 3);
+            // Add leaflet map as a new layer
+            var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+            }).addTo(map);
+            // Open up a popup when clicked
+            {% for observation in observations %}
+            var popupContent = '<div class="observation-gallery-container"><div class="observation-gallery">{% set files = observation.imageFileNames.split(" | ") %}{% for file in files %}<div class="map-gallery-item"><a href="{{ url_for("observations.observation_view", occurrence_id=observation.occurrenceID) }}"><img src="/static/images/compressed/{{ file }}" alt="Observation photo {{ loop.index }}" loading="lazy"></a><p class="image-caption">{{ observation.scientificName | italicize_scientific_name | safe }}\n{{observation.municipality}} - {{observation.eventDateTime | format_datetime }}</p></div>{% endfor %}</div></div>';
+            var marker{{ loop.index }} = L.marker([{{ observation.decimalLatitude }}, {{ observation.decimalLongitude }}]).bindPopup(popupContent).addTo(map);
+            {% endfor %}
+        </script>
+    </div>
+</div>
+-->
+
+<!-- MAP: New map with polygon select -->
 <div class="container-fluid" id="mapContainer">
     <div id="map" style="height: 600px;z-index: 10;">
         <!-- leaflet script -->
@@ -314,18 +343,73 @@
             var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
             }).addTo(map);
-            // It even opens up a popup when you click it!
+
+            // Add Leaflet.draw plugin
+            var drawnItems = new L.FeatureGroup();
+            map.addLayer(drawnItems);
+
+            // Initialize the draw control
+            var drawControl = new L.Control.Draw({
+                draw: {
+                    polygon: true,
+                    rectangle: false,
+                    circle: false,
+                    marker: false,
+                    polyline: false,
+                    circlemarker: false
+                },
+                edit: {
+                    featureGroup: drawnItems,
+                    edit: false
+                }
+            });
+            map.addControl(drawControl);
+
+            // Store all markers for spatial queries
+            var allMarkers = [];
+
+            // Create observation markers
             {% for observation in observations %}
-            var popupContent = '<div class="observation-gallery-container"><div class="observation-gallery">{% set files = observation.imageFileNames.split(" | ") %}{% for file in files %}<div class="map-gallery-item"><a href="{{ url_for("observations.observation_view", occurrence_id=observation.occurrenceID) }}"><img src="/static/images/compressed/{{ file }}" alt="Observation photo {{ loop.index }}" loading="lazy"></a><p class="image-caption">{{ observation.scientificName | italicize_scientific_name | safe }}\n{{observation.municipality}} - {{observation.eventDateTime | format_datetime }}</p></div>{% endfor %}</div></div>';
-            var marker{{ loop.index }} = L.marker([{{ observation.decimalLatitude }}, {{ observation.decimalLongitude }}]).bindPopup(popupContent).addTo(map);
+                var popupContent = '<div class="observation-gallery-container"><div class="observation-gallery">{% set files = observation.imageFileNames.split(" | ") %}{% for file in files %}<div class="map-gallery-item"><a href="{{ url_for("observations.observation_view", occurrence_id=observation.occurrenceID) }}"><img src="/static/images/compressed/{{ file }}" alt="Observation photo {{ loop.index }}" loading="lazy"></a><p class="image-caption">{{ observation.scientificName | italicize_scientific_name | safe }}\n{{observation.municipality}} - {{observation.eventDateTime | format_datetime }}</p></div>{% endfor %}</div></div>';
+                var marker = L.marker([{{ observation.decimalLatitude }}, {{ observation.decimalLongitude }}], {
+                    observationId: '{{ observation.occurrenceID }}',
+                    scientificName: '{{ observation.scientificName }}',
+                    municipality: '{{ observation.municipality }}',
+                    eventDateTime: '{{ observation.eventDateTime }}',
+                    imageFiles: '{{ observation.imageFileNames }}'
+                }).bindPopup(popupContent).addTo(map);
+                allMarkers.push(marker);
             {% endfor %}
+
+            // Handle draw events
+            map.on(L.Draw.Event.CREATED, function (e) {
+                var layer = e.layer;
+                drawnItems.addLayer(layer);
+                
+                // Find markers within the drawn shape
+                var markersInShape = [];
+                allMarkers.forEach(function(marker) {
+                    if (layer.getBounds().contains(marker.getLatLng())) {
+                        markersInShape.push(marker);
+                    }
+                });
+                
+                // Create popup content with observations in the area
+                var popupContent = '<div class="observation-gallery-container">';
+                popupContent += '<h6>Observations in selected area (' + markersInShape.length + ')</h6>';
+                popupContent += '<div class="observation-gallery">'
+                
+                markersInShape.forEach(function(marker) {
+                    var files = marker.options.imageFiles.split(' | ');
+                    popupContent += `${marker._popup._content}`;
+                });
+                
+                popupContent += '</div></div>';
+                layer.bindPopup(popupContent, {maxWidth: 300}).openPopup();
+            });
         </script>
     </div>
 </div>
-
-
-
-
 
 
 <!-- TABLE -->

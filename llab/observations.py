@@ -274,8 +274,7 @@ def observation_view(occurrence_id):
 @observations.route('/observation_filter', methods=['POST', 'GET'])
 @login_required
 def observation_filter():
-    title = "Filter observations"
-
+    title = "Observations"
     # Create  list of names and ranks for taxa-dropdown-select-search bar
     taxa = Taxa.query.join(Observations, Taxa.taxonInt==Observations.taxonInt).all() # Database query for taxa
     ranks = np.unique([i.taxonRank for i in taxa if i.taxonRank]) # Database query for taxon ranks

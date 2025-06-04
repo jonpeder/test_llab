@@ -7,15 +7,15 @@
     }
 
     .observation-gallery-container {
-        margin: 1.5rem 0;
+        margin: 0.5rem 0;
     }
 
     .observation-gallery {
         display: flex;
-        gap: 1rem;
+        gap: 0.5rem;
         overflow-x: auto;
         scroll-snap-type: x proximity;
-        padding-bottom: 1rem;
+        padding-bottom: 0px;
         -webkit-overflow-scrolling: touch;
         /* Smooth scrolling on iOS */
     }
@@ -65,14 +65,13 @@
     }
 
     .area-observations-container {
-                    max-height: 400px;
-                    max-width: 400px;
+                    max-height: 350px;
+                    max-width: 300px;
                     overflow-y: auto;
-                    overflow-x: auto;
                 }
 
     .image-caption {
-        padding: 0.1rem;
+        padding: 0rem;
         margin: 0;
         font-size: 0.7rem;
         color: #555;
@@ -88,11 +87,11 @@
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .gallery-item {
-            width: 350px;
+            width: 400px;
         }
 
         .gallery-item img {
-            height: 350px;
+            height: 400px;
         }
     }
 
@@ -325,32 +324,10 @@
     <button type="button" class="btn btn-secondary"
         onclick="document.getElementById('mapContainer').style.display = 'none'; document.getElementById('galleryContainer').style.display = 'none'; document.getElementById('tableContainer').style.display = 'block'; document.getElementById('statContainer').style.display = 'none';">Table</button>
     <button type="button" class="btn btn-secondary"
-        onclick="document.getElementById('mapContainer').style.display = 'none'; document.getElementById('galleryContainer').style.display = 'none'; document.getElementById('tableContainer').style.display = 'none'; document.getElementById('statContainer').style.display = 'block';">Stats</button>
+        onclick="document.getElementById('mapContainer').style.display = 'none'; document.getElementById('galleryContainer').style.display = 'none'; document.getElementById('tableContainer').style.display = 'none'; document.getElementById('statContainer').style.display = 'block';">Metrics</button>
     <button type="button" class="btn btn-secondary"
         onclick="document.getElementById('mapContainer').style.display = 'none'; document.getElementById('galleryContainer').style.display = 'block'; document.getElementById('tableContainer').style.display = 'none'; document.getElementById('statContainer').style.display = 'none';">Gallery</button>
 </div>
-
-<!-- MAP: Old map 
-<div class="container-fluid" id="mapContainer">
-    <div id="map" style="height: 600px;z-index: 10;">
-        -->
-        <!-- leaflet script 
-        <script type="text/javascript">
-            // The first parameters are the coordinates of the center of the map, the second parameter is the zoom level
-            var map = L.map('map', { fullscreenControl: true }).setView([65, 5], 3);
-            // Add leaflet map as a new layer
-            var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-            }).addTo(map);
-            // Open up a popup when clicked
-            {% for observation in observations %}
-            var popupContent = '<div class="observation-gallery-container"><div class="observation-gallery">{% set files = observation.imageFileNames.split(" | ") %}{% for file in files %}<div class="map-gallery-item"><a href="{{ url_for("observations.observation_view", occurrence_id=observation.occurrenceID) }}"><img src="/static/images/compressed/{{ file }}" alt="Observation photo {{ loop.index }}" loading="lazy"></a><p class="image-caption">{{ observation.scientificName | italicize_scientific_name | safe }}\n{{observation.municipality}} - {{observation.eventDateTime | format_datetime }}</p></div>{% endfor %}</div></div>';
-            var marker{{ loop.index }} = L.marker([{{ observation.decimalLatitude }}, {{ observation.decimalLongitude }}]).bindPopup(popupContent).addTo(map);
-            {% endfor %}
-        </script>
-    </div>
-</div>
--->
 
 <!-- MAP: New map with polygon select -->
 <div class="container-fluid" id="mapContainer">
@@ -408,24 +385,36 @@
                 
                 // Find markers within the drawn shape
                 var markersInShape = [];
+                var observationIds = [];
                 allMarkers.forEach(function(marker) {
                     if (layer.getBounds().contains(marker.getLatLng())) {
                         markersInShape.push(marker);
+                        observationIds.push(marker.options.observationId);
                     }
                 });
                 
                 // Create popup content with observations in the area
-                var popupContent = '<div class="observation-gallery-container">';
-                popupContent += '<h6>Observations in selected area (' + markersInShape.length + ')</h6>';
-                popupContent += '<div class="observation-gallery">'
+                var popupContent = '<div class="area-observations-container">';
+                popupContent += '<h6 style="margin: 0px;">Observations in selected area (' + markersInShape.length + ')</h6>';
+                popupContent += '<div class="observation-gallery">';
                 
                 markersInShape.forEach(function(marker) {
-                    var files = marker.options.imageFiles.split(' | ');
                     popupContent += `${marker._popup._content}`;
                 });
                 
-                popupContent += '</div></div>';
-                layer.bindPopup(popupContent, {maxWidth: 300}).openPopup();
+                popupContent += '</div>';
+                
+                // Add filter button
+                popupContent += `
+                    <form id="areaFilterForm" method="POST" action="/filter_by_area">
+                        <input type="hidden" name="observation_ids" value="${observationIds.join(',')}">
+                        <button type="submit" class="btn btn-primary btn-sm mt-2">Filter these observations</button>
+                    </form>
+                `;
+                
+                popupContent += '</div>';
+                
+                layer.bindPopup(popupContent, {maxWidth: 350}).openPopup();
             });
         </script>
     </div>

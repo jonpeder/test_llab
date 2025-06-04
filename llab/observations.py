@@ -480,3 +480,166 @@ def observation_filter():
         sexes=[s[0] for s in sexes if s[0]],
         recorders=[r[0] for r in recorders if r[0]]
     )
+
+@observations.route('/filter_by_area', methods=['POST'])
+@login_required
+def filter_by_area():
+    title = "observations"
+    # Get observation IDs from the form
+    observation_ids = request.form.get('observation_ids', '').split(',')
+    
+    # Filter observations by these IDs
+    observations = Observations.query\
+        .join(Country_codes, Observations.countryCode==Country_codes.countryCode, isouter=True)\
+        .join(Taxa, Observations.taxonInt==Taxa.taxonInt, isouter=True)\
+        .filter(Observations.occurrenceID.in_(observation_ids))\
+        .order_by(Observations.eventDateTime.desc())\
+        .with_entities(
+            Observations.occurrenceID, 
+            Observations.imageFileNames, 
+            Observations.eventDateTime, 
+            Observations.decimalLatitude, 
+            Observations.decimalLongitude, 
+            Observations.coordinateUncertaintyInMeters, 
+            Country_codes.country, 
+            Observations.county, 
+            Observations.municipality, 
+            Observations.locality, 
+            Taxa.taxonID, 
+            Taxa.taxonRank, 
+            Taxa.scientificName, 
+            Taxa.genus, 
+            Taxa.family, 
+            Taxa.order, 
+            Taxa.cl, 
+            Observations.individualCount, 
+            Observations.lifeStage, 
+            Observations.sex, 
+            Observations.recordedBy, 
+            Observations.occurrenceRemarks
+        )\
+        .all()
+
+    # Create  list of names and ranks for taxa-dropdown-select-search bar
+    taxa = Taxa.query.join(Observations, Taxa.taxonInt==Observations.taxonInt).all() # Database query for taxa
+    ranks = np.unique([i.taxonRank for i in taxa if i.taxonRank]) # Database query for taxon ranks
+    cl = tuple(np.unique([i.cl for i in taxa if i.cl]))
+    order = tuple(np.unique([i.order for i in taxa if i.order]))
+    family = tuple(np.unique([i.family for i in taxa if i.family]))
+    genus = tuple(np.unique([i.genus for i in taxa if i.genus]))
+    scientificName = tuple(np.unique([i.scientificName for i in taxa]))
+    dropdown_names = cl+order+family+genus+scientificName
+    dropdown_ranks = tuple(len(cl)*["class"]+len(order)*["order"]+len(family)*["family"]+len(genus)*[
+                           "genus"]+len(scientificName)*["scientificName"])
+
+    
+    # Get all distinct values for filter dropdowns
+    countries = Observations.query.join(Country_codes, Observations.countryCode==Country_codes.countryCode, isouter=True).with_entities(Country_codes.country).distinct().all()
+    counties = Observations.query.with_entities(Observations.county).distinct().all()
+    municipalities = Observations.query.with_entities(Observations.municipality).distinct().all()
+    life_stages = Observations.query.with_entities(Observations.lifeStage).distinct().all()
+    sexes = Observations.query.with_entities(Observations.sex).distinct().all()
+    recorders = Observations.query.with_entities(Observations.recordedBy).distinct().all()
+    
+    filters = {
+        'start_date': '',
+        'end_date': '',
+        'country': '',
+        'county': '',
+        'municipality': '',
+        'life_stage': '',
+        'sex': '',
+        'rank': '',
+        'taxon_name': '',
+        'recorded_by': ''
+    }
+
+    # Create statistics
+    # 1. Occurrences
+    # Create dataframe
+    family = []
+    order = []
+    genus = []
+    taxonRank = []
+    eventDateTime = []
+    for row in observations:
+        family.append(row.family)
+        order.append(row.order)
+        genus.append(row.genus)
+        taxonRank.append(row.taxonRank)
+        eventDateTime.append(row.eventDateTime)
+    occurrences_dict = {"family":family, "order":order, "genus":genus, "taxonRank":taxonRank, "date":eventDateTime}
+    occurrences_df = pd.DataFrame(occurrences_dict)
+    # Yearly
+    occurrence_year = bar_plot_dict(occurrences_df, "year", 0)
+    # Monthly
+    occurrence_month = bar_plot_dict(occurrences_df, "month", 0)
+    # Order
+    occurrence_order = bar_plot_dict(occurrences_df, "order", 1)
+    # Family
+    occurrence_family = bar_plot_dict(occurrences_df, "family", 2)
+    # Genus
+    occurrence_genus = bar_plot_dict(occurrences_df, "genus", 0.5)
+    # Rank
+    occurrence_taxonRank = bar_plot_dict(occurrences_df, "taxonRank", 2)
+    # Count length
+    occ_len = len(observations)
+
+    # 2. Taxa
+    # Create dataframe
+    scientificName = []
+    taxonRank = []
+    eventDateTime = []
+    order = []
+    family = []
+    index = 1
+    for i in observations:
+        if i.scientificName not in scientificName:
+            index+=1
+            scientificName.append(i.scientificName)
+            taxonRank.append(i.taxonRank)
+            order.append(i.order)
+            family.append(i.family)
+            eventDateTime.append(i.eventDateTime)
+    taxa_dict = {"scientificName":scientificName, "order":order, "family":family, "taxonRank":taxonRank, "date":eventDateTime}
+    
+    taxa_df = pd.DataFrame(taxa_dict)
+    # Yearly
+    taxa_year = bar_plot_dict(taxa_df, "year", 0)
+    # Order
+    taxa_order = bar_plot_dict(taxa_df, "order", 1)
+    # Family
+    taxa_family = bar_plot_dict(taxa_df, "family", 0.5)
+    # Rank
+    taxa_taxonRank = bar_plot_dict(taxa_df, "taxonRank", 1)
+    # Count length
+    taxa_len = len(taxa_df)
+    
+    return render_template(
+        "observation_filter.html", 
+        user=current_user, 
+        title=title,
+        observations=observations,
+        filters=filters,
+        dropdown_names=dropdown_names,
+        dropdown_ranks=dropdown_ranks,
+        ranks=ranks,
+        occurrence_year=occurrence_year, # Stats
+        occurrence_month=occurrence_month,
+        occurrence_order=occurrence_order,
+        occurrence_family=occurrence_family,
+        occurrence_genus=occurrence_genus,
+        occurrence_taxonRank=occurrence_taxonRank,
+        occ_len=occ_len,
+        taxa_year=taxa_year,
+        taxa_order=taxa_order,
+        taxa_family=taxa_family,
+        taxa_taxonRank=taxa_taxonRank,
+        taxa_len=taxa_len,
+        countries=[c[0] for c in countries if c[0]],
+        counties=[c[0] for c in counties if c[0]],
+        municipalities=[m[0] for m in municipalities if m[0]],
+        life_stages=[ls[0] for ls in life_stages if ls[0]],
+        sexes=[s[0] for s in sexes if s[0]],
+        recorders=[r[0] for r in recorders if r[0]]
+    )

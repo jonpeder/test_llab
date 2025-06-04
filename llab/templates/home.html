@@ -589,105 +589,105 @@
         }
       }],
       'order': [[1, 'asc']]
-  });
+    });
     
-  var checkboxStates = {};  
-        // Handle the select-all checkbox
-        $('#select-all').on('click', function () {
-            var rows = table.rows({ 'search': 'applied' }).nodes();
-            $('input[type="checkbox"]', rows).prop('checked', this.checked);
-            var isChecked = this.checked;
-            table.rows({ 'search': 'applied' }).every(function () {
-                var data = this.data();
-                var id = data[0]; // The unique Occurrence-ID is in the first index
-                checkboxStates[id] = isChecked;
-            });
-        });
+    var checkboxStates = {};  
+        
+    // Handle the select-all checkbox
+    $('#select-all').on('click', function () {
+      var rows = table.rows({ 'search': 'applied' }).nodes();
+      $('input[type="checkbox"]', rows).prop('checked', this.checked);
+      var isChecked = this.checked;
+      table.rows({ 'search': 'applied' }).every(function () {
+        var data = this.data();
+        var id = data[0]; // The unique Occurrence-ID is in the first index
+        checkboxStates[id] = isChecked;
+      });
+    });
     
-        // Handle checkbox change and update state object
-        $('#specimen-table tbody').on('change', 'input[type="checkbox"]', function () {
-            var row = $(this).closest('tr');
-            var data = table.row(row).data();
-            var id = data[0]; // The unique Occurrence-ID is in the first index
-            checkboxStates[id] = this.checked;
-        });
+    // Handle checkbox change and update state object
+    $('#specimen-table tbody').on('change', 'input[type="checkbox"]', function () {
+      var row = $(this).closest('tr');
+      var data = table.row(row).data();
+      var id = data[0]; // The unique Occurrence-ID is in the first index
+        checkboxStates[id] = this.checked;
+      });
 
-      // Function to collect data from selected checkboxes
-      function getSelectedCheckboxValues() {
+    // Function to collect data from selected checkboxes
+    function getSelectedCheckboxValues() {
       var selected = [];
       for (var id in checkboxStates) {
-              if (checkboxStates[id]) {
-                    selected.push(id);
-                }
-            }
+        if (checkboxStates[id]) {
+          selected.push(id);
+        }
+      }
       return selected;
-      };
+    };
 
-      // Export faunistic report
-      $('#exportFaunistic').on('click', function (e) {
-        e.preventDefault(); // Prevent default action of the link
-        var selectedValues = getSelectedCheckboxValues();
-        // alert if no checkboxes are checked
-        if (selectedValues.length === 0) {
-          alert("Please select at least one specimen to export.");
-          return;
-        }
-        // Construct the URL with the selected IDs, separated by ";"
-        var url = '/export_faunistic_report/' + selectedValues.join('|');
-        // Update the href and trigger the click
-       $(this).attr('href', url);
-        window.open(url, '_blank'); // Open the link in a new tab
-      });
+    // Export faunistic report
+    $('#exportFaunistic').on('click', function (e) {
+      e.preventDefault(); // Prevent default action of the link
+      var selectedValues = getSelectedCheckboxValues();
+      // alert if no checkboxes are checked
+      if (selectedValues.length === 0) {
+        alert("Please select at least one specimen to export.");
+        return;
+      }
+      // Construct the URL with the selected IDs, separated by ";"
+      var url = '/export_faunistic_report/' + selectedValues.join('|');
+      // Update the href and trigger the click
+      $(this).attr('href', url);
+      window.open(url, '_blank'); // Open the link in a new tab
+    });
 
-      // Export GBIF table
-      $('#exportGBIF').on('click', function (e) {
-        e.preventDefault(); // Prevent default action of the link
-        var selectedValues = getSelectedCheckboxValues();
-        // alert if no checkboxes are checked
-        if (selectedValues.length === 0) {
-          alert("Please select at least one specimen to export.");
-          return;
-        }
-        // Construct the URL with the selected IDs, separated by ";"
-        var url = '/export_GBIF/' + selectedValues.join('|');
-        // Update the href and trigger the click
-        $(this).attr('href', url);
-        window.open(url, '_blank'); // Open the link in a new tab
-      });
+    // Export GBIF table
+    $('#exportGBIF').on('click', function (e) {
+      e.preventDefault(); // Prevent default action of the link
+      var selectedValues = getSelectedCheckboxValues();
+      // alert if no checkboxes are checked
+      if (selectedValues.length === 0) {
+        alert("Please select at least one specimen to export.");
+        return;
+      }
+      // Construct the URL with the selected IDs, separated by ";"
+      var url = '/export_GBIF/' + selectedValues.join('|');
+      // Update the href and trigger the click
+      $(this).attr('href', url);
+      window.open(url, '_blank'); // Open the link in a new tab
+    });
 
-      // Export DNA barcodes 
-      $('#exportDnaBarcodes').on('click', function (e) {
-        e.preventDefault(); // Prevent default action of the link
-        var selectedValues = getSelectedCheckboxValues();
-        // alert if no checkboxes are checked
-        if (selectedValues.length === 0) {
-          alert("Please select at least one specimen to export.");
-          return;
-        }
-        // Construct the URL with the selected IDs, separated by ";"
-        var url = '/export_DNA_barcodes/' + selectedValues.join('|');
-        // Update the href and trigger the click
-        $(this).attr('href', url);
-        window.open(url, '_blank'); // Open the link in a new tab
-      });
+    // Export DNA barcodes 
+    $('#exportDnaBarcodes').on('click', function (e) {
+      e.preventDefault(); // Prevent default action of the link
+      var selectedValues = getSelectedCheckboxValues();
+      // alert if no checkboxes are checked
+      if (selectedValues.length === 0) {
+        alert("Please select at least one specimen to export.");
+        return;
+      }
+      // Construct the URL with the selected IDs, separated by ";"
+      var url = '/export_DNA_barcodes/' + selectedValues.join('|');
+      // Update the href and trigger the click
+      $(this).attr('href', url);
+      window.open(url, '_blank'); // Open the link in a new tab
+    });
 
-      // Export collecting-event table 
-      $('#exportEvents').on('click', function (e) {
-        e.preventDefault(); // Prevent default action of the link
-        var events = {{ event_ids | tojson }};
-        // alert if no checkboxes are checked
-        if (events.length === 0) {
-          alert("Please select at least one event.");
-          return;
-        }
-        // Construct the URL with the selected IDs, separated by ";"
-        var url = '/export_events/' + events.join('|');
-        // Update the href and trigger the click
-        $(this).attr('href', url);
-        window.open(url, '_blank'); // Open the link in a new tab
-      });
+    // Export collecting-event table 
+    $('#exportEvents').on('click', function (e) {
+      e.preventDefault(); // Prevent default action of the link
+      var events = {{ event_ids | tojson }};
+      // alert if no checkboxes are checked
+      if (events.length === 0) {
+        alert("Please select at least one event.");
+        return;
+      }
+      // Construct the URL with the selected IDs, separated by ";"
+      var url = '/export_events/' + events.join('|');
+      // Update the href and trigger the click
+      $(this).attr('href', url);
+      window.open(url, '_blank'); // Open the link in a new tab
+    });
   
-
     // Send values to be added to dataset
     $('#add_to_dataset').on('click', function () {
       var datasetName = $('#dataset').val();

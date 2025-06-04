@@ -1,7 +1,7 @@
 # Flask module for handling datasets
 from flask import Blueprint, current_app, redirect, url_for, render_template, flash, request, jsonify, send_file
 from flask_login import login_required, current_user
-from .models import User, Collecting_events, Occurrences, Country_codes, Eunis_habitats, Identification_events, Taxa, Chalcidoidea, co1, Sequence_alignment, Collectors, Datasets
+from .models import User, Collecting_events, Occurrences, Observations, Country_codes, Eunis_habitats, Identification_events, Taxa, Chalcidoidea, co1, Sequence_alignment, Collectors, Datasets
 from . import db
 import numpy as np
 import pandas as pd
@@ -463,3 +463,153 @@ def export_DNA_barcodes(occurrenceIDs):
         "dna_barcodes.html",
         output_alignment = output_alignment
         )
+
+
+####
+# Export observations to a csv-file ready for GBIF import
+####
+@export.route('/export_observations_GBIF/<string:occurrenceIDs>', methods=["GET"])
+@login_required
+def export_observations_GBIF(occurrenceIDs):
+    if not occurrenceIDs:
+        return "No occurrence IDs provided", 400
+
+    try:
+        occurrence_ids = occurrenceIDs.split("|")
+        if not occurrence_ids:
+            return "No valid occurrence IDs provided", 400
+
+        # Query observations
+        observations = (
+            Observations.query.filter(Observations.occurrenceID.in_(occurrence_ids))
+            .join(Taxa, Observations.taxonInt == Taxa.taxonInt, isouter=True)
+            .with_entities(
+                Observations.occurrenceID,
+                Observations.eventDateTime,
+                Taxa.scientificName,
+                Taxa.scientificNameAuthorship,
+                Taxa.taxonRank,
+                Taxa.order,
+                Taxa.family,
+                Taxa.genus,
+                Taxa.specificEpithet,
+                Observations.lifeStage,
+                Observations.sex,
+                Observations.locality,
+                Observations.decimalLatitude,
+                Observations.decimalLongitude,
+                Observations.coordinateUncertaintyInMeters,
+                Observations.countryCode,
+                Observations.county,
+                Observations.recordedBy,
+                Observations.identifiedBy,
+                Observations.dateIdentified,
+                Observations.individualCount,
+                Observations.occurrenceRemarks,
+                Observations.imageFileNames,
+                Observations.municipality
+            )
+            .order_by(Taxa.order, Taxa.family, Taxa.scientificName)
+            .all()
+        )
+
+        if not observations:
+            return "No matching observations found", 404
+
+        header = ["ownerInstitutionCode",
+        "basisOfRecord", 
+        "occurrenceID",
+        "eventDateTime",
+        "scientificName",
+        "taxonRank",
+        "order",
+        "family",
+        "genus",
+        "specificEpithet",
+        "scientificNameAuthorship",
+        "lifeStage",
+        "sex",
+        "individualCount",
+        "decimalLatitude",
+        "decimalLongitude",
+        "coordinateUncertaintyInMeters",
+        "countryCode",
+        "county",
+        "municipality",
+        "locality",
+        "recordedBy",
+        "recordedByID",
+        "identifiedBy",
+        "identifiedByID",
+        "dateIdentified",
+        "occurrenceRemarks",
+        "imageFileNames",
+        ]
+        
+        # Create a temporary file
+        temp_file = NamedTemporaryFile(delete=False, suffix='.csv', mode='w', encoding='utf-8')
+        try:
+            writer = csv.writer(temp_file)
+            writer.writerow(header)
+
+            for observation in observations:
+                # Safely get collector IDs
+                recordedByID = ""
+                if observation.recordedBy:
+                    collector = Collectors.query.filter(
+                        Collectors.recordedBy == observation.recordedBy
+                    ).with_entities(Collectors.recordedByID).first()
+                    recordedByID = collector[0] if collector else ""
+
+                identifiedByID = ""
+                if observation.identifiedBy:
+                    identifier = Collectors.query.filter(
+                        Collectors.recordedBy == observation.identifiedBy
+                    ).with_entities(Collectors.recordedByID).first()
+                    identifiedByID = identifier[0] if identifier else ""
+
+                row = ["TMU",
+                    "HumanObservation", 
+                    observation.occurrenceID,
+                    observation.eventDateTime,
+                    observation.scientificName,
+                    observation.taxonRank,
+                    observation.order,
+                    observation.family,
+                    observation.genus,
+                    observation.specificEpithet,
+                    observation.scientificNameAuthorship,
+                    observation.lifeStage,
+                    observation.sex,
+                    observation.individualCount,
+                    observation.decimalLatitude,
+                    observation.decimalLongitude,
+                    observation.coordinateUncertaintyInMeters,
+                    observation.countryCode,
+                    observation.county,
+                    observation.municipality,
+                    observation.locality,
+                    observation.recordedBy,
+                    recordedByID,
+                    observation.identifiedBy,
+                    identifiedByID,
+                    observation.dateIdentified,
+                    observation.occurrenceRemarks,
+                    observation.imageFileNames]
+                writer.writerow(row)
+
+            temp_file.close()
+
+            return send_file(
+                temp_file.name,
+                mimetype='text/csv',
+                download_name='gbif_observation_export.csv',
+                as_attachment=True
+            )
+        except Exception as e:
+            temp_file.close()
+            os.unlink(temp_file.name)
+            raise e
+
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 500

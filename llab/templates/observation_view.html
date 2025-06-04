@@ -112,7 +112,9 @@
     <!-- Life stage -->
     {{ occurrence.lifeStage | tablerow("Life stage") | safe }}
     <!-- Identified by -->
-    {{ occurrence.recordedBy | tablerow("Identified by") | safe }}
+    {{ occurrence.identifiedBy | tablerow("Identified by") | safe }}
+    <!-- Date identified -->
+    {{ occurrence.dateIdentified | tablerow("Date identified") | safe }}
    
     
     <!-- Taxon table -->

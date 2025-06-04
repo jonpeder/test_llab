@@ -55,6 +55,7 @@ def observation_add():
             municipality = request.form.get("Municipality")
             locality = request.form.get("Locality_2")
             recordedBy = request.form.get("recordedBy")
+            identifiedBy = request.form.get("identifiedBy")
             lifeStage = request.form.get("lifeStage")
             individualCount = request.form.get("individualCount")
             sex = request.form.get("sex")
@@ -89,11 +90,13 @@ def observation_add():
                  decimalLongitude = decimalLongitude,
                  coordinateUncertaintyInMeters = coordinateUncertaintyInMeters,
                  eventDateTime = eventDateTime,
+                 dateIdentified = date,
                  countryCode = countryCode,
                  county = county,
                  municipality = municipality,
                  locality = locality,
                  recordedBy = recordedBy,
+                 identifiedBy = identifiedBy,
                  lifeStage = lifeStage,
                  individualCount = individualCount,
                  sex = sex,
@@ -128,7 +131,7 @@ def observation_edit(occurrence_id):
         observation = Observations.query.filter_by(occurrenceID=occurrence_id)\
             .join(Country_codes, Observations.countryCode==Country_codes.countryCode, isouter=True)\
             .join(Taxa, Observations.taxonInt==Taxa.taxonInt, isouter=True)\
-            .with_entities(Observations.occurrenceID, Observations.imageFileNames, Observations.eventDateTime, Observations.decimalLatitude, Observations.decimalLongitude, Observations.coordinateUncertaintyInMeters, Country_codes.countryCode, Country_codes.country, Observations.county, Observations.municipality, Observations.locality, Taxa.taxonInt, Taxa.taxonID, Taxa.taxonRank, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.cl, Observations.individualCount, Observations.lifeStage, Observations.sex, Observations.recordedBy, Observations.occurrenceRemarks)\
+            .with_entities(Observations.occurrenceID, Observations.imageFileNames, Observations.eventDateTime, Observations.decimalLatitude, Observations.decimalLongitude, Observations.coordinateUncertaintyInMeters, Country_codes.countryCode, Country_codes.country, Observations.county, Observations.municipality, Observations.locality, Taxa.taxonInt, Taxa.taxonID, Taxa.taxonRank, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.cl, Observations.individualCount, Observations.lifeStage, Observations.sex, Observations.recordedBy, Observations.identifiedBy, Observations.occurrenceRemarks)\
             .first()
         # separate date and time
         date = str(observation.eventDateTime).split(" ")[0]
@@ -172,6 +175,13 @@ def observation_edit(occurrence_id):
                 individualCount = request.form.get("individualCount")
                 sex = request.form.get("sex")
                 occurrenceRemarks = request.form.get("occurrenceRemarks")
+                # If taxonInt has been changed, update identifiedBy and dateIdentified
+                if str(taxonInt) != str(observation.taxonInt):
+                    identifiedBy = request.form.get("identifiedBy")
+                    dateIdentified = datetime.today().strftime('%Y-%m-%d')
+                else:
+                    identifiedBy = observation.identifiedBy
+                    dateIdentified = date
                 # Get observation
                 observation_update = Observations.query.filter_by(occurrenceID=occurrence_id).first()
                 # Initialize imageFileNames with existing files that are checked to be kept
@@ -227,6 +237,8 @@ def observation_edit(occurrence_id):
                 observation_update.decimalLongitude = decimalLongitude
                 observation_update.coordinateUncertaintyInMeters = coordinateUncertaintyInMeters
                 observation_update.eventDateTime = eventDateTime
+                observation_update.dateIdentified = dateIdentified
+                observation_update.identifiedBy = identifiedBy
                 observation_update.countryCode = countryCode
                 observation_update.county = county
                 observation_update.municipality = municipality
@@ -261,7 +273,7 @@ def observation_view(occurrence_id):
     occurrence = Observations.query.filter_by(occurrenceID=occurrence_id)\
             .join(Country_codes, Observations.countryCode==Country_codes.countryCode, isouter=True)\
             .join(Taxa, Observations.taxonInt==Taxa.taxonInt, isouter=True)\
-            .with_entities(Observations.occurrenceID, Observations.imageFileNames, Observations.eventDateTime, Observations.decimalLatitude, Observations.decimalLongitude, Observations.coordinateUncertaintyInMeters, Country_codes.country, Observations.county, Observations.municipality, Observations.locality, Taxa.taxonID, Taxa.taxonRank, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.cl, Observations.individualCount, Observations.lifeStage, Observations.sex, Observations.recordedBy, Observations.occurrenceRemarks)\
+            .with_entities(Observations.occurrenceID, Observations.imageFileNames, Observations.eventDateTime, Observations.decimalLatitude, Observations.decimalLongitude, Observations.coordinateUncertaintyInMeters, Country_codes.country, Observations.county, Observations.municipality, Observations.locality, Taxa.taxonID, Taxa.taxonRank, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.cl, Observations.individualCount, Observations.lifeStage, Observations.sex, Observations.recordedBy, Observations.identifiedBy, Observations.dateIdentified, Observations.occurrenceRemarks)\
             .first()
     
     files = occurrence.imageFileNames.split(" | ")
@@ -274,7 +286,8 @@ def observation_view(occurrence_id):
 @observations.route('/observation_filter', methods=['POST', 'GET'])
 @login_required
 def observation_filter():
-    title = "Observations"
+    title = "observations"
+
     # Create  list of names and ranks for taxa-dropdown-select-search bar
     taxa = Taxa.query.join(Observations, Taxa.taxonInt==Observations.taxonInt).all() # Database query for taxa
     ranks = np.unique([i.taxonRank for i in taxa if i.taxonRank]) # Database query for taxon ranks

@@ -121,6 +121,20 @@
                     </select>
                 </div>
 
+                <!-- Recorded by -->
+                Recorded by
+                <div class="mb-3">
+                    <select class="form-select" id="identifiedBy" name="identifiedBy">
+                        {% for name in entomologists %}
+                        {% if name.recordedBy == user.entomologist_name %}
+                        <option selected value="{{name.recordedBy}}">{{name.recordedBy}}</option>
+                        {% else %}
+                        <option value="{{name.recordedBy}}">{{name.recordedBy}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
                 <!-- lifestage -->
                 Lifestage
                 <div class="mb-3">

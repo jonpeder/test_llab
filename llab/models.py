@@ -237,6 +237,8 @@ class Observations(db.Model):
     occurrenceRemarks = db.Column(db.String)
     createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
+    identifiedBy = db.Column(db.String(100), db.ForeignKey('collectors.recordedBy'))
+    dateIdentified = db.Column(db.String(10), default=str(date.today()))
 
 # Pteromalidae database
 class Pteromalidae_norway(db.Model):

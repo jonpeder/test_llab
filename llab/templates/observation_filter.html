@@ -291,6 +291,26 @@
                     </form>
                 </div>
             </div>
+            <!-- EXPORT -->
+            <div class="card-header">
+                <a class="btn" data-bs-toggle="collapse" href="#collapseExport">
+                    Export
+                </a>
+            </div>
+            <!-- Export collapsible -->
+            <div id="collapseExport" class="collapse">
+                <div class="card-body">
+                    <!-- Export table formatted for GBIF-import -->
+                    <div class="mb-1">
+                        <a class="btn btn-secondary" href="#" target="_blank" id="exportObservationsGBIF">
+                            GBIF
+                        </a>
+                    </div>
+                    <div class="mb-1">
+                        <small id="exportObservationsGBIF-dataHelp" class="form-text text-muted">Export table formatted for GBIF-import</small>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -597,6 +617,22 @@
             }
             return selected;
         };
+
+        // Export GBIF table
+        $('#exportObservationsGBIF').on('click', function (e) {
+            e.preventDefault(); // Prevent default action of the link
+            var selectedValues = getSelectedCheckboxValues();
+            // alert if no checkboxes are checked
+            if (selectedValues.length === 0) {
+              alert("Please select at least one specimen to export.");
+              return;
+            }
+            // Construct the URL with the selected IDs, separated by ";"
+            var url = '/export_observations_GBIF/' + selectedValues.join('|');
+            // Update the href and trigger the click
+            $(this).attr('href', url);
+            window.open(url, '_blank'); // Open the link in a new tab
+        });
     });
 
 </script>

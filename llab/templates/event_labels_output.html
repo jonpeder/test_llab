@@ -118,7 +118,7 @@
     {% endif %}
     <!-- Line 7: Catalog number and event-ID -->
     <!--<b>{{ catalog_numbers[user.id~"_"~event.id~"_"~n] }}&emsp;{{ data.eventID[4:] }}</b>-->
-    <b>{{ user.institutionCode }}:{{ data.eventID }}:{{ catalog_numbers[user.id~"_"~event.id~"_"~n] }}</b>
+    <b>{{ institutionCode }}:{{ data.eventID }}:{{ catalog_numbers[user.id~"_"~event.id~"_"~n] }}</b>
 </var>
 
 {% endfor %}

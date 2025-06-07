@@ -226,6 +226,7 @@ def labels():
     title = "Print specimen labels"
     # Remove earlier qr-code image-files
     files = os.listdir(app.config["UPLOAD_FOLDER"])
+    user_institution = current_user.institutionCode
     for file in files:
         if file.startswith(f'{current_user.id}_qrlabel_'):
             os.remove(os.path.join(app.config["UPLOAD_FOLDER"], file))
@@ -249,6 +250,8 @@ def labels():
             db.session.commit()
         # Button 3: Print lables
         if request.form.get('action3') == 'VALUE3':
+            # Get institution code
+            institutionCode = request.form.get("institutionCode")
             # Finn eventIDer og antall etiketter som skal printes av brukeren
             user = current_user
             events = user.print_events
@@ -273,23 +276,16 @@ def labels():
                                 catalog_numbers[f'{current_user.id}_{event.id}_{n}'] = catalog_number
                                 # Create qr-code image files
                                 filename = f'{current_user.id}_qrlabel_{event.id}_{n}.png'
-                                if request.form.get("code_type") == "qr":
-                                    qr = qrcode.QRCode(version = 1, box_size = 5, border = 1, error_correction=qrcode.constants.ERROR_CORRECT_L)
-                                    qr.add_data(f'{current_user.institutionCode}:{event.eventID}:{catalog_number}')
-                                    qr.make(fit = True)
-                                    img = qr.make_image(fill_color = 'black', back_color = 'white')
-                                    img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                                else:
-                                    encoded_data = encode(f'{current_user.institutionCode}:{event.eventID}:{catalog_number}'.encode('utf8'))
-                                    image = Image.frombytes('RGB', (encoded_data.width, encoded_data.height), encoded_data.pixels)
-                                    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                                encoded_data = encode(f'{institutionCode}:{event.eventID}:{catalog_number}'.encode('utf8'))
+                                image = Image.frombytes('RGB', (encoded_data.width, encoded_data.height), encoded_data.pixels)
+                                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 # Return labels
-                return render_template("event_labels_output.html", title=title, events=events, user=current_user, event_data=event_data, catalog_numbers=catalog_numbers)
+                return render_template("event_labels_output.html", title=title, events=events, user=current_user, institutionCode=institutionCode, event_data=event_data, catalog_numbers=catalog_numbers)
 
     # Søk etter event-IDer
     events = Collecting_events.query.filter_by(createdByUserID = current_user.id).order_by(Collecting_events.eventID.desc())
     # Return
-    return render_template("event_labels.html", title = title, events=events, user=current_user)
+    return render_template("event_labels.html", title = title, user_institution=user_institution, events=events, user=current_user)
 
 
 @cevents.route('/test_labels', methods=["POST", "GET"])

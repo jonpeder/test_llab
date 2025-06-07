@@ -16,6 +16,11 @@
         <input type="number" class="form-control" id="Label_number" aria-describedby="Label_number"
             placeholder="Label_number" name="Label_number" min="1" value="1">
     </div>
+    Institution code
+    <div class="mb-3">
+        <input type="text" class="form-control" id="institutionCode" aria-describedby="institutionCode"
+            placeholder="institutionCode" name="institutionCode" min="1" value={{ user_institution }}>
+    </div>
     <div class="d-inline mb-3">
         <!-- Button 2-->
         <button type="submit" class="btn btn-secondary" name="action1" value="VALUE1">Add</button>
@@ -51,19 +56,7 @@
 <p style="font-size: 20px;">Labels on A4-sheet: {{ user.print_events | sum(attribute = 'print_n') }}/400</p>
 
 {% endif %}
-<!-- QR-code/Data Matrix -->
-<div class="form-check">
-    <input class="form-check-input" type="radio" name="code_type" id="code_type1" value="qr" checked>
-    <label class="form-check-label" for="code_type1">
-        QR-code
-    </label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="radio" name="code_type" id="code_type2" value="datamatrix" >
-    <label class="form-check-label" for="code_type2">
-      Data Matrix
-    </label>
-  </div>
+
 <!-- Button 3-->
 <div class="mb-3">
     <a href="/event_labels_output" target="_blank">

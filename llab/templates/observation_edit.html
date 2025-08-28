@@ -117,6 +117,7 @@
                 Recorded by
                 <div class="mb-3">
                     <select class="form-select" id="recordedBy" name="recordedBy">
+                        <option value=""></option>
                         {% for name in entomologists %}
                         <option value="{{name.recordedBy}}" {% if observation.recordedBy == name.recordedBy %}selected{% endif %}>{{name.recordedBy}}</option>
                         {% endfor %}
@@ -127,6 +128,7 @@
                 Identified by
                 <div class="mb-3">
                     <select class="form-select" id="identifiedBy" name="identifiedBy">
+                        <option value=""></option>
                         {% for name in entomologists %}
                         <option value="{{name.recordedBy}}" {% if observation.identifiedBy == name.recordedBy %}selected{% endif %}>{{name.recordedBy}}</option>
                         {% endfor %}

@@ -121,6 +121,7 @@
                 Recorded by
                 <div class="mb-3">
                     <select class="form-select" id="recordedBy" name="recordedBy">
+                        <option value=""></option>
                         {% for name in entomologists %}
                         {% if name.recordedBy == user.entomologist_name %}
                         <option selected value="{{name.recordedBy}}">{{name.recordedBy}}</option>

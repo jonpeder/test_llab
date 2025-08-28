@@ -57,7 +57,10 @@ def observation_add():
                 countryCode = event.countryCode
                 county = event.county
                 municipality = event.municipality
-                locality = event.locality_2
+                if event.locality_2:
+                    locality = event.locality_1 + ", " + event.locality_2
+                else:
+                    locality = event.locality_1
                 recordedBy = event.recordedBy
                 occurrenceRemarks = event.samplingProtocol
                 time = "12:00:00"
@@ -192,7 +195,10 @@ def observation_edit(occurrence_id):
                     countryCode = event.countryCode
                     county = event.county
                     municipality = event.municipality
-                    locality = event.locality_2
+                    if event.locality_2:
+                        locality = event.locality_1 + ", " + event.locality_2
+                    else:
+                        locality = event.locality_1
                     recordedBy = event.recordedBy
                     occurrenceRemarks = event.samplingProtocol
                     time = "12:00:00"

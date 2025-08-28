@@ -97,6 +97,8 @@
     {{ occurrence.eventDateTime | tablerow ("Event date") | safe }}
     <!-- Collected by -->
     {{ occurrence.recordedBy | tablerow("Recorded by") | safe }}
+    <!-- Event ID -->
+    {{ occurrence.eventID | tablerow ("Event ID") | safe }}
     <!-- Occurrence remarks -->
     {{ occurrence.occurrenceRemarks | tablerow("Occurrence remarks") | safe }}
     

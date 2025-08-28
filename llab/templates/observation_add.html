@@ -107,6 +107,16 @@
         <!-- Collapsible area -->
         <div id="collapseInput" class="collapse">
             <div class="card-body">
+                <!-- Event ID -->
+                <div class="mb-3">
+                    Event ID
+                    <select class="form-control selectpicker" id="eventID" name="eventID" data-live-search="true">
+                         <option value=""></option>
+                        {% for i in events %}
+                        <option value="{{i.eventID}}">{{i.eventID}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <!-- Recorded by -->
                 Recorded by
                 <div class="mb-3">

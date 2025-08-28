@@ -239,6 +239,7 @@ class Observations(db.Model):
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
     identifiedBy = db.Column(db.String(100), db.ForeignKey('collectors.recordedBy'))
     dateIdentified = db.Column(db.String(10), default=str(date.today()))
+    eventID = eventID = db.Column(db.String(20))
 
 # Pteromalidae database
 class Pteromalidae_norway(db.Model):

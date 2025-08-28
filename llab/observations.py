@@ -4,7 +4,7 @@ from flask import Blueprint, current_app, request, redirect, url_for, render_tem
 from flask_login import login_required, current_user
 from sqlalchemy import or_, and_
 from datetime import datetime
-from .models import User, Collectors, Taxa, Country_codes, Observations
+from .models import User, Collectors, Taxa, Country_codes, Observations, Collecting_events
 from . import db
 from .functions import compress_image
 import uuid
@@ -34,32 +34,51 @@ def allowed_file(filename):
 def observation_add():
     # Path to image directory
     dir_path = "/var/www/llab/llab/static/images"
+    #dir_path = "llab/static/images"
     # Get researchers
     entomologists = Collectors.query.all()
     # Get taxon data
     taxa = Taxa.query.all()
     # Get Country codes
     countries = Country_codes.query.all()
+    # Get Event IDs
+    events = Collecting_events.query.all()
     # POST
     if request.method == 'POST':
             occurrenceID=str(uuid.uuid4())
             taxonInt =  request.form.get("taxonInt")
-            decimalLatitude = round(float(request.form.get("Latitude")), 8)
-            decimalLongitude =  round(float(request.form.get("Longitude")), 8)
-            coordinateUncertaintyInMeters = request.form.get("uncertaintyInMeters")
-            date = request.form.get("date")
-            time = request.form.get("time")
-            eventDateTime = date+" "+time
-            countryCode = request.form.get("Country")
-            county = request.form.get("County")
-            municipality = request.form.get("Municipality")
-            locality = request.form.get("Locality_2")
-            recordedBy = request.form.get("recordedBy")
+            event_id = request.form.get("eventID")
+            if event_id:
+                event = Collecting_events.query.filter_by(eventID=event_id).first()
+                decimalLatitude = event.decimalLatitude
+                decimalLongitude = event.decimalLongitude
+                coordinateUncertaintyInMeters = event.coordinateUncertaintyInMeters
+                date = str(event.eventDate_1)
+                countryCode = event.countryCode
+                county = event.county
+                municipality = event.municipality
+                locality = event.locality_2
+                recordedBy = event.recordedBy
+                occurrenceRemarks = event.samplingProtocol
+                time = "12:00:00"
+                eventDateTime = date+" "+time
+            else:                
+                decimalLatitude = round(float(request.form.get("Latitude")), 8)
+                decimalLongitude =  round(float(request.form.get("Longitude")), 8)
+                coordinateUncertaintyInMeters = request.form.get("uncertaintyInMeters")
+                date = request.form.get("date")
+                time = request.form.get("time")
+                eventDateTime = date+" "+time
+                countryCode = request.form.get("Country")
+                county = request.form.get("County")
+                municipality = request.form.get("Municipality")
+                locality = request.form.get("Locality_2")
+                recordedBy = request.form.get("recordedBy")
+                occurrenceRemarks = request.form.get("occurrenceRemarks")
             identifiedBy = request.form.get("identifiedBy")
             lifeStage = request.form.get("lifeStage")
             individualCount = request.form.get("individualCount")
             sex = request.form.get("sex")
-            occurrenceRemarks = request.form.get("occurrenceRemarks")
             # For each file in post request
             imageFileNames = []
             for file in request.files.getlist("files"):
@@ -101,14 +120,15 @@ def observation_add():
                  individualCount = individualCount,
                  sex = sex,
                  occurrenceRemarks = occurrenceRemarks,
-                 createdByUserID=current_user.id)
+                 createdByUserID=current_user.id,
+                 eventID = event_id)
             # Add new objects to database
             db.session.add(new_observation)
             # Commit
             db.session.commit()
             flash('Illustration added', category="success")
             return redirect(url_for("observations.observation_add")) 
-    return render_template("observation_add.html", user=current_user, entomologists=entomologists, taxa=taxa, countries=countries)
+    return render_template("observation_add.html", user=current_user, entomologists=entomologists, taxa=taxa, countries=countries, events=events)
 
 #####
 # Edit observation
@@ -125,13 +145,15 @@ def observation_edit(occurrence_id):
     taxa = Taxa.query.all()
     # Get Country codes
     countries = Country_codes.query.all()
+    # Get Event IDs
+    events = Collecting_events.query.all()
     # Error handling
     try:
         # Get observation
         observation = Observations.query.filter_by(occurrenceID=occurrence_id)\
             .join(Country_codes, Observations.countryCode==Country_codes.countryCode, isouter=True)\
             .join(Taxa, Observations.taxonInt==Taxa.taxonInt, isouter=True)\
-            .with_entities(Observations.occurrenceID, Observations.imageFileNames, Observations.eventDateTime, Observations.decimalLatitude, Observations.decimalLongitude, Observations.coordinateUncertaintyInMeters, Country_codes.countryCode, Country_codes.country, Observations.county, Observations.municipality, Observations.locality, Taxa.taxonInt, Taxa.taxonID, Taxa.taxonRank, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.cl, Observations.individualCount, Observations.lifeStage, Observations.sex, Observations.recordedBy, Observations.identifiedBy, Observations.occurrenceRemarks)\
+            .with_entities(Observations.occurrenceID, Observations.imageFileNames, Observations.eventDateTime, Observations.decimalLatitude, Observations.decimalLongitude, Observations.coordinateUncertaintyInMeters, Country_codes.countryCode, Country_codes.country, Observations.county, Observations.municipality, Observations.locality, Taxa.taxonInt, Taxa.taxonID, Taxa.taxonRank, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.cl, Observations.individualCount, Observations.lifeStage, Observations.sex, Observations.recordedBy, Observations.identifiedBy, Observations.occurrenceRemarks, Observations.eventID)\
             .first()
         # separate date and time
         date = str(observation.eventDateTime).split(" ")[0]
@@ -160,21 +182,37 @@ def observation_edit(occurrence_id):
             if request.form.get('action') == 'UPDATE':
                 #imageFileNames = request.form.get("imageFileNames")
                 taxonInt = request.form.get("taxonInt")
-                decimalLatitude = round(float(request.form.get("Latitude")), 8)
-                decimalLongitude =  round(float(request.form.get("Longitude")), 8)
-                coordinateUncertaintyInMeters = request.form.get("uncertaintyInMeters")
-                date = request.form.get("date")
-                time = request.form.get("time")
-                eventDateTime = date+" "+time
-                countryCode = request.form.get("Country")
-                county = request.form.get("County")
-                municipality = request.form.get("Municipality")
-                locality = request.form.get("Locality_2")
-                recordedBy = request.form.get("recordedBy")
+                event_id = request.form.get("eventID")
+                if event_id:
+                    event = Collecting_events.query.filter_by(eventID=event_id).first()
+                    decimalLatitude = event.decimalLatitude
+                    decimalLongitude = event.decimalLongitude
+                    coordinateUncertaintyInMeters = event.coordinateUncertaintyInMeters
+                    date = str(event.eventDate_1)
+                    countryCode = event.countryCode
+                    county = event.county
+                    municipality = event.municipality
+                    locality = event.locality_2
+                    recordedBy = event.recordedBy
+                    occurrenceRemarks = event.samplingProtocol
+                    time = "12:00:00"
+                    eventDateTime = date+" "+time
+                else:                
+                    decimalLatitude = round(float(request.form.get("Latitude")), 8)
+                    decimalLongitude =  round(float(request.form.get("Longitude")), 8)
+                    coordinateUncertaintyInMeters = request.form.get("uncertaintyInMeters")
+                    date = request.form.get("date")
+                    time = request.form.get("time")
+                    eventDateTime = date+" "+time
+                    countryCode = request.form.get("Country")
+                    county = request.form.get("County")
+                    municipality = request.form.get("Municipality")
+                    locality = request.form.get("Locality_2")
+                    recordedBy = request.form.get("recordedBy")
+                    occurrenceRemarks = request.form.get("occurrenceRemarks")
                 lifeStage = request.form.get("lifeStage")
                 individualCount = request.form.get("individualCount")
                 sex = request.form.get("sex")
-                occurrenceRemarks = request.form.get("occurrenceRemarks")
                 # If taxonInt has been changed, update identifiedBy and dateIdentified
                 if str(taxonInt) != str(observation.taxonInt):
                     identifiedBy = request.form.get("identifiedBy")
@@ -249,12 +287,13 @@ def observation_edit(occurrence_id):
                 observation_update.sex = sex
                 observation_update.occurrenceRemarks = occurrenceRemarks
                 observation_update.imageFileNames = imageFileNames
+                observation_update.eventID = event_id
                 db.session.commit()
                 flash(f'Observation updated!', category="success")
                 # Go back to original page
                 return redirect(url_for('observations.observation_view', occurrence_id=occurrence_id))
         else:
-            return render_template("observation_edit.html", user=current_user, title=title, entomologists=entomologists, taxa=taxa, countries=countries, observation=observation, date=date, time=time, files=files)
+            return render_template("observation_edit.html", user=current_user, title=title, entomologists=entomologists, taxa=taxa, countries=countries, observation=observation, date=date, time=time, files=files, events=events)
     except Exception as e:
         # Log the error for debugging
         app.logger.error(f"Error editing observation {occurrence_id}: {str(e)}")
@@ -273,7 +312,7 @@ def observation_view(occurrence_id):
     occurrence = Observations.query.filter_by(occurrenceID=occurrence_id)\
             .join(Country_codes, Observations.countryCode==Country_codes.countryCode, isouter=True)\
             .join(Taxa, Observations.taxonInt==Taxa.taxonInt, isouter=True)\
-            .with_entities(Observations.occurrenceID, Observations.imageFileNames, Observations.eventDateTime, Observations.decimalLatitude, Observations.decimalLongitude, Observations.coordinateUncertaintyInMeters, Country_codes.country, Observations.county, Observations.municipality, Observations.locality, Taxa.taxonID, Taxa.taxonRank, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.cl, Observations.individualCount, Observations.lifeStage, Observations.sex, Observations.recordedBy, Observations.identifiedBy, Observations.dateIdentified, Observations.occurrenceRemarks)\
+            .with_entities(Observations.occurrenceID, Observations.imageFileNames, Observations.eventDateTime, Observations.decimalLatitude, Observations.decimalLongitude, Observations.coordinateUncertaintyInMeters, Country_codes.country, Observations.county, Observations.municipality, Observations.locality, Taxa.taxonID, Taxa.taxonRank, Taxa.scientificName, Taxa.family, Taxa.order, Taxa.cl, Observations.individualCount, Observations.lifeStage, Observations.sex, Observations.recordedBy, Observations.identifiedBy, Observations.dateIdentified, Observations.occurrenceRemarks, Observations.eventID)\
             .first()
     
     files = occurrence.imageFileNames.split(" | ")

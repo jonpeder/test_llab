@@ -252,6 +252,9 @@ def labels():
         if request.form.get('action3') == 'VALUE3':
             # Get institution code
             institutionCode = request.form.get("institutionCode")
+            # Get label size
+            size = request.form.get("size")
+            print(size)
             # Finn eventIDer og antall etiketter som skal printes av brukeren
             user = current_user
             events = user.print_events
@@ -280,7 +283,7 @@ def labels():
                                 image = Image.frombytes('RGB', (encoded_data.width, encoded_data.height), encoded_data.pixels)
                                 image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 # Return labels
-                return render_template("event_labels_output.html", title=title, events=events, user=current_user, institutionCode=institutionCode, event_data=event_data, catalog_numbers=catalog_numbers)
+                return render_template("event_labels_output.html", title=title, events=events, user=current_user, institutionCode=institutionCode, size=size, event_data=event_data, catalog_numbers=catalog_numbers)
 
     # Søk etter event-IDer
     events = Collecting_events.query.filter_by(createdByUserID = current_user.id).order_by(Collecting_events.eventID.desc())

@@ -8,11 +8,73 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css">
 
 <style>
-
+{% if size == "large" %}
 .grid-container {
   display: grid;
-  grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
-  gap: 1px;
+  grid-template-columns: auto auto auto auto; /* 4 columns */
+  gap: 20px;
+  padding: 0px;
+  background-color: #ffffff;
+}
+
+.label {
+    width: 180px;   /* Increased width */
+    height: 55px;   /* Increased height */
+    font-size: 8px; /* Larger font */
+    line-height: 115%;
+    font-family: Verdana;
+    font-weight: normal;
+    font-style: normal;
+    white-space:nowrap;
+    background-color: rgb(255, 255, 255);
+    display: flex; /* Add this */
+    align-items: flex-start; /* Add this */
+}
+{% elif size == "mediumlarge" %}
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto; /* 5 columns */
+  gap: 15px;
+  padding: 0px;
+  background-color: #ffffff;
+}
+
+.label {
+    width: 130px;   /* Increased width */
+    height: 38px;   /* Increased height */
+    font-size: 6px; /* Larger font */
+    line-height: 7px;
+    font-family: Verdana;
+    font-weight: normal;
+    font-style: normal;
+    white-space:nowrap;
+    background-color: rgb(255, 255, 255);
+}
+{% elif size == "medium" %}
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto; /* 6 columns */
+  gap: 10px;
+  padding: 0px;
+  background-color: #ffffff;
+}
+
+.label {
+    width: 100px;   /* Increased width */
+    height: 30px;   /* Increased height */
+    font-size: 5px; /* Larger font */
+    line-height: 115%;
+    font-family: Verdana;
+    font-weight: normal;
+    font-style: normal;
+    white-space:nowrap;
+    background-color: rgb(255, 255, 255);
+}
+{% else %}
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto auto auto; /* 10 columns */
+  gap: 0px;
   padding: 0px;
   background-color: #ffffff;
 }
@@ -21,18 +83,25 @@
     width:68px;
     height:23px;
     font-size: 3px;
-    line-height: 107%;
+    line-height: 115%;
     font-family: Verdana;
     font-weight: normal;
     font-style: normal;
     white-space:nowrap;
     background-color: rgb(255, 255, 255);
 }
+{% endif %}
 
 .label img {
    float:left;
-   height:100%;
+   height: 95%;
    margin-right:1px;
+   flex-shrink: 0; /* Prevent image from shrinking */
+}
+
+.label-content {
+    flex: 1; /* Take remaining space */
+    overflow: hidden; /* Prevent text overflow */
 }
 
 </style>
@@ -54,6 +123,7 @@
 {% for n in range(event.print_n) %}
 <var class='label'>
     <img src="static/uploads/{{user.id}}_qrlabel_{{event.id}}_{{n}}.png">
+    <div class="label-content">
     <!-- Line 1: Country, region, municipality -->
     <strong>{{ data.countryCode|upper }}</strong> {% if data.stateProvince %}{{ data.stateProvince }} {% endif %}{% if data.strand_id %}{{ data.strand_id|upper }} {% endif %}{% if data.municipality %} {{ data.municipality|upper }}{% endif %}:
     <br/>
@@ -76,7 +146,7 @@
     <!-- Line 4: Lat-lon, radius -->
     {% if data.decimalLatitude and data.decimalLongitude %}
     {{ data.decimalLatitude|round(6) }} {{ data.decimalLongitude|round(6) }}
-    {% if data.coordinateUncertaintyInMeters %} &#177 {{ data.coordinateUncertaintyInMeters }}{% endif %}
+    {% if data.coordinateUncertaintyInMeters %} &#177 {{ data.coordinateUncertaintyInMeters }}m{% endif %}
     <br/>
     {% endif %}
     <!-- Line 5: Method, date -->
@@ -119,6 +189,7 @@
     <!-- Line 7: Catalog number and event-ID -->
     <!--<b>{{ catalog_numbers[user.id~"_"~event.id~"_"~n] }}&emsp;{{ data.eventID[4:] }}</b>-->
     <b>{{ institutionCode }}:{{ data.eventID }}:{{ catalog_numbers[user.id~"_"~event.id~"_"~n] }}</b>
+    </div>
 </var>
 
 {% endfor %}

@@ -20,8 +20,8 @@
 .label {
     width:120px;
     height:30px;
-    font-size: 4.8px;
-    line-height: 120%;
+    font-size: 5px;
+    line-height: 110%;
     margin-bottom:1px;
     font-family: Verdana;
     font-weight: normal;
@@ -58,7 +58,7 @@
     <span>
       <!-- Line 1: Scientific name -->
       <p style="margin: 1px; font-size: 145%;">
-      {{ data.scientificName | scn_italic(data.taxonRank, data.scientificNameAuthorship) | safe }}{% if det.identificationQualifier %} <small><b>{{ det.identificationQualifier }}.</b></small>{% endif %}
+      {{ data.scientificName | scn_italic_ex_author (data.taxonRank, data.scientificNameAuthorship) | safe }}{% if det.identificationQualifier %} <small><b>{{ det.identificationQualifier }}.</b></small>{% endif %}
       </p>
       <!-- Line 2: Author -->
       <p>

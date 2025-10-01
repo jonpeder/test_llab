@@ -159,6 +159,19 @@ def scn_format(name):
     name = italicize_scientific_name(name)
     return name
 
+# Returns scientific name without author string
+@filters.app_template_filter('scn_italic_ex_author')
+def scn_italic_ex_author(name, rank, author):
+    # Remove autohor from name and remove trailing white-spaces
+    if author:
+        name = name.replace(author, "").strip()
+    # If species or genus level use italic
+    if rank=="species" or rank=="genus" or rank=="spnov":
+        name=f'<i>{name}</i>'
+    if rank == "species_group":
+        name = f'<i>{name.replace("group", "").strip()}</i> group'
+    return name
+
 # More accurate than 'italicize_scientific_name' but requires rank and author string.
 @filters.app_template_filter('scn_italic2')
 def scn_italic2(name, rank, author):

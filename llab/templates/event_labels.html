@@ -2,77 +2,96 @@
 {% block content %}
 
 <form action="/event_labels" method="POST">
-    Select collecting event
-    <div class="mb-3">
-        <select class="form-control selectpicker" id="ID" name="ID" data-live-search="true">
-            {% for i in events %}
-            <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.municipality %}- {{ i.municipality }}{% endif %} {% if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if
-                i.locality_2 %}- {{ i.locality_2 }}{% endif %}</option>
-            {% endfor %}
-        </select>
+    <div class="card" id="card1">
+        <div class="card-header">
+            Add labels
+        </div>
+        <div class="card-body">
+            Collecting-event
+            <div class="mb-3">
+                <select class="form-control selectpicker" id="ID" name="ID" data-live-search="true">
+                    {% for i in events %}
+                    <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.municipality %}- {{ i.municipality }}{%
+                        endif %} {% if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if
+                        i.locality_2 %}- {{ i.locality_2 }}{% endif %}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            Number of labels
+            <div class="mb-3">
+                <input type="number" class="form-control" id="Label_number" aria-describedby="Label_number"
+                    placeholder="Label_number" name="Label_number" min="1" value="1">
+            </div>
+            <!-- Button -->
+            <button type="submit" class="btn btn-secondary" name="action1" value="VALUE1">Add</button>
+        </div>
     </div>
-    Number of labels
-    <div class="mb-3">
-        <input type="number" class="form-control" id="Label_number" aria-describedby="Label_number"
-            placeholder="Label_number" name="Label_number" min="1" value="1">
-    </div>
-    Label size
-    <div class="mb-3">
-        <select class="form-select" id="size" name="size">
-            <option value="small">Small</option>
-            <option value="medium">Medium</option>
-            <option value="mediumlarge">Medium-large</option>
-            <option value="large">Large</option>
-        </select>
-    </div>
-    Institution code
-    <div class="mb-3">
-        <input type="text" class="form-control" id="institutionCode" aria-describedby="institutionCode"
-            placeholder="institutionCode" name="institutionCode" min="1" value={{ user_institution }}>
-    </div>
-    <div class="d-inline mb-3">
-        <!-- Button 2-->
-        <button type="submit" class="btn btn-secondary" name="action1" value="VALUE1">Add</button>
-        <!-- Button 1-->
-        <button type="submit" class="btn btn-danger" name="action2" value="VALUE2">Clear</button>
-    </div>
-    <p></p>
+    <br>
 
-<!-- table-->
-<!-- Display added collecting events -->
-{% if user.print_events|length > 0 %}
-<strong>Selected collecting events:</strong>
-<table class="table" table-sm>
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">event ID</th>
-            <th scope="col">label n</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for event in user.print_events %}
-        <tr>
-            <th scope="row">{{ loop.index }}</th>
-            <th scope="col">{{ event.eventID }}</th>
-            <th scope="col">{{ event.print_n }}</th>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
 
-<!-- Summarize labels -->
-<p style="font-size: 20px;">Labels on A4-sheet: {{ user.print_events | sum(attribute = 'print_n') }}/400</p>
+    <!-- Display added collecting events -->
+    <div class="card" id="card2">
+        <div class="card-header">
+            Selected collecting events:
+        </div>
+        <div class="card-body">
+            {% if user.print_events|length > 0 %}
+            <strong>Selected collecting events:</strong>
+            <table class="table" table-sm>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">event ID</th>
+                        <th scope="col">label n</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in user.print_events %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <th scope="col">{{ event.eventID }}</th>
+                        <th scope="col">{{ event.print_n }}</th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+            <!-- Summarize labels -->
+            <p style="font-size: 20px;">Labels on A4 sheet: {{ user.print_events | sum(attribute = 'print_n') }}/400</p>
+            <!-- Button 1-->
+            <button type="submit" class="btn btn-danger" name="action2" value="VALUE2">Clear</button>
+        </div>
+    </div>
+    <br>
 
-{% endif %}
 
-<!-- Button 3-->
-<div class="mb-3">
-    <a href="/event_labels_output" target="_blank">
-            <button type="submit" class="btn btn-success btn-lg" name="action3" value="VALUE3">Print</button>
-    </a>
-</div>
-<br />
+    <div class="card" id="card1">
+        <div class="card-header">
+            Generate labels
+        </div>
+        <div class="card-body">
+            Label size
+            <div class="mb-3">
+                <select class="form-select" id="size" name="size">
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="mediumlarge">Medium-large</option>
+                    <option value="large">Large</option>
+                </select>
+            </div>
+            Institution code
+            <div class="mb-3">
+                <input type="text" class="form-control" id="institutionCode" aria-describedby="institutionCode"
+                    placeholder="institutionCode" name="institutionCode" min="1" value={{ user_institution }}>
+            </div>
+
+            <!-- Button 3-->
+            <a href="/event_labels_output" target="_blank">
+                <button type="submit" class="btn btn-success btn-lg" name="action3" value="VALUE3">Print</button>
+            </a>
+        </div>
+        </div>
+        <br>
 </form>
 
 {% endblock %}

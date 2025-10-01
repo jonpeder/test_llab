@@ -254,7 +254,6 @@ def labels():
             institutionCode = request.form.get("institutionCode")
             # Get label size
             size = request.form.get("size")
-            print(size)
             # Finn eventIDer og antall etiketter som skal printes av brukeren
             user = current_user
             events = user.print_events

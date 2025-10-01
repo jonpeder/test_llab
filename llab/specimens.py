@@ -28,10 +28,13 @@ def specimen_det():
     occ_count=0
     occ_update_count=0
     id_count=0
+    # Søk etter Taxa
+    taxa = Taxa.query.all()
     # POST
     if request.method == 'POST':
         # Mandatory fields
         qr_data = request.form.get("qr_data")
+        taxonInt = request.form.get("taxonInt")
         identifiedBy = request.form.get("identifiedBy")
         individualCount = request.form.get("individualCount")
         preparations = request.form.get("preparations")
@@ -44,6 +47,11 @@ def specimen_det():
         associatedTaxa = request.form.get("associatedTaxa")
         associatedReferences = request.form.get("associatedReferences")
         verbatimLabel = request.form.get("verbatimLabel")
+        # If no "TAX:" prefix is present in the string use taxonID if this has been specified
+        if not re.search("TAX\:", qr_data):
+            if taxonInt:
+                qr_data = "TAX:"+taxonInt+":::\n" + qr_data
+
         # Check that a det label have been scanned, that  "TAX:" is present in string
         if re.search("TAX\:", qr_data):
             # For each taxon
@@ -68,11 +76,14 @@ def specimen_det():
                     else:
                         sex = sex_tmp
                     # Get unit-ID. Add to database if not already present
-                    unit_id = f"TAX:{det_data}"
-                    if not Units.query.filter_by(unitID=unit_id).first():
-                        new_unit = Units(unitID=unit_id, createdByUserID=current_user.id, taxonInt=taxonInt, identificationQualifier=identificationQualifier, sex=sex)
-                        db.session.add(new_unit)
-                        db.session.commit()
+                    if det_data.split(":")[3]:
+                        unit_id = f"TAX:{det_data}"
+                        if not Units.query.filter_by(unitID=unit_id).first():
+                            new_unit = Units(unitID=unit_id, createdByUserID=current_user.id, taxonInt=taxonInt, identificationQualifier=identificationQualifier, sex=sex)
+                            db.session.add(new_unit)
+                            db.session.commit()
+                    else:
+                        unit_id = ""
                     # Check that the taxon exists in Taxa-table
                     taxon = Taxa.query.filter_by(taxonInt=taxonInt).first()
                     if taxon:
@@ -169,7 +180,7 @@ def specimen_det():
         if id_count > 0:
             flash(f'Identifications added: {id_count}')
     # Return html-page
-    return render_template("specimen_det.html", title=title, user=current_user, entomologists=entomologists, decoded_QR_codes=decoded_QR_codes)
+    return render_template("specimen_det.html", title=title, user=current_user, entomologists=entomologists, taxa=taxa, decoded_QR_codes=decoded_QR_codes)
 
 # Add determinations to database. Add specimens to database if not already present.
 @specimens.route('/send_decoded_QR_codes/<string:decoded_QR_codes>/', methods=["POST", "GET"])

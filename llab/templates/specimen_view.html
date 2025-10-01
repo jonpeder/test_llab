@@ -43,6 +43,8 @@
     {{ occurrence.ownerInstitutionCode | tablerow("Owner institution") | safe }}
     <!-- Preparations -->
     {{ occurrence.preparations | tablerow("Preparation") | safe }}
+    <!-- Individual count -->
+    {{ occurrence.individualCount | tablerow("Individual count") | safe }}
     <!-- Occurrence remarks -->
     {{ occurrence.occurrenceRemarks | tablerow("Occurrence remarks") | safe }}
     <!-- Associated taxa -->

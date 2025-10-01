@@ -238,7 +238,9 @@ def home():
                 dataset_filter_occurrences = Occurrences.query.filter(Occurrences.occurrenceID.in_(dataset_fiter_occurrences))
                 dataset_filter_eventIDs = [i.eventID for i in dataset_filter_occurrences]
                 dataset_filter_eventIDs = np.unique(dataset_filter_eventIDs)
-                event_ids = np.intersect1d(dataset_filter_eventIDs, event_ids)        
+                event_ids = np.intersect1d(dataset_filter_eventIDs, event_ids)
+            # 10. Preparation 
+            # 11. Number of individuals        
         # If requested, get event-id from show_event.html
         if request.form.get("collecting_event_id") == "collecting_event_id":
             eventID = request.form.get("eventID")
@@ -253,7 +255,7 @@ def home():
             .join(Country_codes, Collecting_events.countryCode==Country_codes.countryCode, isouter=True)\
             .join(Eunis_habitats, Collecting_events.eunisCode==Eunis_habitats.eunisCode, isouter=True)\
             .join(co1, Occurrences.occurrenceID==co1.occurrenceID, isouter=True)\
-            .with_entities(Occurrences.occurrenceID, Country_codes.country, Collecting_events.eventID,
+            .with_entities(Occurrences.occurrenceID, Occurrences.preparations, Occurrences.individualCount, Country_codes.country, Collecting_events.eventID,
             Collecting_events.municipality, Collecting_events.locality_1, Collecting_events.locality_2, 
             Collecting_events.habitat, Collecting_events.substrateName, Collecting_events.substratePlantPart, 
             Collecting_events.substrateType, Collecting_events.eventDate_1, Collecting_events.eventDate_2, 

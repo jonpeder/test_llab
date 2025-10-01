@@ -465,6 +465,8 @@
           <th>Date</th>
           <th>Method</th>
           <th>Leg.</th>
+          <th>Preparation</th>
+          <th>Individual count</th>
         </tr>
       </thead>
       <tbody>
@@ -522,6 +524,10 @@
           <td>{{ occurrence.samplingProtocol | if_present }}</td>
           <!-- Collected by -->
           <td>{{ occurrence.recordedBy | leg_format | if_present | safe }}</td>
+          <!-- Preparation -->
+          <td>{{ occurrence.preparations | if_present | safe }}</td>
+          <!-- Individual count -->
+          <td>{{ occurrence.individualCount | if_present | safe }}</td>
         </tr>
         {% endif %}
         {% endfor %}

@@ -2,83 +2,94 @@
 {% block content %}
 
 <form action="/det_labels" method="POST">
-    <!-- Select taxon -->
-    <div class="mb-3">
-        Taxon
-        <select class="form-control selectpicker" id="scientificName" name="scientificName" data-live-search="true">
-            {% for taxon in taxa %}
-            <option value="{{ taxon.scientificName }}">{{ taxon.scientificName }}</option>
-            {% endfor %}
-        </select>
+    <div class="card" id="card1">
+        <div class="card-header">
+            Add labels
+        </div>
+        <div class="card-body">
+            <!-- Select taxon -->
+            Taxon
+            <div class="mb-3">
+                <select class="form-control selectpicker" id="scientificName" name="scientificName"
+                    data-live-search="true">
+                    <option value=""></option>
+                    {% for taxon in taxa %}
+                    <option value="{{ taxon.scientificName }}">{{ taxon.scientificName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Select identification qualifier -->
+            <div class="mb-3">
+                Identification qualifier
+                <select class="form-select" id="identificationQualifier" name="identificationQualifier">
+                    <option selected value=""></option>
+                    <option value="cf">cf</option>
+                    <option value="aff">aff</option>
+                    <option value="agg">agg</option>
+                </select>
+            </div>
+
+            <!-- Select sex -->
+            <div class="mb-3">
+                Sex
+                <select class="form-select" id="sex" name="sex">
+                    <option selected value=""></option>
+                    <option value="f">female</option>
+                    <option value="m">male</option>
+                </select>
+            </div>
+
+            <!--label number -->
+            Number of labels
+            <div class="mb-3">
+                <input type="number" class="form-control" id="Label_number" aria-describedby="Label_number"
+                    placeholder="Label_number" name="Label_number" min="1" value="1">
+            </div>
+            <!-- Button -->
+            <button type="submit" class="btn btn-secondary" name="action1" value="VALUE1">Add</button>
+        </div>
     </div>
 
-    <!-- Select identification qualifier -->
-    <div class="mb-3">
-        Identification qualifier
-        <select class="form-select" id="identificationQualifier" name="identificationQualifier" >
-            <option selected value=""></option>
-            <option value="cf">cf</option>
-            <option value="aff">aff</option>
-            <option value="agg">agg</option>
-        </select>
+    <br>
+
+    <!-- Table: Display added collecting events -->
+    <div class="card" id="card2">
+        <div class="card-header">
+            Selected taxa
+        </div>
+        <div class="card-body">
+            {% if user.print_det|length > 0 %}
+            <strong>Selected collecting events:</strong>
+            <table class="table" table-sm>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">name</th>
+                        <th scope="col"></th>
+                        <th scope="col">sex</th>
+                        <th scope="col">label n</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for det in user.print_det %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <th scope="col">{{ det.scientificName }}</th>
+                        <th scope="col">{{ det.identificationQualifier }}</th>
+                        <th scope="col">{{ det.sex }}</th>
+                        <th scope="col">{{ det.print_n }}</th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Button -->
+            <button type="submit" class="btn btn-danger" name="action2" value="VALUE2">Clear</button>
+            {% endif %}
+        </div>
     </div>
 
-    <!-- Select sex -->
-    <div class="mb-3">
-        Sex
-        <select class="form-select" id="sex" name="sex" >
-            <option selected value=""></option>
-            <option value="f">female</option>
-            <option value="m">male</option>
-        </select>
-    </div>
-
-    <!--label number -->
-    Number of labels
-    <div class="mb-3">
-        <input type="number" class="form-control" id="Label_number" aria-describedby="Label_number"
-            placeholder="Label_number" name="Label_number" min="1" value="1">
-    </div>
-    <div class="d-inline mb-3">
-        <!-- Button 2-->
-        <button type="submit" class="btn btn-secondary" name="action1" value="VALUE1">Add</button>
-        <!-- Button 1-->
-        <button type="submit" class="btn btn-danger" name="action2" value="VALUE2">Clear</button>
-    </div>
-    <p></p>
-
-<!-- Table: Display added collecting events -->
-{% if user.print_det|length > 0 %}
-<strong>Selected collecting events:</strong>
-<table class="table" table-sm>
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">name</th>
-            <th scope="col">sex</th>
-            <th scope="col">label n</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for det in user.print_det %}
-        <tr>
-            <th scope="row">{{ loop.index }}</th>
-            <th scope="col">{{ det.scientificName }}</th>
-            <th scope="col">{{ det.sex }}</th>
-            <th scope="col">{{ det.print_n }}</th>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endif %}
-
-    <!-- label type 
-    Label type
-    <select class="form-select" aria-label="label_type" name="label_type">
-        <option value="small">medium</option>
-        <option value="medium">small</option>
-    </select>
-    <br />-->
+    <br>
 
     <!-- Button 3-->
     <div class="mb-3">
@@ -88,5 +99,7 @@
     </div>
     <br />
 </form>
+
+<br>
 
 {% endblock %}

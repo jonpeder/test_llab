@@ -30,34 +30,37 @@
                 </button>
               </div>
               <div class="collapse" id="taxa">
-                <div class="mb-1">
-                  <select class="form-control selectpicker" id="taxon_name" name="taxon_name" data-live-search="true">
-                    <option value=""></option>
-                    {% for i in dropdown_names %}
-                    <option value="{{ i }};{{ dropdown_ranks[loop.index0] }}">
-                      {{ i }} ({{ dropdown_ranks[loop.index0] }})
-                    </option>
-                    {% endfor %}
-                  </select>
+                    <div class="mb-1">
+                        <select class="form-control selectpicker" id="taxon_name" name="taxon_name"
+                            data-live-search="true">
+                            <option value=""></option>
+                            {% for name in dropdown_names %}
+                            {% set concat_name = name ~ ' [' ~ dropdown_ranks[loop.index0] ~ ']' %}
+                            <option value="{{ concat_name }}" {% if filters.taxon_name==concat_name%}selected{% endif %}>
+                                {{ concat_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
-              </div>
               <!-- 2. Rank -->
-              <div class="mb-1">
-                <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#rank"
-                  aria-expanded="false" aria-controls="rank">
-                  Rank
-                </button>
-              </div>
-              <div class="collapse" id="rank">
                 <div class="mb-1">
-                  <select class="form-control selectpicker" id="taxon_rank" name="taxon_rank">
-                    <option value=""></option>
-                    {% for i in ranks %}
-                    <option value="{{ i }}">{{ i }}</option>
-                    {% endfor %}
-                  </select>
+                    <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#rank" aria-expanded="false" aria-controls="rank">
+                        Rank
+                    </button>
                 </div>
-              </div>
+                <div class="collapse" id="rank">
+                    <div class="mb-1">
+                        <select class="form-control selectpicker" id="taxon_rank" name="taxon_rank">
+                            <option value=""></option>
+                            {% for rank in ranks %}
+                            <option value="{{ rank }}" {% if filters.taxon_rank==rank %}selected{% endif %}>{{
+                                rank }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
               <!-- 3. sex -->
               <div class="mb-1">
                 <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#sex"
@@ -69,14 +72,16 @@
                 <div class="mb-1">
                   <select class="form-control selectpicker" id="sex" name="sex">
                     <option value=""></option>
-                    <option value="male">male</option>
-                    <option value="female">female</option>
+                    <option value="male"{% if filters.sex=="male" %}selected{% endif %}>male</option>
+                    <option value="female"{% if filters.sex=="female" %}selected{% endif %}>female</option>
                   </select>
                 </div>
               </div>
             </div>
             <!-- Collecting event filters -->
             Collecting event filters
+            <!-- Polygon eventIDs -->
+            <input type="hidden" id="polygon_event_ids" name="polygon_event_ids" value="">
             <div class="container-fluid">
               <!-- 4. Collecting event ID -->
               <div class="mb-1">
@@ -88,12 +93,8 @@
               <div class="collapse" id="event_id">
                 <select class="form-control selectpicker" id="eventID" name="eventID" data-live-search="true">
                   <option value=""></option>
-                  {% for i in collecting_events %}
-                  <option value="{{ i.eventID }}">{{ i.eventID }} {% if i.municipality %}- {{ i.municipality }}{% endif
-                    %} {%
-                    if i.locality_1 %}- {{ i.locality_1 }}{% endif %} {% if i.locality_2 %}- {{ i.locality_2 }}{% endif
-                    %}
-                  </option>
+                  {% for event in collecting_events %}
+                  <option value="{{ event.eventID }}" {% if filters.rank==event.eventID %}selected{% endif %}>{{event.eventID }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -111,7 +112,7 @@
                   <select class="form-control selectpicker" id="country" name="country" data-live-search="true">
                     <option value=""></option>
                     {% for country in countries %}
-                    <option value="{{ country }}">{{ country }}</option>
+                    <option value="{{ country }}" {% if filters.country==country %}selected{% endif %}>{{ country }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -121,7 +122,7 @@
                   <select class="form-control selectpicker" id="county" name="county" data-live-search="true">
                     <option value=""></option>
                     {% for county in counties %}
-                    <option value="{{ county }}">{{ county }}</option>
+                    <option value="{{ county }}" {% if filters.county==county %}selected{% endif %}>{{ county }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -132,7 +133,7 @@
                     data-live-search="true">
                     <option value=""></option>
                     {% for municipality in municipalities %}
-                    <option value="{{ municipality }}">{{ municipality }}</option>
+                    <option value="{{ municipality }}" {% if filters.municipality==municipality %}selected{% endif %}>{{ municipality }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -171,10 +172,10 @@
               </div>
               <div class="collapse" id="date">
                 <div class="mb-1">
-                  <input type="date" class="form-control" id="date_from" name="date_from" placeholder="From">
+                  <input type="date" class="form-control" id="date_from" name="date_from" value="{{ filters.date_from }}" placeholder="From">
                 </div>
                 <div class="mb-1">
-                  <input type="date" class="form-control" id="date_to" name="date_to" placeholder="To">
+                  <input type="date" class="form-control" id="date_to" name="date_to" value="{{ filters.date_to }}" placeholder="To">
                 </div>
               </div>
               <!-- 8. method -->
@@ -189,7 +190,7 @@
                   <select class="form-control selectpicker" id="method" name="method">
                     <option value=""></option>
                     {% for method in methods %}
-                    <option value="{{ method }}">{{ method }}</option>
+                    <option value="{{ method }}" {% if filters.method==method %}selected{% endif %}>{{ method }}</option>
                     {% endfor %}
 
                   </select>
@@ -208,7 +209,7 @@
               </div>
               <div class="collapse" id="SpecimenIDs">
                 <div class="mb-3">
-                  <textarea type="text" class="form-control" id="occurrence_ids" name="occurrence_ids"
+                  <textarea type="text" class="form-control" id="occurrence_ids" name="occurrence_ids" value="{{ filters.occurrence_ids }}"
                     placeholder="Insert decoded QR-codes here!"></textarea>
                   <small id="qr-dataHelp" class="form-text text-muted">Decoded QR-codes from
                     specimen-labels</small>
@@ -223,7 +224,7 @@
               </div>
               <div class="collapse" id="UnitIDs">
                 <div class="mb-3">
-                  <textarea type="text" class="form-control" id="unit_ids" name="unit_ids"
+                  <textarea type="text" class="form-control" id="unit_ids" name="unit_ids" value="{{ filters.unit_ids }}"
                     placeholder="Insert decoded QR-codes here!"></textarea>
                   <small id="qr-dataHelp" class="form-text text-muted">Decoded QR-codes from
                     taxon-labels</small>
@@ -241,7 +242,7 @@
                   <select class="form-control selectpicker" id="drawer_name" name="drawer_name" data-live-search="true">
                     <option value=""></option>
                     {% for drawer in drawers %}
-                    <option value="{{ drawer }}">{{ drawer }}</option>
+                    <option value="{{ drawer }}" {% if filters.drawer==drawer %}selected{% endif %}>{{ drawer }}</option>
                     {% endfor %}
                   </select>
                   <small id="qr-dataHelp" class="form-text text-muted">Name of the drawer</small>
@@ -260,7 +261,7 @@
                 <select class="form-control selectpicker" id="datasetfilter" name="datasetfilter">
                   <option value=""></option>
                   {% for dataset in datasets %}
-                  <option value="{{ dataset.datasetName }}">{{ dataset.datasetName }}</option>
+                  <option value="{{ dataset.datasetName }}" {% if filters.datasetName==dataset.datasetName %}selected{% endif %}>{{ dataset.datasetName }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -398,12 +399,169 @@
       var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
       }).addTo(map);
+      
+      // Add polygon drawing control
+      var drawnItems = new L.FeatureGroup();
+      map.addLayer(drawnItems);
+      
+      var drawControl = new L.Control.Draw({
+        draw: {
+          polygon: true,
+          polyline: false,
+          rectangle: false,
+          circle: false,
+          marker: false,
+          circlemarker: false
+        },
+        edit: {
+          featureGroup: drawnItems,
+          remove: true,
+          edit: false
+        }
+      });
+      map.addControl(drawControl);
+      
+      // Store markers for filtering
+      var eventMarkers = {};
+      
       // It even opens up a popup when you click it!
       {% for event in events %}
       var marker{{ loop.index }} = L.marker([{{ event.decimalLatitude }}, {{ event.decimalLongitude }}]).addTo(map);
       marker{{ loop.index }}.bindPopup('<form action="/event_show" method="post"><input type="text" name="eventID" id="eventID" value="{{ event.eventID }}" hidden><button type="submit" name="action1" value="VALUE1">{{ event.eventID }}</button></form>');
+      
+      // Store marker reference with event data
+      eventMarkers["{{ event.eventID }}"] = {
+        marker: marker{{ loop.index }},
+        latitude: {{ event.decimalLatitude }},
+        longitude: {{ event.decimalLongitude }},
+        eventID: "{{ event.eventID }}"
+      };
       {% endfor %}
+      
+      // Handle polygon creation
+      map.on(L.Draw.Event.CREATED, function (event) {
+        var layer = event.layer;
+        drawnItems.addLayer(layer);
+        
+        // Filter markers based on polygon
+        filterMarkersByPolygon(layer);
+        
+        // Update hidden form field with selected eventIDs
+        updatePolygonFilterField(layer);
+      });
+      
+      // Handle polygon deletion
+      map.on(L.Draw.Event.DELETED, function (event) {
+        // Show all markers when polygon is deleted
+        showAllMarkers();
+        // Clear the polygon filter field
+        clearPolygonFilterField();
+      });
+      
+      // Filter markers based on polygon
+      function filterMarkersByPolygon(polygon) {
+        var bounds = polygon.getBounds();
+        
+        // Hide all markers first
+        Object.values(eventMarkers).forEach(function(eventData) {
+          eventData.marker.removeFrom(map);
+        });
+        
+        // Show only markers within polygon
+        Object.values(eventMarkers).forEach(function(eventData) {
+          var latlng = L.latLng(eventData.latitude, eventData.longitude);
+          if (polygon.getBounds().contains(latlng) && polygon.getLatLngs()[0].some(function(ring) {
+            return isMarkerInsidePolygon(latlng, ring);
+          })) {
+            eventData.marker.addTo(map);
+          }
+        });
+      }
+      
+      // Show all markers
+      function showAllMarkers() {
+        Object.values(eventMarkers).forEach(function(eventData) {
+          eventData.marker.addTo(map);
+        });
+      }
+      
+      // Point in polygon algorithm
+      function isMarkerInsidePolygon(latlng, polyPoints) {
+        var x = latlng.lat, y = latlng.lng;
+        var inside = false;
+        for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+          var xi = polyPoints[i].lat, yi = polyPoints[i].lng;
+          var xj = polyPoints[j].lat, yj = polyPoints[j].lng;
+          
+          var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+          if (intersect) inside = !inside;
+        }
+        return inside;
+      }
+      
+      // Update hidden form field with selected eventIDs - Bounds-based approach
+function updatePolygonFilterField(polygon) {
+    var selectedEventIDs = [];
+    var bounds = polygon.getBounds();
+    
+    console.log("Using bounds:", bounds);
+    
+    Object.values(eventMarkers).forEach(function(eventData) {
+        var latlng = L.latLng(eventData.latitude, eventData.longitude);
+        
+        // Simple bounds check first
+        if (bounds.contains(latlng)) {
+            selectedEventIDs.push(eventData.eventID);
+            console.log("Marker within bounds:", eventData.eventID);
+        }
+    });
+    
+    console.log("Selected Event IDs (bounds-based):", selectedEventIDs);
+    
+    // Update hidden input field
+    var hiddenField = document.getElementById('polygon_event_ids');
+    if (hiddenField) {
+        hiddenField.value = selectedEventIDs.join(',');
+        console.log("Hidden field value:", hiddenField.value);
+    }
+    
+    // Show notification
+    showPolygonFilterNotification(selectedEventIDs.length);
+    }
+      
+      // Clear the polygon filter field
+      function clearPolygonFilterField() {
+        $('#polygon_event_ids').val('');
+        hidePolygonFilterNotification();
+      }
+      
+      // Show notification about active polygon filter
+      function showPolygonFilterNotification(count) {
+        var notification = $('#polygonFilterNotification');
+        notification.find('.event-count').text(count);
+        notification.show();
+      }
+      
+      function hidePolygonFilterNotification() {
+        $('#polygonFilterNotification').hide();
+      }
+      
+      // Clear polygon button
+      L.easyButton('fa-times', function(btn, map) {
+        drawnItems.clearLayers();
+        showAllMarkers();
+        clearPolygonFilterField();
+      }, 'Clear selection').addTo(map);
     </script>
+  </div>
+  
+  <!-- Polygon filter notification -->
+  <div id="polygonFilterNotification" class="alert alert-info mt-2" style="display: none;">
+    <i class="fa fa-info-circle"></i> 
+    Polygon filter active: <span class="event-count">0</span> events selected. 
+    Click "Filter" to apply this spatial filter along with other filters.
+    <button type="button" class="btn-close float-end" onclick="hidePolygonFilterNotification(); clearPolygonFilterField();"></button>
   </div>
 </div>
 
@@ -553,20 +711,33 @@
   // Plot function with Plotly
   function myBarplot(myplot, orient, type, title, yArray, xArray) {
     let data
+    let layout
     if (type == "pie") {
       data = [{ labels: xArray, values: yArray, type: type, orientation: orient, marker: { color: "rgba(0,0,255,0.6)" }, textinfo: 'none' }];
+      layout = { 
+        title: title, 
+        showlegend: false
+      };
     } else {
       data = [{ x: xArray, y: yArray, type: type, orientation: orient, marker: { color: "rgba(0,0,255,0.6)" } }];
+      layout = { 
+        title: title, 
+        showlegend: false,
+        xaxis: {
+            dtick: 1 // Do not use decimals on x axis
+        }
+      };
     }
-    const layout = { title: title, showlegend: false };
     return Plotly.newPlot(myplot, data, layout, { displayModeBar: false });
   }
   // Call the barplot function for each plot
+  // Collecting-event plots
   myBarplot("event_year_plot", "v", "bar", "Year", {{ event_year["count"] }}, {{ event_year["label"] | safe }})
   myBarplot("event_month_plot", "v", "bar", "Month", {{ event_month["count"] }}, {{ event_month["label"] | safe }})
   myBarplot("event_method_plot", "v", "bar", "Method", {{ event_method["count"] }}, {{ event_method["label"] | safe }})
   myBarplot("event_habitat1_plot", "v", "bar", "Habitat (level 1)", {{ event_habitat1["count"] }}, {{ event_habitat1["label"] | safe }})
   myBarplot("event_habitat2_plot", "v", "pie", "Habitat (level-2)", {{ event_habitat2["count"] }}, {{ event_habitat2["label"] | safe }})
+  // Occurrence plots
   myBarplot("occurrence_year_plot", "v", "bar", "Year", {{ occurrence_year["count"] }}, {{ occurrence_year["label"] | safe }})
   myBarplot("occurrence_month_plot", "v", "bar", "Month", {{ occurrence_month["count"] }}, {{ occurrence_month["label"] | safe }})
   myBarplot("occurrence_method_plot", "v", "bar", "Method", {{ occurrence_method["count"] }}, {{ occurrence_method["label"] | safe }})
@@ -576,13 +747,12 @@
   myBarplot("occurrence_family_plot", "v", "pie", "Family", {{ occurrence_family["count"] }}, {{ occurrence_family["label"] | safe }})
   myBarplot("occurrence_genus_plot", "v", "pie", "Genus", {{ occurrence_genus["count"] }}, {{ occurrence_genus["label"] | safe }})
   myBarplot("occurrence_taxonRank_plot", "v", "bar", "Identification level", {{ occurrence_taxonRank["count"] }}, {{ occurrence_taxonRank["label"] | safe }})
+  // Taxa plots
   myBarplot("taxa_year_plot", "v", "bar", "Year", {{ taxa_year["count"] }}, {{ taxa_year["label"] | safe }})
   myBarplot("met_taxon_count_plot", "v", "bar", "Method", {{ met_taxon_count["count"] }}, {{ met_taxon_count["label"] | safe }})
   myBarplot("taxa_taxonRank_plot", "v", "bar", "Identification level", {{ taxa_taxonRank["count"] }}, {{ taxa_taxonRank["label"] | safe }})
   myBarplot("taxa_family_plot", "v", "pie", "Family", {{ taxa_family["count"] }}, {{ taxa_family["label"] | safe }})
   myBarplot("taxa_order_plot", "v", "bar", "Order", {{ taxa_order["count"] }}, {{ taxa_order["label"] | safe }})
-
-
 
   // CHECKBOXES
   // Function to select all checkboxes by clicking the header checkbox

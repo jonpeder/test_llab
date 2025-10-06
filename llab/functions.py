@@ -9,6 +9,7 @@ import cv2
 import numpy as np
 import pandas as pd
 import datetime as dt
+from datetime import datetime
 #from pyzbar.pyzbar import decode
 #from pyzbar.pyzbar import ZBarSymbol
 from collections import defaultdict, Counter
@@ -97,7 +98,6 @@ def bar_plot_dict(dataframe, gr, percentage):
     # Transform back to dict
     dict_out = {"label":list(groups_df.index), "count":list(groups_df["count"])}
     return(dict_out)
-
 
 # Read CSV
 def readcsv(file):
@@ -722,3 +722,17 @@ def number_of_individuals(occurrence_ids, occurrences_dict):
     if males:
         individuals_string.append(f'{males}♂︎')
     return " ".join(individuals_string)
+
+def format_gbif_date(eventDateTime):
+    """Format date for GBIF compatibility"""
+    if not eventDateTime:
+        return ""
+    
+    if isinstance(eventDateTime, datetime):
+        return eventDateTime.isoformat()
+    
+    try:
+        # Parse and reformat if it's a string
+        return datetime.fromisoformat(str(eventDateTime)).isoformat()
+    except:
+        return str(eventDateTime)

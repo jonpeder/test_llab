@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import csv
 from .filters import locality_format, format_dates3
-from .functions import format_occurrence_block, format_biology_block, format_distribution_block, number_of_individuals, format_new_distribution
+from .functions import format_occurrence_block, format_biology_block, format_distribution_block, number_of_individuals, format_new_distribution, format_gbif_date
 from collections import defaultdict
 from Bio import SeqIO
 import subprocess
@@ -25,7 +25,6 @@ app = current_app
 @login_required
 def export_events(eventIDs):
     # Check if eventIDs are provided
-    print(eventIDs)
     if not eventIDs:
         return "No collecting-event IDs provided", 400
     # 
@@ -152,16 +151,19 @@ def export_GBIF(occurrenceIDs):
                 recordedByID = ""
                 if occurrence.recordedBy:
                     collector = Collectors.query.filter(
-                        Collectors.recordedBy == occurrence.recordedBy
-                    ).with_entities(Collectors.recordedByID).first()
-                    recordedByID = collector[0] if collector else ""
+                        Collectors.recordedBy.in_(occurrence.recordedBy.split(" | "))
+                    ).with_entities(Collectors.recordedByID).all()
+                    print(collector)                       
+                    recordedByID = " | ".join([i.recordedByID for i in collector]) if collector else ""
 
                 identifiedByID = ""
                 if occurrence.identifiedBy:
                     identifier = Collectors.query.filter(
-                        Collectors.recordedBy == occurrence.identifiedBy
-                    ).with_entities(Collectors.recordedByID).first()
-                    identifiedByID = identifier[0] if identifier else ""
+                         Collectors.recordedBy.in_(occurrence.identifiedBy.split(" | "))
+                    ).with_entities(Collectors.recordedByID).all()
+                    print(identifier)
+                    identifiedByID = " | ".join(i.recordedByID for i in identifier) if identifier else ""
+
 
                 row = [occurrence.ownerInstitutionCode, occurrence.catalogNumber, occurrence.occurrenceID, "PreservedSpecimen", format_dates3(occurrence.eventDate_1, occurrence.eventDate_2), occurrence.scientificName, occurrence.scientificNameAuthorship, occurrence.taxonRank, occurrence.order, occurrence.family, occurrence.genus, occurrence.specificEpithet, occurrence.lifeStage, occurrence.sex, locality_format(occurrence.locality_1, occurrence.locality_2), occurrence.decimalLatitude, occurrence.decimalLongitude, occurrence.coordinateUncertaintyInMeters, occurrence.eventID, occurrence.geodeticDatum, occurrence.countryCode, occurrence.county, occurrence.stateProvince, occurrence.municipality, occurrence.habitat, occurrence.recordedBy, recordedByID, occurrence.identifiedBy, identifiedByID, occurrence.dateIdentified, occurrence.preparations, occurrence.individualCount, occurrence.associatedTaxa, occurrence.samplingProtocol, remarks, occurrence.associatedReferences, occurrence.eventRemarks, "http://creativecommons.org/licenses/by/4.0/legalcode"]
 
@@ -519,7 +521,7 @@ def export_observations_GBIF(occurrenceIDs):
         header = ["ownerInstitutionCode",
         "basisOfRecord", 
         "occurrenceID",
-        "eventDateTime",
+        "eventDate",
         "scientificName",
         "taxonRank",
         "order",
@@ -571,7 +573,7 @@ def export_observations_GBIF(occurrenceIDs):
                 row = ["TMU",
                     "HumanObservation", 
                     observation.occurrenceID,
-                    observation.eventDateTime,
+                    format_gbif_date(observation.eventDateTime),
                     observation.scientificName,
                     observation.taxonRank,
                     observation.order,

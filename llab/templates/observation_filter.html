@@ -616,7 +616,7 @@
               alert("Please select at least one specimen to export.");
               return;
             }
-            // Construct the URL with the selected IDs, separated by ";"
+            // Construct the URL with the selected IDs, separated by "|"
             var url = '/export_observations_GBIF/' + selectedValues.join('|');
             // Update the href and trigger the click
             $(this).attr('href', url);

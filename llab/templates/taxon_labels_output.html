@@ -61,7 +61,11 @@
       <br>
       {% endif %}
       <!-- Line 1: Scientific name -->
+      {% if data.taxonRank == "species"%}
       <p style="margin: 1px; font-size: 135%;">
+      {% else %}
+      <p style="margin: 1px; font-size: 160%;">
+      {% endif %}
       {{ data.scientificName | scn_italic_ex_author (data.taxonRank, data.scientificNameAuthorship) | safe }}{% if det.identificationQualifier %} <small><b>{{ det.identificationQualifier }}.</b></small>{% endif %}
       </p>
       <!-- Line 2: Author -->
@@ -71,7 +75,7 @@
       {% endif %}
       </p>
       <!-- Line 3: family/rank and sex -->
-      <p style="font-size: 120%; font-weight: bold">
+      <p style="font-size: 130%; font-weight: bold">
           {% if data.taxonRank == "species" or data.taxonRank == "genus" or data.taxonRank == "spnov" or data.taxonRank == "species-group" %}
           {{ data.family }}
           {% else %}

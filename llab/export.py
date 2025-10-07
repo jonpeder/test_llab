@@ -6,7 +6,7 @@ from . import db
 import numpy as np
 import pandas as pd
 import csv
-from .filters import locality_format, format_dates3
+from .filters import locality_format, format_dates3, format_substrate
 from .functions import format_occurrence_block, format_biology_block, format_distribution_block, number_of_individuals, format_new_distribution, format_gbif_date
 from collections import defaultdict
 from Bio import SeqIO

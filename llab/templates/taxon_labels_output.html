@@ -64,7 +64,7 @@
       {% if data.taxonRank == "species"%}
       <p style="margin: 1px; font-size: 135%;">
       {% else %}
-      <p style="margin: 1px; font-size: 160%;">
+      <p style="margin: 1px; font-size: 170%;">
       {% endif %}
       {{ data.scientificName | scn_italic_ex_author (data.taxonRank, data.scientificNameAuthorship) | safe }}{% if det.identificationQualifier %} <small><b>{{ det.identificationQualifier }}.</b></small>{% endif %}
       </p>

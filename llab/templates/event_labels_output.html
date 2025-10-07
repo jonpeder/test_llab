@@ -21,7 +21,7 @@
     width: 175px;   /* Increased width */
     height: 55px;   /* Increased height */
     font-size: 8px; /* Larger font */
-    line-height: 115%;
+    line-height: 120%;
     font-family: Verdana;
     font-weight: normal;
     font-style: normal;
@@ -30,6 +30,12 @@
     display: flex; /* Add this */
     align-items: flex-start; /* Add this */
 }
+
+.label-content {
+    flex: 1; /* Take remaining space */
+    overflow: hidden; /* Prevent text overflow */
+}
+
 {% elif size == "mediumlarge" %}
 .grid-container {
   display: grid;
@@ -41,7 +47,7 @@
 
 .label {
     width: 130px;   /* Increased width */
-    height: 38px;   /* Increased height */
+    height: 46px;   /* Increased height */
     font-size: 6px; /* Larger font */
     line-height: 7px;
     font-family: Verdana;
@@ -61,7 +67,7 @@
 
 .label {
     width: 110px;   /* Increased width */
-    height: 30px;   /* Increased height */
+    height: 33px;   /* Increased height */
     font-size: 5px; /* Larger font */
     line-height: 115%;
     font-family: Verdana;
@@ -74,16 +80,16 @@
 .grid-container {
   display: grid;
   grid-template-columns: auto auto auto auto auto auto auto auto auto auto; /* 10 columns */
-  gap: 0px;
+  gap: 2px;
   padding: 0px;
   background-color: #ffffff;
 }
 
 .label {
     width:68px;
-    height:23px;
+    height:22px;
     font-size: 3px;
-    line-height: 115%;
+    line-height: 100%;
     font-family: Verdana;
     font-weight: normal;
     font-style: normal;
@@ -94,14 +100,14 @@
 
 .label img {
    float:left;
-   height: 95%;
+   height: 100%;
    margin-right:1px;
    flex-shrink: 0; /* Prevent image from shrinking */
 }
 
 .label-content {
-    flex: 1; /* Take remaining space */
-    overflow: hidden; /* Prevent text overflow */
+    /*flex: 1;  Take remaining space */
+    /*overflow: hidden;  Prevent text overflow */
 }
 
 </style>

@@ -1,6 +1,8 @@
 from flask import Blueprint
 from datetime import datetime
 import re
+from .models import Taxa
+from . import db
 
 # connect to __init__ file
 filters = Blueprint('filters', __name__)
@@ -321,3 +323,4 @@ def format_eunis(habitat, code):
         return f"{habitat} ({code})"
     else:
         return ""
+

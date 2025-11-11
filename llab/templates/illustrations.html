@@ -2,20 +2,24 @@
 {% block content %}
 
 <form method=post enctype=multipart/form-data>
-
+    <div class="card">
+    <div class="card-header">
+        Identification
+    </div>
+    <div class="card-body">
     <!-- Scientific name -->
     <div class="mb-3">
         Scientific name
-        <select class="form-control selectpicker" id="scientificName" name="scientificName" data-live-search="true">
+        <select class="form-control selectpicker" id="taxonID" name="taxonID" data-live-search="true">
             {% for i in taxa %}
             {% if last_values is not none %}
             {% if last_values.scientificName == i.scientificName %}
-            <option selected value="{{i.scientificName}}">{{i.scientificName}}</option>
+            <option selected value="{{i.taxonInt}}">{{i.scientificName}}</option>
             {% else %}
-            <option value="{{i.scientificName}}">{{i.scientificName}}</option>
+            <option value="{{i.taxonInt}}">{{i.scientificName}}</option>
             {% endif %}
             {% else %}
-            <option value="{{i.scientificName}}">{{i.scientificName}}</option>
+            <option value="{{i.taxonInt}}">{{i.scientificName}}</option>
             {% endif %}
             {% endfor %}
         </select>
@@ -39,7 +43,7 @@
         </select>
     </div>
 
-    <!-- Sex -->
+    <!-- lifestage -->
     <div class="mb-3">
         Lifestage
         <select class="form-select" name="lifeStage">
@@ -56,10 +60,20 @@
             {% endfor %}
         </select>
     </div>
+    </div>
+    </div>
+    <br>
+
+    <!-- Illustration type, category and perspective -->
+    <div class="card">
+    <div class="card-header">
+        Illustation type, category and perspective
+    </div>
+    <div class="card-body">
 
     <!-- image type -->
     <div class="mb-3">
-        Illustration type
+        Type
         <select class="form-select" name="imageType">
             {% for i in imagetype %}
             {% if last_values is not none %}
@@ -75,8 +89,9 @@
         </select>
     </div>
 
-     <!-- Category -->
-    <div class="mb-3">
+    <!-- Category -->
+    <div class="row">
+    <div class="col-md-6">
         Category
         <select class="form-select" name="category">
             {% for i in imagecat %}
@@ -92,6 +107,40 @@
             {% endfor %}
         </select>
     </div>
+    <div class="col-md-6">
+        New category
+        <input type="text" class="form-control" name="new_category">
+    </div>
+    </div>
+
+    <!-- Image perspective -->
+    <div class="mb-3">
+        Perspective
+        <select class="form-select" name="category">
+            <option value=""></option>
+            {% for perspective in perspectives %}
+            {% if last_values is not none %}
+            {% if last_values.category == perspective %}
+            <option selected value="{{ perspective }}">{{ perspective }}</option>
+            {% else %}
+            <option value="{{ perspective }}">{{ perspective }}</option>
+            {% endif %}
+            {% else %}
+            <option value="{{ perspective }}">{{ perspective }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    </div>
+    </div>
+    <br>
+
+    <!-- Illustation origin -->
+    <div class="card">
+    <div class="card-header">
+        Illustation origin
+    </div>
+    <div class="card-body">
 
     <!-- rightsHolder -->
     <div class="mb-3">
@@ -130,6 +179,9 @@
         <input type="text" class="form-control" name="associatedReference">
         {% endif %}
     </div>
+    </div>
+    </div>
+    <br>
     
 
     <!-- Collapse some of the less important input fields -->

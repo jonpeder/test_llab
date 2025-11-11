@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<form action="/key_add" method="POST">
+    <!-- Key name -->
+    Identification key name
+    <div class="mb-3">
+        <input type="text" class="form-control" id="name" placeholder="Pompilidae subfamilies" name="name" required>
+    </div>
+
+    <!-- Key description -->
+    Description
+    <div class="mb-3">
+        <textarea type="text" class="form-control" id="description" name="description"
+            placeholder="A dichotomous key to the North-European subfamilies of Pompilidae. This is an English version of the key in Nieuwenhuijsen 2005."
+            required></textarea>
+    </div>
+
+    <!-- Select taxon -->
+    Taxon
+    <div class="mb-3">
+        <select class="form-control selectpicker" id="taxonID" name="taxonID" data-live-search="true" required>
+            <option value=""></option>
+            {% for taxon in taxa %}
+            <option value="{{ taxon.taxonInt }}">{{ taxon.scientificName }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Bibliographic reference -->
+    Bibliographic reference
+    <div class="mb-3">
+        <input type="text" class="form-control" id="bibliographicReference" placeholder="Nieuwenhuijsen 2005"
+            name="bibliographicReference">
+    </div>
+
+    <!-- Input key -->
+    Input key
+    <div class="mb-3">
+        <textarea type="text" class="form-control" id="input_key" name="input_key" rows="10" placeholder="# 1
+The pulvillus of leg 3 lies beneath the claws (view from the side) (fig. 85). The claws lie against each other and are hook-shaped (fig. 86). The inner eye margins converge ventrally (fig. 87).
+-> Ceropalinae
+The pulvillus of leg 3 lies between the spread claws (fig. 88 & 89). The inner eye margins bend slightly towards each other, away from each other, or run parallel below (fig. 90).
+-> 2
+
+# 2
+The distal margin of tibia 3 bears spines of unequal length at unequal distances from each other (fig. 91). Discoidal cell 2 (D2) in the forewing has a bulge on the proximal side (fig. 92). Sternite 2 has no transverse groove (fig. 93).
+-> Pompilinae
+The distal margin of tibia 3 bears spines of equal length and at equal distances from each other (fig. 94). Discoidal cell 2 has no bulge (fig. 95). Sternite 2 has a distinct transverse groove (sometimes absent in the male) (fig. 96).
+-> Pepsinae"></textarea>
+        <small id="input_key-dataHelp" class="form-text text-muted">Insert identification key in plain text formatted as in the
+            placeholder example</small>
+    </div>
+
+    <!-- Button -->
+    <div class="mb-3">
+        <button type="submit" class="btn btn-success btn-lg" name="action1" value="VALUE1">Add</button>
+    </div>
+
+</form>
+
+{% endblock %}

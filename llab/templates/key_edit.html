@@ -1,0 +1,592 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    th.tablespace {
+        padding-top: 15px
+    }
+
+    .key-gallery-container {
+        margin: 1.5rem 0;
+    }
+
+    .key-gallery {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        padding-bottom: 1rem;
+        -webkit-overflow-scrolling: touch;
+        /* Smooth scrolling on iOS */
+    }
+
+    .gallery-item {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        width: 500px;
+        /* Fixed width or use min-width/max-width */
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background: white;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item img:hover {
+        transform: scale(1.02);
+    }
+
+    .image-caption {
+        padding: 0.5rem;
+        margin: 0;
+        font-size: 0.9rem;
+        color: #555;
+        text-align: center;
+    }
+
+    /* Hide scrollbar but keep functionality */
+    .observation-gallery::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .gallery-item {
+            width: 300px;
+        }
+
+        .gallery-item img {
+            height: 200px;
+        }
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        {% if key %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>{{ key.name }}</h4>
+                <p class="mb-0">{{ key.description }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Form: Edit existing options -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Key Structure</h5>
+            </div>
+            <div class="card-body">
+                {% for option in options %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <form method="POST" action="/key_edit" class="row">
+                            <input type="hidden" name="key_id" value="{{ key.id if key }}">
+                            <input type="hidden" name="option_id" value="{{ option.id }}">
+
+                            <!-- Parent ID -->
+                            <!-- name: parent -->
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <label class="form-label">ID: {{ option.id }}</label>
+                                    <input type="text" class="form-control" name="parent" value="{{ option.parent }}"
+                                        readonly>
+                                    <small class="text-muted">Parent ID {% set children_count = options|selectattr('parent', 'equalto', option.id)|list|length
+                                %}
+                                {% if children_count > 0 %}
+                                <span class="badge bg-secondary ms-2">{{ children_count }} children</span>
+                                {% endif %}</small>
+                                </div>
+                            </div>
+
+                            <!-- Option_name -->
+                            <!-- name: option_name -->
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" name="option_name" value="{{ option.name }}"
+                                        required>
+                                </div>
+                            </div>
+
+                            <!-- Taxon ID -->
+                            <!-- name: taxonID -->
+                            <div class="col-md-2">
+                                <label class="form-label">Select taxon</label>
+                                <select class="form-control selectpicker" name="taxonID" data-live-search="true">
+                                    <option value=""></option>
+                                    {% for taxon in taxa %}
+                                    <option value="{{ taxon.taxonInt }}" {% if option.taxonID==taxon.taxonInt
+                                        %}selected{% endif %}>{{ taxon.scientificName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Question -->
+                            <!-- name: question -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Question</label>
+                                    <textarea class="form-control" name="question"
+                                        rows="2">{{ option.question or '' }}</textarea>
+                                </div>
+                            </div>
+
+                            <!-- Children count 
+                            <div class="col-md-12">
+                                {% set children_count = options|selectattr('parent', 'equalto', option.id)|list|length
+                                %}
+                                {% if children_count > 0 %}
+                                <span class="badge bg-secondary ms-2">{{ children_count }} children</span>
+                                {% endif %}
+                            </div>
+                            -->
+
+                            <!-- Comment -->
+                            <!-- name: comment -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Comment</label>
+                                    <textarea class="form-control" name="comment"
+                                        rows="2">{{ option.comment or '' }}</textarea>
+                                </div>
+                            </div>
+
+                            <!-- Figures -->
+                            <!-- name: selected_figures -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Figures</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control selected-figures-input"
+                                            name="selected_figures" value="{{ option.figures or ''}}"
+                                            data-option-id="{{ option.id }}" required readonly>
+                                        <button type="button" class="btn btn-outline-primary select-figures-btn"
+                                            data-bs-toggle="modal" data-bs-target="#figureGalleryModal"
+                                            data-option-id="{{ option.id }}">
+                                            Select Figures
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Button: Update option-->
+                            <div class="col-md-2">
+                            <button type="submit" class="btn btn-success" name="ACTION1"
+                                value="value1">Update</button>
+                            </div>
+                            
+                            <!-- Image gallery -->
+                            {% if option.figures %}
+                            <div class="key-gallery-container">
+                                <div class="key-gallery">
+                                    {% set figures_data = get_figures_for_display(option.figures) %}
+                                    {% for fig in figures_data %}
+                                    <!-- Dynamic images -->
+                                    <div class="gallery-item">
+                                        <img src="/static/images/compressed/{{ fig.filename }}" loading="lazy"
+                                            onclick="window.open(window.location.origin+'/static/images/illustrations/{{fig.filename}}', '_blank');">
+                                        <p class="image-caption">Fig. {{ fig.figure_number }}: {{ fig.figure_text }}</p>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Figures Management with Modal -->
+<div class="modal fade" id="figureGalleryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Figures</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Filter dropdown select -->
+                <div class="row g-3 mb-4">
+                    <!-- Select taxa -->
+                    <div class="col-md-4">
+                        <label class="form-label">Select taxa</label>
+                        <select class="form-control selectpicker" name="taxon_name" data-live-search="true">
+                            <option value=""></option>
+                            {% for name in dropdown_names %}
+                            {% set concat_name = name ~ ' [' ~ dropdown_ranks[loop.index0] ~ ']' %}
+                            <option value="{{ concat_name }}">{{ concat_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Select category -->
+                    <div class="col-md-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" name="category">
+                            <option value="">All</option>
+                            {% for category in categories %}
+                            <option value="{{ category }}">{{category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Select sex -->
+                    <div class="col-md-3">
+                        <label class="form-label">Sex</label>
+                        <select class="form-select" name="sex">
+                            <option value="">All</option>
+                            {% for sex in sexes %}
+                            <option value="{{ sex }}">{{ sex }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="button" class="btn btn-primary w-100" id="filterButton">Filter</button>
+                    </div>
+
+                    <!-- Reset and selection buttons -->
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-outline-secondary" onclick="resetFilters()">Reset
+                                filter</button>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-success" id="useSelectionButton">Use selection</button>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="selectionInfo" class="text-muted small">
+                                Selected: <span id="selectedCount">0</span> figures
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Grid -->
+                    <div class="row g-3" id="figureGallery">
+                        {% for ill in illustrations %}
+                        <div class="col-md-3 col-sm-4 col-6">
+                            <div class="card figure-card" data-illustration-id="{{ ill.id }}"
+                                data-scientific-name="{{ ill.scientificName or 'No name' }}">
+                                <img src="{{ url_for('static', filename='images/compressed/' + ill.filename) }}"
+                                    class="card-img-top" alt="{{ ill.scientificName }}"
+                                    style="height: 150px; object-fit: cover; cursor: pointer;">
+                                <div class="card-body p-2">
+                                    <h6 class="card-title mb-1 small">{{ ill.scientificName or 'No name' }}</h6>
+                                    <p class="card-text mb-1 small">
+                                        <span class="badge bg-secondary">{{ ill.category or 'No category' }}</span>
+                                        {% if ill.sex %}<span class="badge bg-info">{{ ill.sex }}</span>{% endif %}
+                                    </p>
+                                    <p id="order" hidden>{{ ill.order }}</p>
+                                    <p id="family" hidden>{{ ill.family }}</p>
+                                    <p id="genus" hidden>{{ ill.genus }}</p>
+                                    <div class="selection-prefix" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .figure-card.selected {
+        border: 2px solid #0d6efd !important;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+    .figure-card:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s;
+        cursor: pointer;
+    }
+
+    .selected-figure-badge {
+        font-size: 0.7rem;
+    }
+
+    /* Smooth transitions for filtering */
+    .col-md-3,
+    .col-sm-4,
+    .col-6 {
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* Loading state (optional) */
+    .filter-loading {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    .selection-prefix {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background: #0d6efd;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 12px;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get DOM elements
+        const taxonNameFilter = document.querySelector('select[name="taxon_name"]');
+        const categoryFilter = document.querySelector('select[name="category"]');
+        const sexFilter = document.querySelector('select[name="sex"]');
+        const filterButton = document.getElementById('filterButton');
+        const useSelectionButton = document.getElementById('useSelectionButton');
+        const figureGallery = document.getElementById('figureGallery');
+        const selectedCount = document.getElementById('selectedCount');
+
+        // Store all figure cards for filtering
+        const allFigureCards = Array.from(document.querySelectorAll('.figure-card'));
+
+        // Store selected figures with their prefixes
+        let selectedFigures = new Map(); // Map to maintain order: id -> prefix
+
+        // Store the current target input field
+        let currentTargetInput = null;
+
+        // Enhanced filter function
+        function filterGallery() {
+            const selectedCategory = categoryFilter.value.toLowerCase().trim();
+            const selectedSex = sexFilter.value.toLowerCase().trim();
+            const selectedTaxon = taxonNameFilter.value.toLowerCase().trim();
+
+            // Parse the selected taxon value to extract name and rank
+            let selectedName = '';
+            let selectedRank = '';
+
+            if (selectedTaxon) {
+                const match = selectedTaxon.match(/^(.*?)\s*\[(.*?)\]$/);
+                if (match) {
+                    selectedName = match[1].trim();
+                    selectedRank = match[2].trim().toLowerCase();
+                } else {
+                    // Fallback if the format doesn't match
+                    selectedName = selectedTaxon;
+                }
+            }
+
+            let visibleCount = 0;
+
+            allFigureCards.forEach(card => {
+                const scientificName = card.querySelector('.card-title').textContent.toLowerCase().trim();
+                const category = card.querySelector('.badge.bg-secondary').textContent.toLowerCase().trim();
+                const sexBadge = card.querySelector('.badge.bg-info');
+                const sex = sexBadge ? sexBadge.textContent.toLowerCase().trim() : '';
+                const order = card.querySelector('p[id="order"]').textContent.toLowerCase().trim();
+                const family = card.querySelector('p[id="family"]').textContent.toLowerCase().trim();
+                const genus = card.querySelector('p[id="genus"]').textContent.toLowerCase().trim();
+
+                // Check if card matches all selected filters
+                const matchesCategory = !selectedCategory || category === selectedCategory;
+                const matchesSex = !selectedSex || sex === selectedSex;
+
+                // Check taxon name based on rank
+                let matchesName = true;
+                if (selectedName) {
+                    if (selectedRank === "order") {
+                        matchesName = order === selectedName;
+                    } else if (selectedRank === "family") {
+                        matchesName = family === selectedName;
+                    } else if (selectedRank === "genus") {
+                        matchesName = genus === selectedName;
+                    } else {
+                        // Default to scientific name matching
+                        matchesName = scientificName === selectedName;
+                    }
+                }
+
+                const parentCol = card.closest('.col-md-3');
+
+                if (matchesName && matchesCategory && matchesSex) {
+                    parentCol.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    parentCol.style.display = 'none';
+                }
+            });
+
+            // Optional: Show message if no results
+            showNoResultsMessage(visibleCount === 0);
+        }
+
+        // Function to show/hide no results message
+        function showNoResultsMessage(show) {
+            let noResultsMsg = document.getElementById('noResultsMessage');
+
+            if (show && !noResultsMsg) {
+                noResultsMsg = document.createElement('div');
+                noResultsMsg.id = 'noResultsMessage';
+                noResultsMsg.className = 'col-12 text-center py-4';
+                noResultsMsg.innerHTML = '<p class="text-muted">No images found matching your filters.</p>';
+                figureGallery.appendChild(noResultsMsg);
+            } else if (!show && noResultsMsg) {
+                noResultsMsg.remove();
+            }
+        }
+
+        // Reset filters function
+        function resetFilters() {
+            taxonNameFilter.value = '';
+            categoryFilter.value = '';
+            sexFilter.value = '';
+            filterGallery();
+        }
+
+        // Generate prefix (a, b, c, ..., z, aa, ab, etc.)
+        function generatePrefix(index) {
+            let prefix = '';
+            let i = index;
+
+            while (i >= 0) {
+                prefix = String.fromCharCode(97 + (i % 26)) + prefix;
+                i = Math.floor(i / 26) - 1;
+            }
+
+            return prefix;
+        }
+
+        // Update selection display
+        function updateSelectionDisplay() {
+            // Update selected count
+            selectedCount.textContent = selectedFigures.size;
+
+            // Update prefix badges on cards
+            allFigureCards.forEach((card, index) => {
+                const illustrationId = card.getAttribute('data-illustration-id');
+                const prefixElement = card.querySelector('.selection-prefix');
+
+                if (selectedFigures.has(illustrationId)) {
+                    const prefix = selectedFigures.get(illustrationId);
+                    prefixElement.textContent = prefix;
+                    prefixElement.style.display = 'flex';
+                    card.classList.add('selected');
+                } else {
+                    prefixElement.style.display = 'none';
+                    card.classList.remove('selected');
+                }
+            });
+        }
+
+        // Generate the formatted string for the input
+        function generateFormattedSelection() {
+            const formattedEntries = Array.from(selectedFigures.entries()).map(
+                ([id, prefix]) => `${prefix}:${id}`
+            );
+            return formattedEntries.join(' | ');
+        }
+
+        // Card selection functionality
+        allFigureCards.forEach(card => {
+            card.addEventListener('click', function () {
+                const illustrationId = this.getAttribute('data-illustration-id');
+
+                if (selectedFigures.has(illustrationId)) {
+                    // Deselect
+                    selectedFigures.delete(illustrationId);
+                } else {
+                    // Select - assign next available prefix
+                    const nextIndex = selectedFigures.size;
+                    const prefix = generatePrefix(nextIndex);
+                    selectedFigures.set(illustrationId, prefix);
+                }
+
+                updateSelectionDisplay();
+                console.log('Selected figures:', Array.from(selectedFigures.entries()));
+            });
+        });
+
+        // Handle "Select Figures" button clicks
+        document.querySelectorAll('.select-figures-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const optionId = this.getAttribute('data-option-id');
+                currentTargetInput = document.querySelector(`.selected-figures-input[data-option-id="${optionId}"]`);
+
+                // Load any existing selection from the input field
+                selectedFigures.clear();
+                const currentValue = currentTargetInput.value;
+                if (currentValue) {
+                    const entries = currentValue.split(' | ');
+                    entries.forEach(entry => {
+                        const [prefix, id] = entry.split(':');
+                        selectedFigures.set(id, prefix);
+                    });
+                }
+
+                updateSelectionDisplay();
+                console.log('Setting target input for option:', optionId);
+            });
+        });
+
+        // Use selection button
+        useSelectionButton.addEventListener('click', function () {
+            if (!currentTargetInput) {
+                alert('No target input field selected. Please click a "Select Figures" button first.');
+                return;
+            }
+
+            if (selectedFigures.size === 0) {
+                alert('Please select at least one figure.');
+                return;
+            }
+
+            const formattedSelection = generateFormattedSelection();
+            currentTargetInput.value = formattedSelection;
+
+            // Close the modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('figureGalleryModal'));
+            modal.hide();
+
+            console.log('Final selection for option:', currentTargetInput.getAttribute('data-option-id'), formattedSelection);
+        });
+
+        // Clear selection when modal is hidden
+        document.getElementById('figureGalleryModal').addEventListener('hidden.bs.modal', function () {
+            selectedFigures.clear();
+            currentTargetInput = null;
+            updateSelectionDisplay();
+        });
+
+        // Event listeners for filtering
+        filterButton.addEventListener('click', filterGallery);
+        taxonNameFilter.addEventListener('change', filterGallery);
+        categoryFilter.addEventListener('change', filterGallery);
+        sexFilter.addEventListener('change', filterGallery);
+
+        // Initialize
+        filterGallery(); // Initial filter to show all images
+        updateSelectionDisplay(); // Initialize selection display
+
+        // Optional: Add keyboard support
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'r') {
+                resetFilters();
+            }
+        });
+    });
+</script>
+
+{% endblock %}

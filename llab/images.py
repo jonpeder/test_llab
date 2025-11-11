@@ -28,7 +28,7 @@ def allowed_file(filename):
 
 # Specify image categories
 imagecat = ['habitat', 'trap', 'substrate', 'colony', 'behaviour', 'other']
-imagecat2 = ['lateral', 'ventral', 'dorsal', 'anterior', 'face', 'fore-wing', 'hind-wing', 'propodeum', 'label', 'in-situ']
+perspectives = ['lateral', 'ventral', 'dorsal', 'frontal']
 licenses = ["All-rights-served", "Public-domain", "CC-by-4", "CC-by-2", "CC-by-sa-2", "CC-by-nc-2", "CC-by-nd-2", "CC-by-nc-nd-2"]
 id_qualifier = ["", "?", "cf", "aff", "agg"]
 type_status = ["", "holotype", "paratype", "lectotype", "neotype", "syntype"]
@@ -86,11 +86,21 @@ def event_image():
 def specimen_image():
     title = "Specimen images"
     dir_path = "/var/www/llab/llab/static/images"
+    images = Occurrence_images.query.all()
+    image_categories = []
+    for image in images:
+        if image.imageCategory not in image_categories:
+            image_categories.append(image.imageCategory)
     # Get image names starting with user initials
     if request.method == 'POST':
         # Request form input
         occurrence = request.form.get("occurrenceID")
-        imageCategory = request.form.get("imageCategory")
+        # If new category is specified use this in stead of category from select field
+        if request.form.get("new_category"):
+            imageCategory = request.form.get("new_category")
+        else:
+            imageCategory = request.form.get("imageCategory")
+        perspective = request.form.get("perspective")
         comment = request.form.get("comment")
         # Button 1:
         if request.form.get('action1') == 'VALUE1':
@@ -122,7 +132,7 @@ def specimen_image():
             flash('Specimen images added', category="success")
             return redirect(url_for("images.specimen_image"))
 
-    return render_template("specimen_image.html", title=title, user=current_user, imagecat=imagecat2)
+    return render_template("specimen_image.html", title=title, user=current_user, perspectives=perspectives, imagecat=image_categories)
 
 @images.route('/add_illustrations', methods=['GET', 'POST'])
 @login_required
@@ -132,6 +142,12 @@ def add_illustrations():
     last_values = None
     # Get taxon data
     taxa = Taxa.query.all()
+    # Create list of image categories in database
+    images = Illustrations.query.all()
+    image_categories = []
+    for image in images:
+        if image.category not in image_categories:
+            image_categories.append(image.category)
     # POST
     if request.method == 'POST':
         # Button 3: Clear values
@@ -144,8 +160,12 @@ def add_illustrations():
         if request.form.get('action1') == 'VALUE1':
             # Request form input
             imageType = request.form.get("imageType")
-            category = request.form.get("category")
-            scientificName = request.form.get("scientificName")
+            if request.form.get("new_category"):
+                category = request.form.get("new_category")
+            else:
+                category = request.form.get("category")
+            perspective = request.form.get("perspective")
+            taxonID = request.form.get("taxonID")
             sex = request.form.get("sex")
             lifeStage = request.form.get("lifeStage")
             rightsHolder = request.form.get("rightsHolder")
@@ -168,7 +188,7 @@ def add_illustrations():
                 # Secure the filenames and save 
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-                    filename2 = f'{scientificName.split(" ")[0]}_{scientificName.split(" ")[1]}_{sex}_{category}_{filename}'
+                    filename2 = f'{taxonID}_{sex}_{category}_{filename}'
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2)) # Save file to upload folder
                     shutil.copyfile(f"{app.config['UPLOAD_FOLDER']}/{filename2}", f"{dir_path}/illustrations/{filename2}") # Move file to image-folder
                     compress_image(os.path.join(app.config['UPLOAD_FOLDER'], filename2), f"{dir_path}/compressed/{filename2}", 20) # Save a compressed version of the image
@@ -178,7 +198,8 @@ def add_illustrations():
                         filename = filename2,
                         imageType = imageType,
                         category = category,
-                        scientificName = scientificName,
+                        perspective = perspective,
+                        taxonID = taxonID,
                         sex = sex,
                         lifeStage = lifeStage,
                         rightsHolder = rightsHolder,
@@ -200,59 +221,4 @@ def add_illustrations():
                     db.session.commit()
             flash('Illustration added', category="success")
             return redirect(url_for("images.add_illustrations")) 
-    return render_template("illustrations.html", title=title, user=current_user, imagecat = imagecat2, licenses=licenses, id_qualifier=id_qualifier, type_status=type_status, sexes=sexes, lifestage=lifestage, imagetype=imagetype, last_values=last_values, taxa=taxa)
-
-@images.route('/read_qr', methods=['GET', 'POST'])
-@login_required
-def read_qr():
-    title = "Read qr-codes"
-    output_string = ""
-    # Reference variables
-    qr_codes = ""
-    img_count = 0
-    # Remove earlier qr-code image-files
-    files = os.listdir(app.config["UPLOAD_FOLDER"])
-    for file in files:
-        if file.startswith("qr_codes_"):
-            os.remove(os.path.join(app.config["UPLOAD_FOLDER"], file))
-    # POST
-    if request.method == 'POST':
-        # For each file in post request
-        qr_codes = []
-        for file in request.files.getlist("files"):
-            img_count+=1
-            # If the user does not select a file
-            if file.filename == '':
-                flash('No selected file', category="error")
-                return redirect(request.url)
-            else:
-                response = file.read()
-                # read the image in numpy array using cv2
-                frame = cv2.imdecode(np.fromstring(response, np.uint8), cv2.IMREAD_GRAYSCALE)
-                # use BarcodeReader function to get decoded qr-code-data and image with displayed decoded qr-codes
-                while True:
-                    try:
-                        qr, img = BarcodeReader(frame)
-                        break
-                    except ValueError:
-                        flash('No QR-codes detected', category="error")
-                        qr = ""
-                        break
-                if qr:
-                    # Convert to list and decode objects from bytes to string
-                    for i in qr:
-                        print(i)
-                    qr = [x.decode('utf-8') for x in qr]
-                    # If determination label is decoded, move determination to begining of list
-                    for qr_code in qr:
-                        if re.search("TAX", qr_code):
-                            qr.remove(qr_code)
-                            qr.insert(0, qr_code)
-                            break
-                    qr_codes=qr_codes + qr
-                    # Save image
-                    cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], f'qr_codes_decoded_{img_count}.jpg'), img, [cv2.IMWRITE_JPEG_QUALITY, 10])
-                time.sleep(1)
-        # output_string
-        output_string = "&#13;&#10;".join(qr_codes)
-    return render_template("read_qr.html", title=title, user=current_user, qr_codes=qr_codes, img_count=img_count, output_string=output_string)
+    return render_template("illustrations.html", title=title, user=current_user, imagecat = image_categories, licenses=licenses, id_qualifier=id_qualifier, type_status=type_status, sexes=sexes, lifestage=lifestage, imagetype=imagetype, last_values=last_values, taxa=taxa, perspectives=perspectives)

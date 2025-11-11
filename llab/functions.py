@@ -736,3 +736,76 @@ def format_gbif_date(eventDateTime):
         return datetime.fromisoformat(str(eventDateTime)).isoformat()
     except:
         return str(eventDateTime)
+    
+
+def parse_identification_key(key_text):
+    """
+    Parse an identification key text into a structured list of dictionaries.
+    
+    Args:
+        key_text (str): The raw text of the identification key
+        
+    Returns:
+        list: List of dictionaries, each representing a child option with:
+            - child: The target after ->
+            - parent: The couplet number this belongs to
+            - text_content: The descriptive text before the ->
+            - comment: The text within * * (if present)
+    """
+    # Split the text into couplets based on # pattern
+    couplets = re.split(r'\s*#\s*', key_text.strip())
+    
+    # Remove any empty couplets
+    couplets = [c for c in couplets if c.strip()]
+    results = []
+    
+    for couplet in couplets:
+        # Extract the couplet number (parent)
+        first_line = couplet.split('\n', 1)[0]
+        parent_match = re.match(r'^(\d+)', first_line.strip())
+        if not parent_match:
+            continue
+            
+        parent = parent_match.group(1)
+        
+        # Remove the parent number from the rest of the text
+        couplet_content = re.sub(r'^\d+\s*', '', couplet, flags=re.MULTILINE)
+        
+        # Split into individual options (each "->" represents an option)
+        options = re.split(r'\n\s*->\s*', couplet_content)
+        
+        # The first part might be empty or contain the parent info, so we process from the second split onward
+        current_text = ""
+        
+        for i, option in enumerate(options):
+            if i == 0:
+                # This is the text before the first ->, which belongs to the first option
+                current_text = option.strip()
+            else:
+                # This contains both the target (after ->) and potentially the next text
+                parts = re.split(r'\n(?=\s*[^->])', option, maxsplit=1)
+                
+                if len(parts) >= 1:
+                    target_part = parts[0].strip()
+                    
+                    # Extract child and comment
+                    child_match = re.match(r'^([^*]+?)(?:\s*\*(.*?)\*)?$', target_part)
+                    if child_match:
+                        child = child_match.group(1).strip()
+                        comment = child_match.group(2).strip() if child_match.group(2) else ""
+                        
+                        # Add to results
+                        results.append({
+                            'child': child,
+                            'parent': parent,
+                            'text_content': current_text.strip(),
+                            'comment': comment
+                        })
+                    
+                    # Prepare text for next option
+                    if len(parts) > 1:
+                        current_text = parts[1].strip()
+                    else:
+                        current_text = ""
+    
+    return results

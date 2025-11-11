@@ -165,7 +165,6 @@ class Illustrations (db.Model):
     filename = db.Column(db.String(200))
     imageType = db.Column(db.String(20))
     category = db.Column(db.String(20))
-    scientificName = db.Column(db.String(50))
     sex = db.Column(db.String(6))
     lifeStage = db.Column(db.String(5))
     identificationQualifier = db.Column(db.String(10))
@@ -181,6 +180,9 @@ class Illustrations (db.Model):
     scaleBar = db.Column(db.String(50))
     typeName = db.Column(db.String(100))
     databased = db.Column(db.DateTime(timezone=True), default=func.now())
+    taxonID = db.Column(db.Integer, db.ForeignKey('taxa.taxonInt'))
+    perspective = db.Column(db.String(50))
+    
 
 class Datasets(db.Model):
     datasetName = db.Column(db.String(100), primary_key=True)
@@ -294,3 +296,21 @@ class Sequence_alignment(db.Model):
     sequenceID = db.Column(db.String(100), primary_key=True)
     sequence = db.Column(db.String)
     createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class Hierarchical_keys(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    description = db.Column(db.String(255))
+    taxonID = db.Column(db.Integer)
+    userID = db.Column(db.Integer)
+    bibliographicReference = db.Column(db.String(255))
+
+class Hierarchical_key_options(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent = db.Column(db.Integer)
+    keyID = db.Column(db.Integer)
+    name = db.Column(db.String(50))
+    question = db.Column(db.String)
+    comment = db.Column(db.String)
+    figures = db.Column(db.String(255))
+    taxonID = db.Column(db.Integer)

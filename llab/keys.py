@@ -237,30 +237,60 @@ def key_edit():
     
     # POST
     if request.method == 'POST':
-        # If key ID exist
-        key_id = request.args.get('key_id') or request.form.get('key_id')
-        if key_id:
-            # Get data from input form. Each option has a separate form and only one form can be submitted at a time.
-            update_option_id = request.form.get('option_id')
-            parent = request.form.get('parent')
-            option_name = request.form.get('option_name')
-            taxonID = request.form.get('taxonID')
-            if taxonID == "":
-                taxonID = None
-            question = request.form.get('question')
-            comment = request.form.get('comment')
-            selected_figures = request.form.get('selected_figures')
-            # Update database
-            option = Hierarchical_key_options.query.filter_by(id=update_option_id).first()
-            option.taxonID = taxonID
-            option.parent = parent
-            option.name = option_name
-            option.question = question
-            option.comment = comment
-            option.figures = selected_figures
+        if request.form.get("DELETE") == "delete":
+            key_id = request.form.get('key_id')
+            title = request.form.get('title')
+            # Delete related options
+            delete_options = Hierarchical_key_options.query.filter_by(keyID=key_id).all()
+            for option in delete_options:
+                db.session.delete(option)
+            # Delete the main key
+            delete_key = Hierarchical_keys.query.filter_by(id=key_id).first()
+            if delete_key:
+                db.session.delete(delete_key)
+            # Commit changes
+            db.session.commit()
+            flash(f'{title} deleted!', category="success")
+            return redirect(url_for('keys.key_view'))
+
+        elif request.form.get("UPDATE") == "update":
+            key_id = request.form.get('key_id')
+            title = request.form.get('title')
+            description = request.form.get('description')
+            bibliographicReference = request.form.get('bibliographicReference')
+            # Update Hierarchical_keys table
+            key = Hierarchical_keys.query.filter_by(id=key_id).first()
+            key.name = title
+            key.description = description
+            key.bibliographicReference = bibliographicReference
             # Commit
             db.session.commit()
-            flash(f'Option {update_option_id} updated!', category="success")
+            flash(f'{title} updated!', category="success")
+        else:
+            # If key ID exist
+            key_id = request.args.get('key_id') or request.form.get('key_id')
+            if key_id:
+                # Get data from input form. Each option has a separate form and only one form can be submitted at a time.
+                update_option_id = request.form.get('option_id')
+                parent = request.form.get('parent')
+                option_name = request.form.get('option_name')
+                taxonID = request.form.get('taxonID')
+                if taxonID == "":
+                    taxonID = None
+                question = request.form.get('question')
+                comment = request.form.get('comment')
+                selected_figures = request.form.get('selected_figures')
+                # Update database
+                option = Hierarchical_key_options.query.filter_by(id=update_option_id).first()
+                option.taxonID = taxonID
+                option.parent = parent
+                option.name = option_name
+                option.question = question
+                option.comment = comment
+                option.figures = selected_figures
+                # Commit
+                db.session.commit()
+                flash(f'Option {update_option_id} updated!', category="success")
 
 
     return render_template("key_edit.html", 

@@ -131,7 +131,7 @@ class Taxa (db.Model):
     nomenclaturalCode = db.Column(db.String(10), default="ICZN")
     taxonID = db.Column(db.String(100))
     createdByUserID = db.Column(db.Integer, db.ForeignKey('user.id'))
-    publishedIn = db.Column(db.String(300))
+    publishedIn = db.Column(db.String(1000))
 
 class Occurrence_images (db.Model):
     id = db.Column(db.Integer, primary_key=True)

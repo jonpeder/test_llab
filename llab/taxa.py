@@ -178,12 +178,14 @@ def edit_taxon():
         # Button 3: Delete
         elif request.form.get('action3') == 'VALUE3':
             scientificName_old = request.form.get("scientificName_old")
-            taxon = Taxa.query.filter_by(scientificName=scientificName_old).first()
-            db.session.delete(taxon)
-            # Delete identification events
+            # Delete related identification events
             delete_identification_events = Identification_events.query.filter_by(scientificName=scientificName_old).all()
             if delete_identification_events:
-                db.session.delete(delete_identification_events)
+                for identification in delete_identification_events:
+                    db.session.delete(identification)
+            # Delete taxon
+            taxon = Taxa.query.filter_by(scientificName=scientificName_old).first()
+            db.session.delete(taxon)
             # Commit changes
             db.session.commit()
             flash(f'{scientificName_old} deleted!', category="success")

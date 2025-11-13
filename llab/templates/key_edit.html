@@ -72,74 +72,97 @@
         {% if key %}
         <div class="card mb-4">
             <div class="card-header">
-                <h4>{{ key.name }}</h4>
-                <p class="mb-0">{{ key.description }}</p>
+                <form method="POST" action="/key_edit" class="row">
+                    <input type="hidden" name="key_id" value="{{ key.id if key }}">
+                    <div class="mb-2">
+                    Title
+                    <h4><input type="text" name="title" value="{{ key.name }}"></h4>
+                    </div>
+                    <div class="mb-2">
+                    Description
+                    <textarea class="form-control" name="description">{{ key.description }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                    References
+                    <input class="form-control" type="text" name="bibliographicReference" value="{{ key.bibliographicReference }}">
+                    </div>
+                    <!-- Buttons -->
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success" name="UPDATE" value="update">Update metadata</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-danger" name="DELETE" value="delete">Delete key</button>
+                    </div>
             </div>
+            </form>
         </div>
-        {% endif %}
 
-        <!-- Form: Edit existing options -->
-        <div class="card">
-            <div class="card-header">
-                <h5>Key Structure</h5>
-            </div>
-            <div class="card-body">
-                {% for option in options %}
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <form method="POST" action="/key_edit" class="row">
-                            <input type="hidden" name="key_id" value="{{ key.id if key }}">
-                            <input type="hidden" name="option_id" value="{{ option.id }}">
+    </div>
+    {% endif %}
 
-                            <!-- Parent ID -->
-                            <!-- name: parent -->
-                            <div class="col-md-2">
-                                <div class="mb-3">
-                                    <label class="form-label">ID: {{ option.id }}</label>
-                                    <input type="text" class="form-control" name="parent" value="{{ option.parent }}"
-                                        readonly>
-                                    <small class="text-muted">Parent ID {% set children_count = options|selectattr('parent', 'equalto', option.id)|list|length
-                                %}
-                                {% if children_count > 0 %}
-                                <span class="badge bg-secondary ms-2">{{ children_count }} children</span>
-                                {% endif %}</small>
-                                </div>
+    <!-- Form: Edit existing options -->
+    <div class="card">
+        <div class="card-header">
+            <h5>Key Structure</h5>
+        </div>
+        <div class="card-body">
+            {% for option in options %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form method="POST" action="/key_edit" class="row">
+                        <input type="hidden" name="key_id" value="{{ key.id if key }}">
+                        <input type="hidden" name="option_id" value="{{ option.id }}">
+
+                        <!-- Parent ID -->
+                        <!-- name: parent -->
+                        <div class="col-md-2">
+                            <div class="mb-3">
+                                <label class="form-label">ID: {{ option.id }}</label>
+                                <input type="text" class="form-control" name="parent" value="{{ option.parent }}"
+                                    readonly>
+                                <small class="text-muted">Parent ID {% set children_count = options|selectattr('parent',
+                                    'equalto', option.id)|list|length
+                                    %}
+                                    {% if children_count > 0 %}
+                                    <span class="badge bg-secondary ms-2">{{ children_count }} children</span>
+                                    {% endif %}</small>
                             </div>
+                        </div>
 
-                            <!-- Option_name -->
-                            <!-- name: option_name -->
-                            <div class="col-md-2">
-                                <div class="mb-3">
-                                    <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" name="option_name" value="{{ option.name }}"
-                                        required>
-                                </div>
+                        <!-- Option_name -->
+                        <!-- name: option_name -->
+                        <div class="col-md-2">
+                            <div class="mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" name="option_name" value="{{ option.name }}"
+                                    required>
                             </div>
+                        </div>
 
-                            <!-- Taxon ID -->
-                            <!-- name: taxonID -->
-                            <div class="col-md-2">
-                                <label class="form-label">Select taxon</label>
-                                <select class="form-control selectpicker" name="taxonID" data-live-search="true">
-                                    <option value=""></option>
-                                    {% for taxon in taxa %}
-                                    <option value="{{ taxon.taxonInt }}" {% if option.taxonID==taxon.taxonInt
-                                        %}selected{% endif %}>{{ taxon.scientificName }}</option>
-                                    {% endfor %}
-                                </select>
+                        <!-- Taxon ID -->
+                        <!-- name: taxonID -->
+                        <div class="col-md-2">
+                            <label class="form-label">Select taxon</label>
+                            <select class="form-control selectpicker" name="taxonID" data-live-search="true">
+                                <option value=""></option>
+                                {% for taxon in taxa %}
+                                <option value="{{ taxon.taxonInt }}" {% if option.taxonID==taxon.taxonInt %}selected{%
+                                    endif %}>{{ taxon.scientificName }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Question -->
+                        <!-- name: question -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Question</label>
+                                <textarea class="form-control" name="question"
+                                    rows="2">{{ option.question or '' }}</textarea>
                             </div>
+                        </div>
 
-                            <!-- Question -->
-                            <!-- name: question -->
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Question</label>
-                                    <textarea class="form-control" name="question"
-                                        rows="2">{{ option.question or '' }}</textarea>
-                                </div>
-                            </div>
-
-                            <!-- Children count 
+                        <!-- Children count 
                             <div class="col-md-12">
                                 {% set children_count = options|selectattr('parent', 'equalto', option.id)|list|length
                                 %}
@@ -149,63 +172,62 @@
                             </div>
                             -->
 
-                            <!-- Comment -->
-                            <!-- name: comment -->
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Comment</label>
-                                    <textarea class="form-control" name="comment"
-                                        rows="2">{{ option.comment or '' }}</textarea>
-                                </div>
+                        <!-- Comment -->
+                        <!-- name: comment -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Comment</label>
+                                <textarea class="form-control" name="comment"
+                                    rows="2">{{ option.comment or '' }}</textarea>
                             </div>
+                        </div>
 
-                            <!-- Figures -->
-                            <!-- name: selected_figures -->
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Figures</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control selected-figures-input"
-                                            name="selected_figures" value="{{ option.figures or ''}}"
-                                            data-option-id="{{ option.id }}" required readonly>
-                                        <button type="button" class="btn btn-outline-primary select-figures-btn"
-                                            data-bs-toggle="modal" data-bs-target="#figureGalleryModal"
-                                            data-option-id="{{ option.id }}">
-                                            Select Figures
-                                        </button>
-                                    </div>
+                        <!-- Figures -->
+                        <!-- name: selected_figures -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Figures</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control selected-figures-input"
+                                        name="selected_figures" value="{{ option.figures or ''}}"
+                                        data-option-id="{{ option.id }}" required readonly>
+                                    <button type="button" class="btn btn-outline-primary select-figures-btn"
+                                        data-bs-toggle="modal" data-bs-target="#figureGalleryModal"
+                                        data-option-id="{{ option.id }}">
+                                        Select Figures
+                                    </button>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Button: Update option-->
-                            <div class="col-md-2">
-                            <button type="submit" class="btn btn-success" name="ACTION1"
-                                value="value1">Update</button>
-                            </div>
-                            
-                            <!-- Image gallery -->
-                            {% if option.figures %}
-                            <div class="key-gallery-container">
-                                <div class="key-gallery">
-                                    {% set figures_data = get_figures_for_display(option.figures) %}
-                                    {% for fig in figures_data %}
-                                    <!-- Dynamic images -->
-                                    <div class="gallery-item">
-                                        <img src="/static/images/compressed/{{ fig.filename }}" loading="lazy"
-                                            onclick="window.open(window.location.origin+'/static/images/illustrations/{{fig.filename}}', '_blank');">
-                                        <p class="image-caption">Fig. {{ fig.figure_number }}: {{ fig.figure_text }}</p>
-                                    </div>
-                                    {% endfor %}
+                        <!-- Button: Update option-->
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-success" name="ACTION1" value="value1">Update option</button>
+                        </div>
+
+                        <!-- Image gallery -->
+                        {% if option.figures %}
+                        <div class="key-gallery-container">
+                            <div class="key-gallery">
+                                {% set figures_data = get_figures_for_display(option.figures) %}
+                                {% for fig in figures_data %}
+                                <!-- Dynamic images -->
+                                <div class="gallery-item">
+                                    <img src="/static/images/compressed/{{ fig.filename }}" loading="lazy"
+                                        onclick="window.open(window.location.origin+'/static/images/illustrations/{{fig.filename}}', '_blank');">
+                                    <p class="image-caption">Fig. {{ fig.figure_number }}: {{ fig.figure_text }}</p>
                                 </div>
+                                {% endfor %}
                             </div>
-                            {% endif %}
-                        </form>
-                    </div>
+                        </div>
+                        {% endif %}
+                    </form>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
     </div>
+</div>
 </div>
 
 

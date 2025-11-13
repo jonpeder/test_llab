@@ -11,15 +11,15 @@
     <div class="mb-3">
         Scientific name
         <select class="form-control selectpicker" id="taxonID" name="taxonID" data-live-search="true">
-            {% for i in taxa %}
+            {% for taxon in taxa %}
             {% if last_values is not none %}
-            {% if last_values.scientificName == i.scientificName %}
-            <option selected value="{{i.taxonInt}}">{{i.scientificName}}</option>
+            {% if last_values.taxonID == taxon.taxonInt %}
+            <option selected value="{{taxon.taxonInt}}">{{taxon.scientificName}}</option>
             {% else %}
-            <option value="{{i.taxonInt}}">{{i.scientificName}}</option>
+            <option value="{{taxon.taxonInt}}">{{taxon.scientificName}}</option>
             {% endif %}
             {% else %}
-            <option value="{{i.taxonInt}}">{{i.scientificName}}</option>
+            <option value="{{taxon.taxonInt}}">{{taxon.scientificName}}</option>
             {% endif %}
             {% endfor %}
         </select>
@@ -116,11 +116,11 @@
     <!-- Image perspective -->
     <div class="mb-3">
         Perspective
-        <select class="form-select" name="category">
+        <select class="form-select" name="perspective">
             <option value=""></option>
             {% for perspective in perspectives %}
             {% if last_values is not none %}
-            {% if last_values.category == perspective %}
+            {% if last_values.perspective == perspective %}
             <option selected value="{{ perspective }}">{{ perspective }}</option>
             {% else %}
             <option value="{{ perspective }}">{{ perspective }}</option>

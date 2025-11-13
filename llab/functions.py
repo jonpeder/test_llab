@@ -752,6 +752,9 @@ def parse_identification_key(key_text):
             - text_content: The descriptive text before the ->
             - comment: The text within * * (if present)
     """
+    # Replace \u2028 and other line separators with regular newlines
+    key_text = key_text.replace('\u2028', '\n').replace('\u2029', '\n')
+
     # Split the text into couplets based on # pattern
     couplets = re.split(r'\s*#\s*', key_text.strip())
     
@@ -781,6 +784,7 @@ def parse_identification_key(key_text):
             if i == 0:
                 # This is the text before the first ->, which belongs to the first option
                 current_text = option.strip()
+                
             else:
                 # This contains both the target (after ->) and potentially the next text
                 parts = re.split(r'\n(?=\s*[^->])', option, maxsplit=1)
@@ -790,6 +794,7 @@ def parse_identification_key(key_text):
                     
                     # Extract child and comment
                     child_match = re.match(r'^([^*]+?)(?:\s*\*(.*?)\*)?$', target_part)
+                    
                     if child_match:
                         child = child_match.group(1).strip()
                         comment = child_match.group(2).strip() if child_match.group(2) else ""

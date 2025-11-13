@@ -33,7 +33,6 @@
 
     .gallery-item img {
         width: 100%;
-        height: 250px;
         object-fit: cover;
         transition: transform 0.3s ease;
     }
@@ -59,10 +58,6 @@
     @media (max-width: 768px) {
         .gallery-item {
             width: 300px;
-        }
-
-        .gallery-item img {
-            height: 200px;
         }
     }
 </style>
@@ -107,11 +102,25 @@
                 {% if reached_conclusion %}
                 <!-- Conclusion Message (in left column) -->
                 <div class="card border-success">
-                    <div class="card-header">
-                        <h6 class="mb-0"> Identification Complete!</h6>
-                    </div>
                     <div class="card-body">
-                        <h3 class="display-8">{{ conclusion_name | italicize_scientific_name | safe }}</h3>
+                        <h5 class="display-8">{{ conclusion_name | italicize_scientific_name | safe }}</h5>
+                        <!-- Image gallery -->
+                        {% if conclusion_figures %}
+                        <div class="key-gallery-container">
+                            <div class="key-gallery">
+                                {% set figures_data = get_figures_for_display(conclusion_figures) %}
+                                {% for fig in figures_data %}
+                                <!-- Dynamic images -->
+                                <div class="gallery-item">
+                                    <img src="/static/images/compressed/{{ fig.filename }}" loading="lazy"
+                                        onclick="window.open(window.location.origin+'/static/images/illustrations/{{fig.filename}}', '_blank');">
+                                    <p class="image-caption" style="font-size: x-small;"><strong>Fig. {{
+                                            fig.figure_number }}:</strong> {{ fig.figure_text | safe }}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% else %}
@@ -121,8 +130,9 @@
                     <div class="col-md-6 mb-2">
                         <div class="card option-card {% if not option.question %}bg-light{% endif %}">
                             <div class="card-body">
+                                <!-- If question -->
                                 {% if option.question %}
-                                <p class="card-text">{{ option.question }}</p>
+                                <!-- Option button -->
                                 <a href="{{ url_for('keys.key_view', step_id=option.id, key_id=key_id) }}"
                                     class="btn btn-outline-primary btn-sm">
                                     {% if option.taxonID %}
@@ -137,23 +147,33 @@
                                     {{ option.name | italicize_scientific_name | safe }}
                                     {% endif %}
                                 </a>
+                                <p></p>
+                                <!-- Question -->
+                                <p class="card-text">{{ option.question }}</p>
+                                <!-- Comment -->
                                 {% endif %}
-                            <!-- Image gallery -->
-                            {% if option.figures %}
-                            <div class="key-gallery-container">
-                                <div class="key-gallery">
-                                    {% set figures_data = get_figures_for_display(option.figures) %}
-                                    {% for fig in figures_data %}
-                                    <!-- Dynamic images -->
-                                    <div class="gallery-item">
-                                        <img src="/static/images/compressed/{{ fig.filename }}" loading="lazy"
-                                            onclick="window.open(window.location.origin+'/static/images/illustrations/{{fig.filename}}', '_blank');">
-                                        <p class="image-caption" style="font-size: x-small;"><strong>Fig. {{ fig.figure_number }}:</strong> {{ fig.figure_text | safe }}</p>
-                                    </div>
-                                    {% endfor %}
+                                {% if option.comment %}
+                                <div class="card-text text-muted">
+                                    {{ option.comment }}
                                 </div>
-                            </div>
-                            {% endif %}
+                                {% endif %}
+                                <!-- Image gallery -->
+                                {% if option.figures %}
+                                <div class="key-gallery-container">
+                                    <div class="key-gallery">
+                                        {% set figures_data = get_figures_for_display(option.figures) %}
+                                        {% for fig in figures_data %}
+                                        <!-- Dynamic images -->
+                                        <div class="gallery-item">
+                                            <img src="/static/images/compressed/{{ fig.filename }}" loading="lazy"
+                                                onclick="window.open(window.location.origin+'/static/images/illustrations/{{fig.filename}}', '_blank');">
+                                            <p class="image-caption" style="font-size: x-small;"><strong>Fig. {{
+                                                    fig.figure_number }}:</strong> {{ fig.figure_text | safe }}</p>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -227,9 +247,9 @@
         </div>
 
     </div>
-        
-            
-                
+
+
+
 
 </div>
 {% endif %}

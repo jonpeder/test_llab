@@ -68,7 +68,8 @@ def key_view():
     key_id = None
     reached_conclusion = False
     conclusion_name = None
-    
+    conclusion_figures = None
+
     # Get list of identification keys
     keys = Hierarchical_keys.query.all()
     # Get list of taxa from database
@@ -156,6 +157,7 @@ def key_view():
                     conclusion_name = taxon.scientificName if taxon else selected_option.name
                 else:
                     conclusion_name = selected_option.name
+                conclusion_figures = selected_option.figures
     
     return render_template("key_view.html", 
                          title=title, 
@@ -166,6 +168,7 @@ def key_view():
                          keys=keys,
                          reached_conclusion=reached_conclusion,
                          conclusion_name=conclusion_name,
+                         conclusion_figures=conclusion_figures,
                          taxa=taxa,
                          get_figures_for_display=get_figures_for_display)
 
@@ -242,6 +245,8 @@ def key_edit():
             parent = request.form.get('parent')
             option_name = request.form.get('option_name')
             taxonID = request.form.get('taxonID')
+            if taxonID == "":
+                taxonID = None
             question = request.form.get('question')
             comment = request.form.get('comment')
             selected_figures = request.form.get('selected_figures')
@@ -319,7 +324,8 @@ def get_figures_for_display(figures_format):
                     Illustrations.id, 
                     Illustrations.filename, 
                     Taxa.scientificName, 
-                    Illustrations.category, 
+                    Illustrations.category,
+                    Illustrations.perspective, 
                     Illustrations.sex, 
                     Illustrations.rightsHolder, 
                     Illustrations.associatedReference, 
@@ -331,6 +337,7 @@ def get_figures_for_display(figures_format):
         filename = figure_data.filename
         taxon_name = figure_data.scientificName
         category = figure_data.category
+        perspective = figure_data.perspective
         sex = figure_data.sex
         scalebar = figure_data.scaleBar
         rightsholder = figure_data.rightsHolder
@@ -344,6 +351,8 @@ def get_figures_for_display(figures_format):
             figure_text = figure_text + " " + sex
         if category:
             figure_text = figure_text + ", " + category
+        if perspective:
+            figure_text = figure_text + ", " + perspective + " view"
         figure_text = figure_text + ". "
         if scalebar:
             figure_text = figure_text + f"Scalebar {scalebar}. "

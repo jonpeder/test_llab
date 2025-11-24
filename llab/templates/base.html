@@ -51,91 +51,43 @@
             <div class="navbar-nav">
                 {% if user.is_authenticated %}
 
-                <!-- Collecting events dropdown -->
+                <!-- Add dropdown-->
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" role="button"
                             aria-haspopup="true" aria-expanded="false">
-                            Event
+                            <i class="bi bi-plus-lg"></i>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" id="eventnew" href="/event_new">add</a>
-                            <a class="dropdown-item" id="eventshow" href="/event_show">view</a>
-                            <a class="dropdown-item" id="eventimages" href="/event_image">image upload</a>
+                            <a class="dropdown-item" id="eventnew" href="/event_new">event</a>
+                            <a class="dropdown-item" id="specimen_det" href="/specimen_det">identification</a>                            
+                            <a class="dropdown-item" id="observation_add" href="/observation_add">observation</a>
+                            <a class="dropdown-item" id="addTaxon" href="/add_taxon">taxon</a>
+                            <a class="dropdown-item" id="dataset_new" href="/dataset_new">dataset</a>
+                            <a class="dropdown-item" id="collection_new" href="/drawer_edit">drawer</a>
+                            <a class="dropdown-item" id="eventimages" href="/event_image">event image</a>
+                            <a class="dropdown-item" id="specimen_image" href="/specimen_image">specimen image</a>
+                            <a class="dropdown-item" id="add illustrations" href="/add_illustrations">illustration</a>
+                            <a class="dropdown-item" id="addresearcher" href="/add_researcher">researcher</a>
                         </div>
                     </li>
                 </ul>
 
-                <!-- Specimen dropdown -->
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" role="button"
-                            aria-haspopup="true" aria-expanded="false">
-                            Specimens
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" id="specimen_det" href="/specimen_det">add identification</a>
-                            <a class="dropdown-item" id="specimen_image" href="/specimen_image">image upload</a>
-                        </div>
-                    </li>
-                </ul>
-
-                <!-- Observations dropdown -->
+                <!-- Overview -->
                  <ul class="navbar-nav">
                     <li class ="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" role="button"
                             aria-haspopup="true" aria-expanded="false">
-                            Observation
+                            <i class="bi bi-binoculars"></i>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" id="observation_add" href="/observation_add">add</a>
-                            <a class="dropdown-item" id="observation_filter" href="/observation_filter">filter</a>
+                            <a class="dropdown-item" id="observation_filter" href="/observation_filter">Observations</a>
+                            <a class="dropdown-item" id="eventshow" href="/event_show">Collecting events</a>
+                            <a class="dropdown-item" id="editTaxon" href="/edit_taxon">Taxa</a>
+                            <a class="dropdown-item" id="collection_show" href="/drawer_view">Drawers</a>
                         </div>
                     </li>
                  </ul>
-
-                <!-- Taxon dropdown -->
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" role="button"
-                            aria-haspopup="true" aria-expanded="false">
-                            Taxon
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" id="addTaxon" href="/add_taxon">add</a>
-                            <a class="dropdown-item" id="editTaxon" href="/edit_taxon">edit</a>
-                            <a class="dropdown-item" id="add illustrations" href="/add_illustrations">add illustrations</a>
-                            <a class="dropdown-item" id="taxonImages" href="/taxon_image">view images</a>
-                        </div>
-                    </li>
-                </ul>
-
-                <!-- Dataset dropdown-->
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" role="button"
-                            aria-haspopup="true" aria-expanded="false">
-                            Dataset
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" id="dataset_new" href="/dataset_new">specimen dataset</a>
-                            <a class="dropdown-item" id="landmarks" href="/landmark_dataset">landmark datasets</a>                            
-                        </div>
-                    </li>
-                </ul>
-
-                <!-- Collection dropdown -->
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" role="button"
-                            aria-haspopup="true" aria-expanded="false">
-                            Collection
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" id="collection_new" href="/drawer_edit">add/update/delete drawer</a>
-                            <a class="dropdown-item" id="collection_show" href="/drawer_view">view drawers</a>
-                        </div>
-                    </li>
 
                 <!-- Print dropdown -->
                 <ul class="navbar-nav">
@@ -151,6 +103,19 @@
                     </li>
                 </ul>
 
+                <!-- Images -->
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">
+                            <i class="bi bi-images"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" id="taxonImages" href="/taxon_image">images</a>
+                        </div>
+                    </li>
+                </ul>
+
                 <!-- User dropdown -->
                 <ul class="navbar-nav">
                 <li class="nav-item dropdown">
@@ -161,7 +126,6 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" id="passwd" href="/change_password">Change password</a>
                         <a class="dropdown-item" id="signUp" href="/sign-up">Add user</a>
-                        <a class="dropdown-item" id="addresearcher" href="/add_researcher">Add researcher</a>
                         <a class="dropdown-item" id="logout" href="/logout">Logout</a>
                     </div>
                 </li>

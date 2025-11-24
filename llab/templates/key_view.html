@@ -23,19 +23,24 @@
     .gallery-item {
         flex: 0 0 auto;
         scroll-snap-align: start;
-        width: 350px;
-        /* Fixed width or use min-width/max-width */
+        width: auto; /* Changed from fixed width */
+        max-width: 350px; /* Add max-width constraint */
         border-radius: 8px;
         overflow: hidden;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         background: white;
+        display: flex;
+        flex-direction: column;
     }
 
     .gallery-item img {
-        width: 100%;
-        object-fit: cover;
+        width: auto; /* Allow natural width */
+        height: auto; /* Allow natural height */
+        max-width: 350px; /* Maximum width constraint */
+        max-height: 550px; /* Maximum height constraint */
+        object-fit: contain; /* Changed from cover to contain to see entire image */
         transition: transform 0.3s ease;
-    }
+    }  
 
     .gallery-item img:hover {
         transform: scale(1.02);
@@ -50,14 +55,19 @@
     }
 
     /* Hide scrollbar but keep functionality */
-    .observation-gallery::-webkit-scrollbar {
+    .key-gallery::-webkit-scrollbar { 
         display: none;
     }
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .gallery-item {
-            width: 300px;
+            max-width: 350px; /* Changed from fixed width */
+        }
+    
+        .gallery-item img {
+            max-width: 350px; /* Also update image max-width for mobile */
+            max-height: 350px;
         }
     }
 </style>
@@ -94,7 +104,7 @@
             <div class="card-header">
                 <h5>
                     {% for key in keys %}
-                    {% if key.id==key_id|int %}{{ key.name }}{% endif %}
+                    {% if key.id==key_id|int %}{{ key.name | safe }}{% endif %}
                     {% endfor %}
                 </h5>
             </div>
@@ -104,6 +114,17 @@
                 <div class="card border-success">
                     <div class="card-body">
                         <h5 class="display-8">{{ conclusion_name | italicize_scientific_name | safe }}</h5>
+                        <!-- Further identification -->
+                        {% if suggested_identificationKeys %}
+                                    {% for key in suggested_identificationKeys %}
+                                    <br>
+                                    Key:                         
+                                    <a href="{{ url_for('keys.key_view', step_id=0, key_id=key.id) }}">
+                                        {{ key.name | safe }}
+                                    </a>
+                                    {% endfor %}
+                                </ul>
+                        {% endif %}
                         <!-- Image gallery -->
                         {% if conclusion_figures %}
                         <div class="key-gallery-container">
@@ -149,12 +170,12 @@
                                 </a>
                                 <p></p>
                                 <!-- Question -->
-                                <p class="card-text">{{ option.question }}</p>
+                                <p class="card-text">{{ option.question | safe }}</p>
                                 <!-- Comment -->
                                 {% endif %}
                                 {% if option.comment %}
                                 <div class="card-text text-muted">
-                                    {{ option.comment }}
+                                    {{ option.comment | safe }}
                                 </div>
                                 {% endif %}
                                 <!-- Image gallery -->
@@ -228,7 +249,7 @@
             </div>
             <div class="card-body">
                 {% for key in keys %}
-                {% if key.id==key_id|int %}{{ key.description }}{% endif %}
+                {% if key.id==key_id|int %}{{ key.description | safe }}{% endif %}
                 {% endfor %}
             </div>
         </div>
@@ -241,7 +262,7 @@
             </div>
             <div class="card-body">
                 {% for key in keys %}
-                {% if key.id==key_id|int %}{{ key.bibliographicReference }}{% endif %}
+                {% if key.id==key_id|int %}{{ key.bibliographicReference | safe }}{% endif %}
                 {% endfor %}
             </div>
         </div>

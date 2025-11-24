@@ -69,6 +69,7 @@ def key_view():
     reached_conclusion = False
     conclusion_name = None
     conclusion_figures = None
+    suggested_identificationKeys = None
 
     # Get list of identification keys
     keys = Hierarchical_keys.query.all()
@@ -154,10 +155,14 @@ def key_view():
                 # Get the conclusion name
                 if selected_option.taxonID:
                     taxon = Taxa.query.filter_by(taxonInt=selected_option.taxonID).first()
+                    suggested_identificationKeys = Hierarchical_keys.query.filter_by(taxonID=selected_option.taxonID).all()
                     conclusion_name = taxon.scientificName if taxon else selected_option.name
+                    conclusion_figures = Illustrations.query.filter_by(taxonID=selected_option.taxonID).all()
+                    conclusion_figures = " | ".join([f':{i.id}' for i in conclusion_figures])
                 else:
                     conclusion_name = selected_option.name
-                conclusion_figures = selected_option.figures
+                    conclusion_figures = selected_option.figures
+
     
     return render_template("key_view.html", 
                          title=title, 
@@ -170,6 +175,7 @@ def key_view():
                          conclusion_name=conclusion_name,
                          conclusion_figures=conclusion_figures,
                          taxa=taxa,
+                         suggested_identificationKeys=suggested_identificationKeys,
                          get_figures_for_display=get_figures_for_display)
 
 def get_possible_names(all_options, current_step):

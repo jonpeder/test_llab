@@ -41,8 +41,10 @@ def drawer_edit():
             # Get input from form
             drawer_name = request.form.get("drawer-name")
             unit_ids = request.form.get("unit_ids")
-            if unit_ids == "":
-                flash('No units were selected', category='error')
+            if not drawer_name:
+                flash(f'Drawer-name not specified', category='error')
+            elif unit_ids == "":
+                flash('Unit-IDs not specified', category='error')
             else:
                 # Get units and specimens
                 unit_ids = unit_ids.splitlines()
@@ -50,11 +52,11 @@ def drawer_edit():
                 units = Units.query.filter(Units.unitID.in_(unit_ids)).all()
                 # If no units were found
                 if len(units) == 0:
-                    flash('No units were found', category='error')
+                    flash('No units-IDs found', category='error')
                 else:
                     # If no specimens were found
                     if len(specimens) == 0:
-                        flash('No specimens were found in the selected units', category='error')
+                        flash('No specimens were found in the specified units', category='error')
                     # Update drawer name for all specimens
                     for unit in units:
                         unit.drawerName = drawer_name
@@ -62,22 +64,26 @@ def drawer_edit():
                     db.session.commit()
                     flash(f'{drawer_name} was updated for {len(units)} units with {len(specimens)} specimens', category='success')
         if request.form.get("delete_drawer") == "delete_drawer":
-            # Get input from form
-            drawer_name = request.form.get("drawer-name")
-            # Get all specimens in the drawer
-            units = Units.query.filter(Units.drawerName == drawer_name).all()
-            specimens = Occurrences.query.join(Units, Units.unitID == Occurrences.unit_id).filter(Units.drawerName == drawer_name).all()
-            # Update drawer name for all specimens
-            for unit in units:
-                unit.drawerName = None
-            # Commit
-            db.session.commit()
-            # Delete drawer
-            drawer = Drawers.query.filter(Drawers.drawerName == drawer_name).first()
-            db.session.delete(drawer)
-            # Commit
-            db.session.commit()
-            flash(f'{drawer_name} deleted and {len(specimens)} specimens in {len(units)} units removed from the drawer', category='success')
+            # If no drawer is specified
+            if not request.form.get("drawer-name"):
+                flash(f'Drawer-name not specified', category='error')
+            else:
+                # Get input from form
+                drawer_name = request.form.get("drawer-name")
+                # Get all specimens in the drawer
+                units = Units.query.filter(Units.drawerName == drawer_name).all()
+                specimens = Occurrences.query.join(Units, Units.unitID == Occurrences.unit_id).filter(Units.drawerName == drawer_name).all()
+                # Update drawer name for all specimens
+                for unit in units:
+                    unit.drawerName = None
+                # Commit
+                db.session.commit()
+                # Delete drawer
+                drawer = Drawers.query.filter(Drawers.drawerName == drawer_name).first()
+                db.session.delete(drawer)
+                # Commit
+                db.session.commit()
+                flash(f'{drawer_name} deleted and {len(specimens)} specimens in {len(units)} units removed from the drawer', category='success')
     existing_drawer_names = [i.drawerName for i in Drawers.query.all()] # Get all drawer names
     # Return HTML page
     return render_template("drawer_add.html", user=current_user, existing_drawer_names=existing_drawer_names, ids_from_url=ids_from_url)

@@ -11,6 +11,10 @@ collection = Blueprint('collection', __name__)
 @collection.route('/drawer_edit', methods=["POST", "GET"])
 @login_required
 def drawer_edit():
+    if request.args.get("unit_ids"):
+        ids_from_url = request.args.get("unit_ids")
+    else:
+        ids_from_url = None
     if request.method == 'POST':
         if request.form.get("add_drawer") == "add_drawer":
             existing_drawer_names = [i.drawerName for i in Drawers.query.all()] # Get all drawer names
@@ -76,7 +80,7 @@ def drawer_edit():
             flash(f'{drawer_name} deleted and {len(specimens)} specimens in {len(units)} units removed from the drawer', category='success')
     existing_drawer_names = [i.drawerName for i in Drawers.query.all()] # Get all drawer names
     # Return HTML page
-    return render_template("drawer_add.html", user=current_user, existing_drawer_names=existing_drawer_names)
+    return render_template("drawer_add.html", user=current_user, existing_drawer_names=existing_drawer_names, ids_from_url=ids_from_url)
 
 # Function to view drawer content
 @collection.route('/drawer_view', methods=["POST", "GET"])

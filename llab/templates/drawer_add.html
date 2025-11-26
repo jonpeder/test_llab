@@ -34,12 +34,11 @@
         <small id="drawer_nameHelp" class="form-text text-muted">Select drawer to be updated</small>
     </div>
 
-    <!-- Taxon label QR-code data -->
+    <!-- Taxon label barcode data -->
     Add units to drawer
     <div class="mb-3">
-        <textarea type="text" class="form-control" id="unit_ids" name="unit_ids"
-            placeholder="Insert Unit-IDs here!" ></textarea>
-        <small id="qr-dataHelp" class="form-text text-muted">Decoded QR-codes from taxon-labels separated by
+        <textarea type="text" class="form-control" id="unit_ids" name="unit_ids" placeholder="Insert Unit-IDs here!">{% if ids_from_url %}{{ ids_from_url }}{% endif %}</textarea>
+        <small id="barcode-dataHelp" class="form-text text-muted">Decoded barcodes from taxon-labels separated by
             line-breaks</small>
     </div>
 

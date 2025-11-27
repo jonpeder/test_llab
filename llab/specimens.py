@@ -136,7 +136,7 @@ def specimen_det():
                                     occ_update_count+=1
                                     db.session.commit()
                                 # If occurrenceID not exist and if eventID exist create a new occurrence-record:
-                                elif Collecting_events.query.filter_by(eventID=specimen2.split(":")[1]).first():
+                                elif Collecting_events.query.filter_by(eventID=specimen2.split(":")[1]).first() or Collecting_events.query.filter_by(eventID=specimen2.split(":")[1].replace("_A", "")).first(): # The last query where "_A" is removed is to find a few eventIDs that where changed by a mistake. This can be removed after a while when the relevant specimens have been databased
                                     # First create the Identification-record
                                     new_identification = new_id()
                                     db.session.add(new_identification)
@@ -144,11 +144,16 @@ def specimen_det():
                                     id_count+=1
                                     db.session.commit()
                                     db.session.refresh(new_identification)
+                                    # This code can be removed after a while: If this is one of the events where "_A" were removed from the eventID by an accident, remove the "_A" from the eventID
+                                    if Collecting_events.query.filter_by(eventID=specimen2.split(":")[1]).first():
+                                        eventID = specimen2.split(":")[1]
+                                    else:
+                                        eventID = specimen2.split(":")[1].replace("_A", "")
                                     # Then the Occurrence-record
                                     new_occurrence=Occurrences(
                                         occurrenceID = specimen,
                                         catalogNumber = specimen2.split(":")[2],
-                                        eventID = specimen2.split(":")[1],
+                                        eventID = eventID,
                                         identificationID = new_identification.identificationID,
                                         ownerInstitutionCode = specimen2.split(":")[0],
                                         individualCount = individualCount,

@@ -43,7 +43,6 @@ def build_filter_query():
     
     if request.form.get("drawer_name"):
         drawer = request.form.get("drawer_name")
-        #units = [unit.unitID for unit in Units.drawerName.in_(drawer_qr).all]
         units = [i.unitID for i in Units.query.filter_by(drawerName=drawer).all()]
         qr_filters.append(Occurrences.unit_id.in_(units))
     

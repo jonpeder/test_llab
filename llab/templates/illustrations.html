@@ -2,317 +2,330 @@
 {% block content %}
 
 <form method=post enctype=multipart/form-data>
+    <!-- Button: Copy from last record -->
+    <div class="d-inline mb-3">
+        <button type="submit" class="btn btn-secondary" name="action2" value="VALUE2">Copy from last record</button>
+    </div>
+    <p></p>
+
     <div class="card">
-    <div class="card-header">
-        Identification
-    </div>
-    <div class="card-body">
-    <!-- Scientific name -->
-    <div class="mb-3">
-        Scientific name
-        <select class="form-control selectpicker" id="taxonID" name="taxonID" data-live-search="true">
-            {% for taxon in taxa %}
-            {% if last_values is not none %}
-            {% if last_values.taxonID == taxon.taxonInt %}
-            <option selected value="{{taxon.taxonInt}}">{{taxon.scientificName}}</option>
-            {% else %}
-            <option value="{{taxon.taxonInt}}">{{taxon.scientificName}}</option>
-            {% endif %}
-            {% else %}
-            <option value="{{taxon.taxonInt}}">{{taxon.scientificName}}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </div>
+        <div class="card-header">
+            Identification
+        </div>
+        <div class="card-body">
+            <!-- Scientific name -->
+            <div class="mb-3">
+                Scientific name
+                <select class="form-control selectpicker" id="taxonID" name="taxonID" data-live-search="true">
+                    {% for taxon in taxa %}
+                    {% if last_values is not none %}
+                    {% if last_values.taxonID == taxon.taxonInt %}
+                    <option selected value="{{taxon.taxonInt}}">{{taxon.scientificName}}</option>
+                    {% else %}
+                    <option value="{{taxon.taxonInt}}">{{taxon.scientificName}}</option>
+                    {% endif %}
+                    {% else %}
+                    <option value="{{taxon.taxonInt}}">{{taxon.scientificName}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
 
-    <!-- Sex -->
-    <div class="mb-3">
-        Sex
-        <select class="form-select" name="sex">
-            {% for i in sexes %}
-            {% if last_values is not none %}
-            {% if last_values.sex == i %}
-            <option selected value="{{ i }}">{{ i }}</option>
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </div>
+            <!-- Sex -->
+            <div class="mb-3">
+                Sex
+                <select class="form-select" name="sex">
+                    {% for i in sexes %}
+                    {% if last_values is not none %}
+                    {% if last_values.sex == i %}
+                    <option selected value="{{ i }}">{{ i }}</option>
+                    {% else %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endif %}
+                    {% else %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
 
-    <!-- lifestage -->
-    <div class="mb-3">
-        Lifestage
-        <select class="form-select" name="lifeStage">
-            {% for i in lifestage %}
-            {% if last_values is not none %}
-            {% if last_values.lifeStage == i %}
-            <option selected value="{{ i }}">{{ i }}</option>
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </div>
-    </div>
+            <!-- lifestage -->
+            <div class="mb-3">
+                Lifestage
+                <select class="form-select" name="lifeStage">
+                    {% for i in lifestage %}
+                    {% if last_values is not none %}
+                    {% if last_values.lifeStage == i %}
+                    <option selected value="{{ i }}">{{ i }}</option>
+                    {% else %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endif %}
+                    {% else %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
     </div>
     <br>
 
     <!-- Illustration type, category and perspective -->
     <div class="card">
-    <div class="card-header">
-        Illustation type, category and perspective
-    </div>
-    <div class="card-body">
+        <div class="card-header">
+            Illustation type, category and perspective
+        </div>
+        <div class="card-body">
 
-    <!-- image type -->
-    <div class="mb-3">
-        Type
-        <select class="form-select" name="imageType">
-            {% for i in imagetype %}
-            {% if last_values is not none %}
-            {% if last_values.imageType == i %}
-            <option selected value="{{ i }}">{{ i }}</option>
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </div>
+            <!-- image type -->
+            <div class="mb-3">
+                Type
+                <select class="form-select" name="imageType">
+                    {% for i in imagetype %}
+                    {% if last_values is not none %}
+                    {% if last_values.imageType == i %}
+                    <option selected value="{{ i }}">{{ i }}</option>
+                    {% else %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endif %}
+                    {% else %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
 
-    <!-- Category -->
-    <div class="row">
-    <div class="col-md-6">
-        Category
-        <select class="form-select" name="category">
-            {% for i in imagecat %}
-            {% if last_values is not none %}
-            {% if last_values.category == i %}
-            <option selected value="{{ i }}">{{ i }}</option>
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </div>
-    <div class="col-md-6">
-        New category
-        <input type="text" class="form-control" name="new_category">
-    </div>
-    </div>
+            <!-- Category -->
+            <div class="row">
+                <div class="col-md-6">
+                    Category
+                    <select class="form-control selectpicker" name="category" data-live-search="true">
+                        {% for i in imagecat|sort %}
+                        {% if last_values is not none %}
+                        {% if last_values.category == i %}
+                        <option selected value="{{ i }}">{{ i }}</option>
+                        {% else %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endif %}
+                        {% else %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    New category
+                    <input type="text" class="form-control" name="new_category">
+                </div>
+            </div>
 
-    <!-- Image perspective -->
-    <div class="mb-3">
-        Perspective
-        <select class="form-select" name="perspective">
-            <option value=""></option>
-            {% for perspective in perspectives %}
-            {% if last_values is not none %}
-            {% if last_values.perspective == perspective %}
-            <option selected value="{{ perspective }}">{{ perspective }}</option>
-            {% else %}
-            <option value="{{ perspective }}">{{ perspective }}</option>
-            {% endif %}
-            {% else %}
-            <option value="{{ perspective }}">{{ perspective }}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </div>
-    </div>
+            <!-- Image perspective -->
+            <div class="mb-3">
+                Perspective
+                <select class="form-select" name="perspective">
+                    <option value=""></option>
+                    {% for perspective in perspectives|sort %}
+                    {% if last_values is not none %}
+                    {% if last_values.perspective == perspective %}
+                    <option selected value="{{ perspective }}">{{ perspective }}</option>
+                    {% else %}
+                    <option value="{{ perspective }}">{{ perspective }}</option>
+                    {% endif %}
+                    {% else %}
+                    <option value="{{ perspective }}">{{ perspective }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
     </div>
     <br>
 
     <!-- Illustation origin -->
     <div class="card">
-    <div class="card-header">
-        Illustation origin
-    </div>
-    <div class="card-body">
+        <div class="card-header">
+            Illustation origin
+        </div>
+        <div class="card-body">
 
-    <!-- rightsHolder -->
-    <div class="mb-3">
-        Rights-holder
-        {% if last_values is not none %}
-        <input type="text" class="form-control" name="rightsHolder" value="{{ last_values.rightsHolder }}">
-        {% else %}
-        <input type="text" class="form-control" name="rightsHolder">
-        {% endif %}
-    </div>
+            <!-- rightsHolder -->
+            <div class="mb-3">
+                Rights-holder
+                {% if last_values is not none %}
+                <input type="text" class="form-control" name="rightsHolder" value="{{ last_values.rightsHolder }}">
+                {% else %}
+                <input type="text" class="form-control" name="rightsHolder">
+                {% endif %}
+            </div>
 
-    <!-- license -->
-    <div class="mb-3">
-        License
-        <select class="form-select" name="license">
-            {% for i in licenses %}
-            {% if last_values is not none %}
-            {% if last_values.license == i %}
-            <option selected value="{{ i }}">{{ i }}</option>
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </div>
+            <!-- license -->
+            <div class="mb-3">
+                License
+                <select class="form-select" name="license">
+                    {% for i in licenses %}
+                    {% if last_values is not none %}
+                    {% if last_values.license == i %}
+                    <option selected value="{{ i }}">{{ i }}</option>
+                    {% else %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endif %}
+                    {% else %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
 
-    <!-- associatedReference -->
-    <div class="mb-3">
-        Reference
-        {% if last_values is not none %}
-        <input type="text" class="form-control" name="associatedReference" value="{{ last_values.associatedReference }}">
-        {% else %}
-        <input type="text" class="form-control" name="associatedReference">
-        {% endif %}
-    </div>
-    </div>
+            <!-- associatedReference -->
+            <div class="mb-3">
+                Reference
+                {% if last_values is not none %}
+                <input type="text" class="form-control" name="associatedReference"
+                    value="{{ last_values.associatedReference }}">
+                {% else %}
+                <input type="text" class="form-control" name="associatedReference">
+                {% endif %}
+            </div>
+        </div>
     </div>
     <br>
-    
 
-    <!-- Collapse some of the less important input fields -->
-    <!-- Collapse button -->
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
-        Show more fields
-    </button>
-    <!-- Collapse start -->
-    <div class="collapse" id="collapseForm">
+    <!-- Collapsible input fields -->
+    <div class="card">
+        <div class="card-header">
+            <a class="btn" data-bs-toggle="collapse" href="#collapseInput">
+                More input fields (click)
+            </a>
+        </div>
+        <!-- Collapsible card body -->
+        <div id="collapseInput" class="collapse">
+            <div class="card-body">
 
-    <!-- identificationQualifier -->
-    <div class="mb-3">
-        Identification qualifier
-        <select class="form-select" name="identificationQualifier">
-            {% for i in id_qualifier %}
-            {% if last_values is not none %}
-            {% if last_values.identificationQualifier == i %}
-            <option selected value="{{ i }}">{{ i }}</option>
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </div>
+                <!-- identificationQualifier -->
+                <div class="mb-3">
+                    Identification qualifier
+                    <select class="form-select" name="identificationQualifier">
+                        {% for i in id_qualifier %}
+                        {% if last_values is not none %}
+                        {% if last_values.identificationQualifier == i %}
+                        <option selected value="{{ i }}">{{ i }}</option>
+                        {% else %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endif %}
+                        {% else %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <!-- identifiedBy -->
-    <div class="mb-3">
-        Identified by
-        {% if last_values is not none %}
-        <input type="text" class="form-control" name="identifiedBy" value="{{ last_values.identifiedBy }}">
-        {% else %}
-        <input type="text" class="form-control" name="identifiedBy">
-        {% endif %}
-    </div>
+                <!-- identifiedBy -->
+                <div class="mb-3">
+                    Identified by
+                    {% if last_values is not none %}
+                    <input type="text" class="form-control" name="identifiedBy" value="{{ last_values.identifiedBy }}">
+                    {% else %}
+                    <input type="text" class="form-control" name="identifiedBy">
+                    {% endif %}
+                </div>
 
-    <!-- scaleBar -->
-    <div class="mb-3">
-        Scale bar
-        {% if last_values is not none %}
-        <input type="text" class="form-control" name="scaleBar" value="{{ last_values.scaleBar }}">
-        {% else %}
-        <input type="text" class="form-control" name="scaleBar">
-        {% endif %}
-    </div>
+                <!-- scaleBar -->
+                <div class="mb-3">
+                    Scale bar
+                    {% if last_values is not none %}
+                    <input type="text" class="form-control" name="scaleBar" value="{{ last_values.scaleBar }}">
+                    {% else %}
+                    <input type="text" class="form-control" name="scaleBar">
+                    {% endif %}
+                </div>
 
-    <!-- typeStatus -->
-    <div class="mb-3">
-        Type status
-        <select class="form-select" name="typeStatus">
-            {% for i in type_status %}
-            {% if last_values is not none %}
-            {% if last_values.typeStatus == i %}
-            <option selected value="{{ i }}">{{ i }}</option>
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% else %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </div>
-    
-    <!-- typeName -->
-    <div class="mb-3">
-        Type of scientific name
-        {% if last_values is not none %}
-        <input type="text" class="form-control" name="typeName" value="{{ last_values.typeName }}">
-        {% else %}
-        <input type="text" class="form-control" name="typeName">
-        {% endif %}
-    </div>
+                <!-- typeStatus -->
+                <div class="mb-3">
+                    Type status
+                    <select class="form-select" name="typeStatus">
+                        {% for i in type_status %}
+                        {% if last_values is not none %}
+                        {% if last_values.typeStatus == i %}
+                        <option selected value="{{ i }}">{{ i }}</option>
+                        {% else %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endif %}
+                        {% else %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <!-- typeID -->
-    <div class="mb-3">
-        Type ID
-        {% if last_values is not none %}
-        <input type="text" class="form-control" name="typeID" value="{{ last_values.typeID }}">
-        {% else %}
-        <input type="text" class="form-control" name="typeID">
-        {% endif %}
-    </div>
+                <!-- typeName -->
+                <div class="mb-3">
+                    Type of scientific name
+                    {% if last_values is not none %}
+                    <input type="text" class="form-control" name="typeName" value="{{ last_values.typeName }}">
+                    {% else %}
+                    <input type="text" class="form-control" name="typeName">
+                    {% endif %}
+                </div>
 
-    <!-- ownerInstitutionCode -->
-    <div class="mb-3">
-        Owner institution code
-        {% if last_values is not none %}
-        <input type="text" class="form-control" name="ownerInstitutionCode" value="{{ last_values.ownerInstitutionCode }}">
-        {% else %}
-        <input type="text" class="form-control" name="ownerInstitutionCode">
-        {% endif %}
-    </div>
+                <!-- typeID -->
+                <div class="mb-3">
+                    Type ID
+                    {% if last_values is not none %}
+                    <input type="text" class="form-control" name="typeID" value="{{ last_values.typeID }}">
+                    {% else %}
+                    <input type="text" class="form-control" name="typeID">
+                    {% endif %}
+                </div>
 
-    <!-- remarks -->
-    <div class="mb-3">
-        Remarks
-        {% if last_values is not none %}
-        <input type="text" class="form-control" name="remarks" value="{{ last_values.remarks }}">
-        {% else %}
-        <input type="text" class="form-control" name="remarks">
-        {% endif %}
-    </div>
+                <!-- ownerInstitutionCode -->
+                <div class="mb-3">
+                    Owner institution code
+                    {% if last_values is not none %}
+                    <input type="text" class="form-control" name="ownerInstitutionCode"
+                        value="{{ last_values.ownerInstitutionCode }}">
+                    {% else %}
+                    <input type="text" class="form-control" name="ownerInstitutionCode">
+                    {% endif %}
+                </div>
 
-    <!-- Collapse end -->
+                <!-- remarks -->
+                <div class="mb-3">
+                    Remarks
+                    {% if last_values is not none %}
+                    <input type="text" class="form-control" name="remarks" value="{{ last_values.remarks }}">
+                    {% else %}
+                    <input type="text" class="form-control" name="remarks">
+                    {% endif %}
+                </div>
+
+            <!-- Collapsible end -->
+            </div>
+        <!-- Cardbody end -->
+        </div>
+    <!-- Card end -->
     </div>
+    <br>
 
     <!-- Select images -->
     <div class="mb-3">
         <label for="files">Select images</label>
         <input type=file id="imgInp" multiple="multiple" accept="image/jpeg, image/png, image/jpg" class="form-control"
-            name=files onchange="loadFiles(event)" >
+            name=files onchange="loadFiles(event)">
         <div class="img_container" id="result">
         </div>
     </div>
 
-    <!-- Button 1 and 2 -->
+    <!-- Button: Clear files -->
     <div class="d-inline mb-3">
-        <!-- Button 2-->
-        <button type="submit" class="btn btn-secondary" name="action2" value="VALUE2">Copy from last record</button>
-        <!-- Button 3-->
-        <button type="submit" class="btn btn-warning" name="clear_files" value="VALUE3" onclick="clearFiles()" >Clear</button>
+        <button type="submit" class="btn btn-warning" name="clear_files" value="VALUE3"
+            onclick="clearFiles()">Clear</button>
     </div>
     <p></p>
+    <!-- Button: Submit -->
     <div class="mb-3">
-    <!-- Button 1-->
-    <button type="submit" class="btn btn-lg btn-success" name="action1" value="VALUE1">Upload</button>
+        <button type="submit" class="btn btn-lg btn-success" name="action1" value="VALUE1">Upload</button>
     </div>
-    <p></p>
+    <br>
 
 </form>
 

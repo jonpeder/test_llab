@@ -813,8 +813,8 @@ function updatePolygonFilterField(polygon) {
         alert("Please select at least one specimen to export.");
         return;
       }
-      // Construct the URL with the selected IDs, separated by ";"
-      var url = '/export_faunistic_report/' + selectedValues.join('|');
+      // Construct the URL with the selected IDs, separated by "|"
+      var url = '/export_faunistic_report?specimen_ids=' + selectedValues.join('|');
       // Update the href and trigger the click
       $(this).attr('href', url);
       window.open(url, '_blank'); // Open the link in a new tab
@@ -830,7 +830,7 @@ function updatePolygonFilterField(polygon) {
         return;
       }
       // Construct the URL with the selected IDs, separated by "|"
-      var url = '/export_GBIF/' + selectedValues.join('|');
+      var url = '/export_GBIF?specimen_ids=' + selectedValues.join('|');
       // Update the href and trigger the click
       $(this).attr('href', url);
       window.open(url, '_blank'); // Open the link in a new tab
@@ -845,8 +845,8 @@ function updatePolygonFilterField(polygon) {
         alert("Please select at least one specimen to export.");
         return;
       }
-      // Construct the URL with the selected IDs, separated by ";"
-      var url = '/export_DNA_barcodes/' + selectedValues.join('|');
+      // Construct the URL with the selected IDs, separated by "|"
+      var url = '/export_DNA_barcodes?specimen_ids=' + selectedValues.join('|');
       // Update the href and trigger the click
       $(this).attr('href', url);
       window.open(url, '_blank'); // Open the link in a new tab

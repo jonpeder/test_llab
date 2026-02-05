@@ -63,9 +63,10 @@ def export_events(eventIDs):
         return f"An error occurred: {str(e)}", 500    
             
 
-@export.route('/export_GBIF/<string:occurrenceIDs>', methods=["GET"])
+@export.route('/export_GBIF', methods=["GET"])
 @login_required
-def export_GBIF(occurrenceIDs):
+def export_GBIF():
+    occurrenceIDs = request.args.get("specimen_ids")
     if not occurrenceIDs:
         return "No occurrence IDs provided", 400
 
@@ -185,9 +186,10 @@ def export_GBIF(occurrenceIDs):
     except Exception as e:
         return f"An error occurred: {str(e)}", 500
 
-@export.route('/export_faunistic_report/<string:occurrenceIDs>', methods=["GET"])
+@export.route('/export_faunistic_report', methods=["GET"])
 @login_required
-def export_faunistic_report(occurrenceIDs):
+def export_faunistic_report():
+    occurrenceIDs = request.args.get("specimen_ids")
     if not occurrenceIDs:  # Validate occurrenceIDs
         return "No occurrence IDs provided", 400
     
@@ -406,9 +408,10 @@ def export_faunistic_report(occurrenceIDs):
         orders=orders,
     )
 
-@export.route('/export_DNA_barcodes/<string:occurrenceIDs>', methods=["GET"])
+@export.route('/export_DNA_barcodes', methods=["GET"])
 @login_required
-def export_DNA_barcodes(occurrenceIDs):
+def export_DNA_barcodes():
+    occurrenceIDs = request.args.get("specimen_ids")
     if not occurrenceIDs:  # Validate occurrenceIDs
         return "No occurrence IDs provided", 400
     # Split occurrenceIDs into a list
@@ -417,9 +420,8 @@ def export_DNA_barcodes(occurrenceIDs):
     dna_barcodes = co1.query.filter(co1.occurrenceID.in_(specimen_ids)).all()
     
     ## Create alignment 
-    # Define the output FASTA file
+    # Write data to file in fasta-format
     output_fasta = "output.fasta"
-    # Write data to FASTA format
     with open(output_fasta, "w") as fasta_file:
         for barcode in dna_barcodes:
             if barcode.sequenceID:
@@ -470,9 +472,10 @@ def export_DNA_barcodes(occurrenceIDs):
 ####
 # Export observations to a csv-file ready for GBIF import
 ####
-@export.route('/export_observations_GBIF/<string:occurrenceIDs>', methods=["GET"])
+@export.route('/export_observations_GBIF', methods=["GET"])
 @login_required
-def export_observations_GBIF(occurrenceIDs):
+def export_observations_GBIF():
+    occurrenceIDs = request.args.get("specimen_ids")
     if not occurrenceIDs:
         return "No occurrence IDs provided", 400
 

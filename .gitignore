@@ -5,7 +5,10 @@ output.adjustdirection.fasta
 output.linsi.fasta
 output.fasta
 tips.txt
+.DS_Store
 
+# Any database files
+*.db
 
 # Visual studio code
 .vscode

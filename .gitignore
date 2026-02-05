@@ -10,6 +10,9 @@ tips.txt
 # Any database files
 *.db
 
+# Any Jupyter notebook file
+*.ipynb
+
 # Visual studio code
 .vscode
 
